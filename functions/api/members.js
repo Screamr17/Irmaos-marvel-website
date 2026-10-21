@@ -87,6 +87,36 @@ async function identity(request, env) {
   return allow.includes(email) ? email : null;
 }
 
+function validId(value) {
+  const n = Number(value);
+  return Number.isSafeInteger(n) && n > 0 ? n : null;
+}
+
+function snapshot(row) {
+  return {
+    id: row.id,
+    name: row.name,
+    group_no: row.group_no,
+    position: row.position,
+    prestige: row.prestige,
+    role: row.role
+  };
+}
+
+function historyStatement(env, action, member, details, email) {
+  return env.DB.prepare(
+    `INSERT INTO member_history
+     (action, member_id, member_name, details, officer_email)
+     VALUES (?, ?, ?, ?, ?)`
+  ).bind(
+    action,
+    member.id,
+    member.name,
+    JSON.stringify(details),
+    email
+  );
+}
+
 export async function onRequest({ request, env }) {
   try {
     if (!env.DB)
@@ -99,14 +129,34 @@ export async function onRequest({ request, env }) {
         error: "Não autorizado. Confirma Cloudflare Access e OFFICER_EMAILS."
       }, 403);
 
+    const url = new URL(request.url);
+
+    // CONSULTAR HISTÓRICO (APENAS OFICIAIS)
+    if (
+      request.method === "GET" &&
+      url.searchParams.get("action") === "history"
+    ) {
+      const result = await env.DB.prepare(
+        `SELECT id, action, member_id, member_name,
+                details, officer_email, created_at
+         FROM member_history
+         ORDER BY id DESC
+         LIMIT 100`
+      ).all();
+
+      return json({ items: result.results || [], email });
+    }
+
+    // CONSULTAR JOGADORES
     if (request.method === "GET") {
-      const data = await env.DB.prepare(
-        `SELECT id, group_no, position, name, prestige, role, updated_at
+      const result = await env.DB.prepare(
+        `SELECT id, group_no, position, name,
+                prestige, role, updated_at
          FROM alliance_members
          ORDER BY group_no, position, id`
       ).all();
 
-      return json({ items: data.results || [], email });
+      return json({ items: result.results || [], email });
     }
 
     if (!["POST", "PUT", "DELETE"].includes(request.method))
@@ -114,34 +164,27 @@ export async function onRequest({ request, env }) {
 
     const body = await request.json().catch(() => null);
 
-    if (!body || typeof body !== "object")
+    if (!body || typeof body !== "object" || Array.isArray(body))
       return json({ error: "Dados inválidos." }, 400);
 
-    // TROCAR DOIS JOGADORES ENTRE GRUPOS
+    // TROCAR DOIS JOGADORES
     if (request.method === "POST" && body.action === "swap") {
-      const first = Number(body.first_id);
-      const second = Number(body.second_id);
+      const first = validId(body.first_id);
+      const second = validId(body.second_id);
 
-      if (
-        !Number.isSafeInteger(first) ||
-        !Number.isSafeInteger(second) ||
-        first < 1 ||
-        second < 1 ||
-        first === second
-      ) {
+      if (!first || !second || first === second)
         return json({
           error: "Escolhe dois jogadores diferentes."
         }, 400);
-      }
 
-      const rows = await env.DB.prepare(
-        `SELECT id, group_no, position, name
+      const result = await env.DB.prepare(
+        `SELECT id, group_no, position, name, prestige, role
          FROM alliance_members
          WHERE id IN (?, ?)`
       ).bind(first, second).all();
 
-      const a = (rows.results || []).find(x => x.id === first);
-      const b = (rows.results || []).find(x => x.id === second);
+      const a = (result.results || []).find(x => x.id === first);
+      const b = (result.results || []).find(x => x.id === second);
 
       if (!a || !b)
         return json({
@@ -153,27 +196,67 @@ export async function onRequest({ request, env }) {
           error: "Escolhe jogadores de grupos diferentes."
         }, 400);
 
-      // As duas alterações são executadas numa transação D1.
-      const results = await env.DB.batch([
+      const beforeA = snapshot(a);
+      const beforeB = snapshot(b);
+
+      const afterA = {
+        ...beforeA,
+        group_no: b.group_no,
+        position: b.position
+      };
+
+      const afterB = {
+        ...beforeB,
+        group_no: a.group_no,
+        position: a.position
+      };
+
+      // Atualizações e histórico na mesma transação D1.
+      await env.DB.batch([
         env.DB.prepare(
           `UPDATE alliance_members
            SET group_no = ?, position = ?,
                updated_by = ?, updated_at = CURRENT_TIMESTAMP
-           WHERE id = ? AND group_no = ?`
-        ).bind(b.group_no, b.position, email, a.id, a.group_no),
+           WHERE id = ?`
+        ).bind(
+          afterA.group_no, afterA.position, email, a.id
+        ),
 
         env.DB.prepare(
           `UPDATE alliance_members
            SET group_no = ?, position = ?,
                updated_by = ?, updated_at = CURRENT_TIMESTAMP
-           WHERE id = ? AND group_no = ?`
-        ).bind(a.group_no, a.position, email, b.id, b.group_no)
+           WHERE id = ?`
+        ).bind(
+          afterB.group_no, afterB.position, email, b.id
+        ),
+
+        historyStatement(
+          env,
+          "swap",
+          a,
+          {
+            before: beforeA,
+            after: afterA,
+            other_member: b.name,
+            other_member_id: b.id
+          },
+          email
+        ),
+
+        historyStatement(
+          env,
+          "swap",
+          b,
+          {
+            before: beforeB,
+            after: afterB,
+            other_member: a.name,
+            other_member_id: a.id
+          },
+          email
+        )
       ]);
-
-      if (results.some(r => r.meta?.changes !== 1))
-        return json({
-          error: "A lista foi alterada. Atualiza e tenta novamente."
-        }, 409);
 
       return json({
         ok: true,
@@ -182,18 +265,36 @@ export async function onRequest({ request, env }) {
       });
     }
 
-    const id = Number(body.id);
+    const id = validId(body.id);
 
-    // APAGAR JOGADOR
+    // ELIMINAR JOGADOR
     if (request.method === "DELETE") {
-      if (!Number.isSafeInteger(id) || id < 1)
+      if (!id)
         return json({ error: "ID inválido." }, 400);
 
-      const result = await env.DB.prepare(
-        "DELETE FROM alliance_members WHERE id = ?"
-      ).bind(id).run();
+      const old = await env.DB.prepare(
+        `SELECT id, group_no, position, name, prestige, role
+         FROM alliance_members WHERE id = ?`
+      ).bind(id).first();
 
-      return json({ ok: result.meta.changes > 0 });
+      if (!old)
+        return json({ error: "Jogador não encontrado." }, 404);
+
+      await env.DB.batch([
+        env.DB.prepare(
+          "DELETE FROM alliance_members WHERE id = ?"
+        ).bind(id),
+
+        historyStatement(
+          env,
+          "delete",
+          old,
+          { before: snapshot(old) },
+          email
+        )
+      ]);
+
+      return json({ ok: true });
     }
 
     const name = String(body.name || "").trim();
@@ -217,19 +318,23 @@ export async function onRequest({ request, env }) {
 
     // EDITAR JOGADOR
     if (request.method === "PUT") {
-      if (!Number.isSafeInteger(id) || id < 1)
+      if (!id)
         return json({ error: "ID inválido." }, 400);
 
-      const previous = await env.DB.prepare(
-        "SELECT group_no FROM alliance_members WHERE id = ?"
+      const old = await env.DB.prepare(
+        `SELECT id, group_no, position, name, prestige, role
+         FROM alliance_members WHERE id = ?`
       ).bind(id).first();
 
-      if (!previous)
+      if (!old)
         return json({ error: "Jogador não encontrado." }, 404);
 
-      if (previous.group_no !== group) {
+      let position = old.position;
+
+      if (old.group_no !== group) {
         const count = await env.DB.prepare(
-          "SELECT COUNT(*) AS n FROM alliance_members WHERE group_no = ?"
+          `SELECT COUNT(*) AS n
+           FROM alliance_members WHERE group_no = ?`
         ).bind(group).first();
 
         if (count.n >= 10)
@@ -237,38 +342,51 @@ export async function onRequest({ request, env }) {
             error: "Grupo completo. Usa a opção Trocar dois jogadores."
           }, 409);
 
-        const result = await env.DB.prepare(
+        const max = await env.DB.prepare(
+          `SELECT COALESCE(MAX(position), 0) AS n
+           FROM alliance_members WHERE group_no = ?`
+        ).bind(group).first();
+
+        position = max.n + 1;
+      }
+
+      const before = snapshot(old);
+      const after = {
+        id,
+        name,
+        group_no: group,
+        position,
+        prestige,
+        role
+      };
+
+      await env.DB.batch([
+        env.DB.prepare(
           `UPDATE alliance_members
-           SET name = ?, prestige = ?, role = ?,
-               group_no = ?,
-               position = (
-                 SELECT COALESCE(MAX(position), 0) + 1
-                 FROM alliance_members
-                 WHERE group_no = ?
-               ),
-               updated_by = ?,
+           SET name = ?, group_no = ?, position = ?,
+               prestige = ?, role = ?, updated_by = ?,
                updated_at = CURRENT_TIMESTAMP
            WHERE id = ?`
         ).bind(
-          name, prestige, role, group, group, email, id
-        ).run();
+          name, group, position, prestige, role, email, id
+        ),
 
-        return json({ ok: result.meta.changes > 0 });
-      }
+        historyStatement(
+          env,
+          "update",
+          after,
+          { before, after },
+          email
+        )
+      ]);
 
-      const result = await env.DB.prepare(
-        `UPDATE alliance_members
-         SET name = ?, prestige = ?, role = ?,
-             updated_by = ?, updated_at = CURRENT_TIMESTAMP
-         WHERE id = ?`
-      ).bind(name, prestige, role, email, id).run();
-
-      return json({ ok: result.meta.changes > 0 });
+      return json({ ok: true });
     }
 
     // ADICIONAR JOGADOR
     const count = await env.DB.prepare(
-      "SELECT COUNT(*) AS n FROM alliance_members WHERE group_no = ?"
+      `SELECT COUNT(*) AS n
+       FROM alliance_members WHERE group_no = ?`
     ).bind(group).first();
 
     if (count.n >= 10)
@@ -276,29 +394,41 @@ export async function onRequest({ request, env }) {
         error: "Este grupo já tem 10 jogadores."
       }, 409);
 
-    const result = await env.DB.prepare(
+    const max = await env.DB.prepare(
+      `SELECT COALESCE(MAX(position), 0) AS n
+       FROM alliance_members WHERE group_no = ?`
+    ).bind(group).first();
+
+    const position = max.n + 1;
+
+    // RETURNING permite registar o ID correto no histórico.
+    const created = await env.DB.prepare(
       `INSERT INTO alliance_members
        (group_no, position, name, prestige, role, updated_by)
-       VALUES (
-         ?,
-         (SELECT COALESCE(MAX(position), 0) + 1
-          FROM alliance_members WHERE group_no = ?),
-         ?, ?, ?, ?
-       )`
+       VALUES (?, ?, ?, ?, ?, ?)
+       RETURNING id, group_no, position, name, prestige, role`
     ).bind(
-      group, group, name, prestige, role, email
+      group, position, name, prestige, role, email
+    ).first();
+
+    if (!created)
+      throw new Error("Falha ao criar jogador.");
+
+    await historyStatement(
+      env,
+      "create",
+      created,
+      { after: snapshot(created) },
+      email
     ).run();
 
-    return json({
-      ok: true,
-      id: result.meta.last_row_id
-    }, 201);
+    return json({ ok: true, id: created.id }, 201);
 
   } catch (error) {
     console.error("Members API:", error);
 
     return json({
-      error: "Erro na API. Confirma a configuração D1 e Cloudflare Access."
+      error: "Erro na API. Confirma a tabela member_history e a configuração D1."
     }, 500);
   }
 }
