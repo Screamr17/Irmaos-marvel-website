@@ -103,6 +103,15 @@ function snapshot(row) {
   };
 }
 
+const fields = [
+  "id", "name", "group_no",
+  "position", "prestige", "role"
+];
+
+function same(a, b) {
+  return !!a && !!b && fields.every(k => a[k] === b[k]);
+}
+
 function historyStatement(env, action, member, details, email) {
   return env.DB.prepare(
     `INSERT INTO member_history
@@ -117,6 +126,280 @@ function historyStatement(env, action, member, details, email) {
   );
 }
 
+function getMember(env, id) {
+  return env.DB.prepare(
+    `SELECT id, group_no, position, name, prestige, role
+     FROM alliance_members WHERE id = ?`
+  ).bind(id).first();
+}
+
+function setMember(env, row, email) {
+  return env.DB.prepare(
+    `UPDATE alliance_members
+     SET name = ?, group_no = ?, position = ?,
+         prestige = ?, role = ?, updated_by = ?,
+         updated_at = CURRENT_TIMESTAMP
+     WHERE id = ?`
+  ).bind(
+    row.name, row.group_no, row.position,
+    row.prestige, row.role, email, row.id
+  );
+}
+
+function countGroup(env, group) {
+  return env.DB.prepare(
+    "SELECT COUNT(*) AS n FROM alliance_members WHERE group_no = ?"
+  ).bind(group).first();
+}
+
+function maxPosition(env, group) {
+  return env.DB.prepare(
+    `SELECT COALESCE(MAX(position), 0) AS n
+     FROM alliance_members WHERE group_no = ?`
+  ).bind(group).first();
+}
+
+// DESFAZER ALTERAÇÕES
+async function undo(env, email, historyId) {
+  const record = await env.DB.prepare(
+    "SELECT * FROM member_history WHERE id = ?"
+  ).bind(historyId).first();
+
+  if (
+    !record ||
+    !["create", "update", "delete", "swap"].includes(record.action)
+  ) {
+    return json({
+      error: "Alteração não encontrada ou não reversível."
+    }, 404);
+  }
+
+  const prior = await env.DB.prepare(
+    `SELECT id FROM member_history
+     WHERE action = 'undo'
+       AND json_extract(details, '$.original_history_id') = ?
+     LIMIT 1`
+  ).bind(historyId).first();
+
+  if (prior)
+    return json({ error: "Esta alteração já foi desfeita." }, 409);
+
+  let details;
+
+  try {
+    details = JSON.parse(record.details);
+  } catch {
+    return json({ error: "Histórico inválido." }, 409);
+  }
+
+  const before = details.before;
+  const after = details.after;
+
+  // DESFAZER TROCA DE JOGADORES
+  if (record.action === "swap") {
+    const otherId = validId(details.other_member_id);
+
+    if (!before || !after || !otherId)
+      return json({ error: "Dados da troca incompletos." }, 409);
+
+    const otherRecord = await env.DB.prepare(
+      `SELECT * FROM member_history
+       WHERE action = 'swap'
+         AND member_id = ?
+         AND id BETWEEN ? AND ?
+       ORDER BY id DESC`
+    ).bind(otherId, historyId - 1, historyId + 1).all();
+
+    const pair = (otherRecord.results || []).find(r => {
+      try {
+        const d = JSON.parse(r.details);
+        return (
+          d.other_member_id === record.member_id &&
+          r.officer_email === record.officer_email &&
+          r.created_at === record.created_at
+        );
+      } catch {
+        return false;
+      }
+    });
+
+    if (!pair)
+      return json({
+        error: "Não foi possível identificar a outra metade da troca."
+      }, 409);
+
+    const pairUndo = await env.DB.prepare(
+      `SELECT id FROM member_history
+       WHERE action = 'undo'
+         AND json_extract(details, '$.original_history_id') = ?
+       LIMIT 1`
+    ).bind(pair.id).first();
+
+    if (pairUndo)
+      return json({ error: "Esta troca já foi desfeita." }, 409);
+
+    const otherDetails = JSON.parse(pair.details);
+    const a = await getMember(env, record.member_id);
+    const b = await getMember(env, otherId);
+
+    if (!same(a, after) || !same(b, otherDetails.after))
+      return json({
+        error: "Os jogadores foram alterados depois da troca. Não é seguro desfazer."
+      }, 409);
+
+    await env.DB.batch([
+      setMember(env, before, email),
+      setMember(env, otherDetails.before, email),
+
+      historyStatement(
+        env, "undo", before,
+        {
+          original_history_id: historyId,
+          paired_history_id: pair.id,
+          undo_action: "swap",
+          before: after,
+          after: before
+        },
+        email
+      ),
+
+      historyStatement(
+        env, "undo", otherDetails.before,
+        {
+          original_history_id: pair.id,
+          paired_history_id: historyId,
+          undo_action: "swap",
+          before: otherDetails.after,
+          after: otherDetails.before
+        },
+        email
+      )
+    ]);
+
+    return json({ ok: true, action: "swap" });
+  }
+
+  const current = await getMember(env, record.member_id);
+
+  // DESFAZER ADIÇÃO
+  if (record.action === "create") {
+    if (!same(current, after))
+      return json({
+        error: "Este jogador foi alterado entretanto. Não é seguro desfazer."
+      }, 409);
+
+    await env.DB.batch([
+      env.DB.prepare(
+        "DELETE FROM alliance_members WHERE id = ?"
+      ).bind(after.id),
+
+      historyStatement(
+        env, "undo", after,
+        {
+          original_history_id: historyId,
+          undo_action: "create",
+          before: after
+        },
+        email
+      )
+    ]);
+  }
+
+  // DESFAZER ELIMINAÇÃO
+  else if (record.action === "delete") {
+    if (!before || current)
+      return json({
+        error: "O jogador já existe ou o histórico está incompleto."
+      }, 409);
+
+    const count = await countGroup(env, before.group_no);
+
+    if (count.n >= 10)
+      return json({
+        error: "O grupo original está completo. Não é possível restaurar."
+      }, 409);
+
+    const occupied = await env.DB.prepare(
+      `SELECT id FROM alliance_members
+       WHERE group_no = ? AND position = ?`
+    ).bind(before.group_no, before.position).first();
+
+    if (occupied)
+      return json({
+        error: "A posição original está ocupada. Ajusta os grupos antes de restaurar."
+      }, 409);
+
+    await env.DB.batch([
+      env.DB.prepare(
+        `INSERT INTO alliance_members
+         (id, group_no, position, name, prestige,
+          role, updated_by, updated_at)
+         VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)`
+      ).bind(
+        before.id, before.group_no, before.position,
+        before.name, before.prestige, before.role, email
+      ),
+
+      historyStatement(
+        env, "undo", before,
+        {
+          original_history_id: historyId,
+          undo_action: "delete",
+          after: before
+        },
+        email
+      )
+    ]);
+  }
+
+  // DESFAZER EDIÇÃO
+  else {
+    if (!before || !same(current, after))
+      return json({
+        error: "O jogador foi alterado entretanto. Não é seguro desfazer."
+      }, 409);
+
+    if (before.group_no !== after.group_no) {
+      const count = await countGroup(env, before.group_no);
+
+      if (count.n >= 10)
+        return json({
+          error: "O grupo original está completo. Não é possível desfazer."
+        }, 409);
+    }
+
+    const occupied = await env.DB.prepare(
+      `SELECT id FROM alliance_members
+       WHERE group_no = ? AND position = ? AND id <> ?`
+    ).bind(
+      before.group_no, before.position, before.id
+    ).first();
+
+    if (occupied)
+      return json({
+        error: "A posição anterior está ocupada. Não é possível desfazer."
+      }, 409);
+
+    await env.DB.batch([
+      setMember(env, before, email),
+
+      historyStatement(
+        env, "undo", before,
+        {
+          original_history_id: historyId,
+          undo_action: "update",
+          before: after,
+          after: before
+        },
+        email
+      )
+    ]);
+  }
+
+  return json({ ok: true, action: record.action });
+}
+
+// API PRINCIPAL
 export async function onRequest({ request, env }) {
   try {
     if (!env.DB)
@@ -131,7 +414,7 @@ export async function onRequest({ request, env }) {
 
     const url = new URL(request.url);
 
-    // CONSULTAR HISTÓRICO (APENAS OFICIAIS)
+    // CONSULTAR HISTÓRICO
     if (
       request.method === "GET" &&
       url.searchParams.get("action") === "history"
@@ -167,8 +450,24 @@ export async function onRequest({ request, env }) {
     if (!body || typeof body !== "object" || Array.isArray(body))
       return json({ error: "Dados inválidos." }, 400);
 
+    // PEDIDO PARA DESFAZER
+    if (
+      request.method === "POST" &&
+      body.action === "undo"
+    ) {
+      const historyId = validId(body.history_id);
+
+      if (!historyId)
+        return json({ error: "ID do histórico inválido." }, 400);
+
+      return await undo(env, email, historyId);
+    }
+
     // TROCAR DOIS JOGADORES
-    if (request.method === "POST" && body.action === "swap") {
+    if (
+      request.method === "POST" &&
+      body.action === "swap"
+    ) {
       const first = validId(body.first_id);
       const second = validId(body.second_id);
 
@@ -211,30 +510,12 @@ export async function onRequest({ request, env }) {
         position: a.position
       };
 
-      // Atualizações e histórico na mesma transação D1.
       await env.DB.batch([
-        env.DB.prepare(
-          `UPDATE alliance_members
-           SET group_no = ?, position = ?,
-               updated_by = ?, updated_at = CURRENT_TIMESTAMP
-           WHERE id = ?`
-        ).bind(
-          afterA.group_no, afterA.position, email, a.id
-        ),
-
-        env.DB.prepare(
-          `UPDATE alliance_members
-           SET group_no = ?, position = ?,
-               updated_by = ?, updated_at = CURRENT_TIMESTAMP
-           WHERE id = ?`
-        ).bind(
-          afterB.group_no, afterB.position, email, b.id
-        ),
+        setMember(env, afterA, email),
+        setMember(env, afterB, email),
 
         historyStatement(
-          env,
-          "swap",
-          a,
+          env, "swap", a,
           {
             before: beforeA,
             after: afterA,
@@ -245,9 +526,7 @@ export async function onRequest({ request, env }) {
         ),
 
         historyStatement(
-          env,
-          "swap",
-          b,
+          env, "swap", b,
           {
             before: beforeB,
             after: afterB,
@@ -272,10 +551,7 @@ export async function onRequest({ request, env }) {
       if (!id)
         return json({ error: "ID inválido." }, 400);
 
-      const old = await env.DB.prepare(
-        `SELECT id, group_no, position, name, prestige, role
-         FROM alliance_members WHERE id = ?`
-      ).bind(id).first();
+      const old = await getMember(env, id);
 
       if (!old)
         return json({ error: "Jogador não encontrado." }, 404);
@@ -286,9 +562,7 @@ export async function onRequest({ request, env }) {
         ).bind(id),
 
         historyStatement(
-          env,
-          "delete",
-          old,
+          env, "delete", old,
           { before: snapshot(old) },
           email
         )
@@ -321,10 +595,7 @@ export async function onRequest({ request, env }) {
       if (!id)
         return json({ error: "ID inválido." }, 400);
 
-      const old = await env.DB.prepare(
-        `SELECT id, group_no, position, name, prestige, role
-         FROM alliance_members WHERE id = ?`
-      ).bind(id).first();
+      const old = await getMember(env, id);
 
       if (!old)
         return json({ error: "Jogador não encontrado." }, 404);
@@ -332,25 +603,19 @@ export async function onRequest({ request, env }) {
       let position = old.position;
 
       if (old.group_no !== group) {
-        const count = await env.DB.prepare(
-          `SELECT COUNT(*) AS n
-           FROM alliance_members WHERE group_no = ?`
-        ).bind(group).first();
+        const count = await countGroup(env, group);
 
         if (count.n >= 10)
           return json({
             error: "Grupo completo. Usa a opção Trocar dois jogadores."
           }, 409);
 
-        const max = await env.DB.prepare(
-          `SELECT COALESCE(MAX(position), 0) AS n
-           FROM alliance_members WHERE group_no = ?`
-        ).bind(group).first();
-
+        const max = await maxPosition(env, group);
         position = max.n + 1;
       }
 
       const before = snapshot(old);
+
       const after = {
         id,
         name,
@@ -361,20 +626,10 @@ export async function onRequest({ request, env }) {
       };
 
       await env.DB.batch([
-        env.DB.prepare(
-          `UPDATE alliance_members
-           SET name = ?, group_no = ?, position = ?,
-               prestige = ?, role = ?, updated_by = ?,
-               updated_at = CURRENT_TIMESTAMP
-           WHERE id = ?`
-        ).bind(
-          name, group, position, prestige, role, email, id
-        ),
+        setMember(env, after, email),
 
         historyStatement(
-          env,
-          "update",
-          after,
+          env, "update", after,
           { before, after },
           email
         )
@@ -384,24 +639,16 @@ export async function onRequest({ request, env }) {
     }
 
     // ADICIONAR JOGADOR
-    const count = await env.DB.prepare(
-      `SELECT COUNT(*) AS n
-       FROM alliance_members WHERE group_no = ?`
-    ).bind(group).first();
+    const count = await countGroup(env, group);
 
     if (count.n >= 10)
       return json({
         error: "Este grupo já tem 10 jogadores."
       }, 409);
 
-    const max = await env.DB.prepare(
-      `SELECT COALESCE(MAX(position), 0) AS n
-       FROM alliance_members WHERE group_no = ?`
-    ).bind(group).first();
-
+    const max = await maxPosition(env, group);
     const position = max.n + 1;
 
-    // RETURNING permite registar o ID correto no histórico.
     const created = await env.DB.prepare(
       `INSERT INTO alliance_members
        (group_no, position, name, prestige, role, updated_by)
