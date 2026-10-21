@@ -53,7 +53,7 @@
 </script><script>
 (()=>{
  const $=id=>document.getElementById(id);
- const labels={create:'➕ Jogador adicionado',update:'✏️ Jogador editado',delete:'🗑️ Jogador eliminado',swap:'🔄 Troca de grupo'};
+ const labels={create:'➕ Jogador adicionado',update:'✏️ Jogador editado',delete:'🗑️ Jogador eliminado',swap:'🔄 Troca de grupo',undo:'↩️ Alteração desfeita'};
  function dateText(value){
   if(!value)return 'Data desconhecida';
   const normalized=/^\d{4}-\d\d-\d\d \d\d:\d\d:\d\d$/.test(value)?value.replace(' ','T')+'Z':value;
@@ -64,6 +64,7 @@
   let data;
   try{data=JSON.parse(item.details||'{}')}catch{return String(item.details||'')}
   const before=data.before,after=data.after;
+  if(item.action==='undo')return 'Revertido: '+(data.undo_action||'alteração')+' · Histórico #'+data.original_history_id;
   if(item.action==='swap'&&before&&after)return 'G'+before.group_no+' → G'+after.group_no+(data.other_member?' · Trocado com '+data.other_member:'');
   if(item.action==='create')return after?'Adicionado ao G'+after.group_no:'Jogador adicionado';
   if(item.action==='delete')return before?'Eliminado do G'+before.group_no:'Jogador eliminado';
@@ -87,12 +88,33 @@
    if(!Array.isArray(data.items))throw Error('Resposta de histórico inválida.');
    status.textContent='✓ '+data.items.length+' registos encontrados (últimos 100)';
    if(!data.items.length){const p=document.createElement('p');p.textContent='Ainda não existem alterações registadas.';list.append(p);return}
+   const undone=new Set();
+   for(const entry of data.items){if(entry.action!=='undo')continue;try{const d=JSON.parse(entry.details||'{}');if(d.original_history_id)undone.add(Number(d.original_history_id));if(d.paired_history_id)undone.add(Number(d.paired_history_id))}catch{}}
    for(const item of data.items){
     const card=document.createElement('article');card.className='v13-entry';
     const heading=document.createElement('h3');heading.textContent=(labels[item.action]||'📋 Alteração')+' · '+item.member_name;
     const desc=document.createElement('p');desc.textContent=description(item);
     const meta=document.createElement('small');meta.textContent='👤 '+item.officer_email+' · 🕒 '+dateText(item.created_at)+' (Portugal)';
-    card.append(heading,desc,meta);list.append(card);
+    card.append(heading,desc,meta);
+    if(['create','update','delete','swap'].includes(item.action)){
+     const button=document.createElement('button');button.type='button';
+     button.textContent=undone.has(Number(item.id))?'✓ Já desfeito':'↩️ Desfazer';
+     button.disabled=undone.has(Number(item.id));
+     button.style.marginTop='12px';
+     button.onclick=async()=>{
+      if(!confirm('Desfazer a alteração de '+item.member_name+'?\nA operação só será realizada se for segura.'))return;
+      button.disabled=true;status.textContent='A verificar e desfazer…';
+      try{
+       const response=await fetch('/api/members',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify({action:'undo',history_id:item.id})});
+       const result=await response.json().catch(()=>({error:'Resposta inesperada do servidor.'}));
+       if(!response.ok||!result.ok)throw Error(result.error||'Não foi possível desfazer.');
+       await loadHistory();
+       const refresh=document.getElementById('roster-refresh');if(refresh)refresh.click();
+      }catch(error){status.textContent='⚠️ '+error.message;button.disabled=false}
+     };
+     card.append(button);
+    }
+    list.append(card);
    }
   }catch(error){status.textContent='⚠️ '+error.message}
   finally{button.disabled=false}
