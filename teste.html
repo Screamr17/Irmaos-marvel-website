@@ -1,0 +1,610 @@
+
+<!doctype html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#050b17">
+<title>Champions Edition | IRMÃOS MARVEL</title>
+
+<style>
+:root{
+  --gold:#ffc66a;
+  --blue:#49a8ff;
+  --muted:#aebed4;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  background:radial-gradient(ellipse at 50% 5%,#14305c,#050a15 65%);
+  color:#f5f7ff;
+  font-family:system-ui,-apple-system,Segoe UI,sans-serif;
+}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1400px;margin:auto;padding:0 18px}
+
+.top{
+  background:#030914f5;
+  border-bottom:1px solid #806336;
+  position:sticky;
+  top:0;
+  z-index:5;
+  backdrop-filter:blur(15px);
+}
+.topin{
+  min-height:76px;
+  display:flex;
+  align-items:center;
+  gap:18px;
+}
+.brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  flex-shrink:0;
+  font-size:21px;
+  font-weight:950;
+}
+.brand img{
+  width:50px;
+  height:50px;
+  object-fit:cover;
+  border-radius:10px;
+}
+.brand span,.gold{color:var(--gold)}
+.nav{
+  margin-left:auto;
+  display:flex;
+  gap:3px;
+  overflow-x:auto;
+  scrollbar-width:none;
+}
+.nav a{
+  font-weight:750;
+  white-space:nowrap;
+  padding:13px 12px;
+  border-radius:7px;
+  color:#d6e2f2;
+}
+.nav a:hover,.nav .active{
+  color:var(--gold);
+  background:#372b173d;
+  border-bottom:2px solid var(--gold);
+}
+
+.hero{
+  margin:16px auto 20px;
+  border:1px solid #a47d38;
+  border-radius:14px;
+  overflow:hidden;
+  position:relative;
+  background:#091b35;
+  box-shadow:0 0 55px #0055b633;
+}
+.hero img{
+  display:block;
+  width:100%;
+  height:auto;
+}
+.hero-caption{
+  position:absolute;
+  bottom:0;
+  left:0;
+  right:0;
+  background:linear-gradient(transparent,#030914eb);
+  padding:24px 20px 13px;
+  text-align:center;
+  color:#dbe9ff;
+  font-size:12px;
+  letter-spacing:3px;
+  font-weight:800;
+}
+
+.cards{
+  display:grid;
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  gap:12px;
+}
+.tile{
+  min-height:145px;
+  position:relative;
+  overflow:hidden;
+  border:1px solid #7a633b;
+  border-radius:12px;
+  display:flex;
+  flex-direction:column;
+  justify-content:end;
+  text-align:center;
+  padding:20px 7px 14px;
+  background:
+    radial-gradient(circle at 50% 0,var(--glow),transparent 72%),
+    linear-gradient(145deg,#13263f,#040b18);
+  box-shadow:0 7px 18px #0007;
+  transition:transform .2s,box-shadow .2s;
+}
+.tile:hover{
+  transform:translateY(-4px);
+  box-shadow:0 0 25px var(--glow);
+}
+.tile .symbol{
+  font-size:40px;
+  filter:drop-shadow(0 0 13px var(--glow));
+  margin-bottom:7px;
+}
+.tile strong{font-size:23px;letter-spacing:.5px}
+.tile small{
+  color:#d0d5e2;
+  font-size:10px;
+  letter-spacing:1px;
+  margin-top:5px;
+}
+
+.section{
+  display:grid;
+  grid-template-columns:1.65fr 1fr;
+  gap:16px;
+  margin:22px 0 42px;
+}
+.panel{
+  background:linear-gradient(160deg,#0c182c,#060d19);
+  border:1px solid #8b6932;
+  border-radius:13px;
+  overflow:hidden;
+  box-shadow:0 10px 28px #0006;
+}
+.panel h2{
+  margin:0;
+  padding:17px 20px;
+  border-bottom:1px solid #25364f;
+  font-size:21px;
+}
+.panel h2 span{color:var(--gold)}
+.notices{padding:0 20px 16px}
+.notice{
+  padding:18px 0;
+  border-bottom:1px solid #273650;
+}
+.notice:last-child{border:0}
+.notice h3{
+  margin:0 0 7px;
+  font-size:18px;
+  color:#fff;
+}
+.notice p{
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+  margin:0;
+  color:#d1deef;
+  line-height:1.55;
+}
+.notice small{
+  display:block;
+  color:#77b6f7;
+  margin-top:9px;
+}
+.notice-likes{
+  margin-top:13px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.like-button{
+  border:1px solid #4169a2;
+  background:#102e55;
+  color:#e8f4ff;
+  border-radius:9px;
+  padding:9px 13px;
+  font-weight:750;
+  cursor:pointer;
+}
+.like-button[aria-pressed=true]{
+  background:#1b63a7;
+  border-color:#80c6ff;
+}
+.like-button:disabled{opacity:.55}
+.like-count{color:#a5c1e2;font-size:13px}
+.status{color:#c3d0e3}
+
+.strength{padding:22px}
+.numbers{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:14px;
+}
+.number{
+  background:#0e2037;
+  border:1px solid #354c68;
+  border-radius:9px;
+  text-align:center;
+  padding:15px 6px;
+}
+.number b{
+  display:block;
+  font-size:26px;
+  color:var(--gold);
+}
+.number small{
+  font-size:11px;
+  color:#c8d4e4;
+}
+.motto{
+  text-align:center;
+  color:var(--gold);
+  font-weight:900;
+  font-size:clamp(22px,3vw,31px);
+  line-height:1.2;
+  margin:28px 0 8px;
+}
+footer{
+  text-align:center;
+  border-top:1px solid #3c4454;
+  color:#9aacc4;
+  padding:24px 15px 105px;
+}
+.mobile{display:none}
+.wa{
+  position:fixed;
+  right:17px;
+  bottom:22px;
+  z-index:20;
+  background:#22bb67;
+  color:white;
+  border-radius:50%;
+  height:54px;
+  width:54px;
+  display:grid;
+  place-items:center;
+  font-size:26px;
+  box-shadow:0 4px 20px #0008;
+}
+
+@media(max-width:1000px){
+  .cards{grid-template-columns:repeat(3,1fr)}
+  .nav{font-size:12px}
+  .brand{font-size:17px}
+  .tile{min-height:128px}
+}
+@media(max-width:700px){
+  .wrap{padding:0 12px}
+  .topin{min-height:65px}
+  .brand img{width:42px;height:42px}
+  .brand{font-size:18px}
+  .nav{display:none}
+  .hero{margin:12px auto}
+  .hero img{
+    width:100%;
+    height:235px;
+    object-fit:cover;
+    object-position:center;
+  }
+  .hero-caption{font-size:9px;letter-spacing:1.5px}
+  .cards{grid-template-columns:repeat(2,1fr);gap:9px}
+  .tile{min-height:127px}
+  .tile .symbol{font-size:34px}
+  .tile strong{font-size:20px}
+  .section{grid-template-columns:1fr}
+  .panel h2{font-size:19px}
+  .mobile{
+    display:flex;
+    position:fixed;
+    bottom:0;
+    left:0;
+    right:0;
+    background:#050b17f7;
+    border-top:1px solid #997536;
+    overflow:auto;
+    gap:5px;
+    padding:8px 7px calc(8px + env(safe-area-inset-bottom));
+    z-index:10;
+    scrollbar-width:none;
+  }
+  .mobile a{
+    flex:1;
+    min-width:62px;
+    text-align:center;
+    white-space:nowrap;
+    font-size:11px;
+    padding:8px 5px;
+    color:#e5d5b7;
+  }
+  .mobile .active{
+    background:#3a2b15;
+    border-radius:7px;
+  }
+  .wa{bottom:calc(87px + env(safe-area-inset-bottom))}
+}
+</style>
+</head>
+
+<body>
+
+<header class="top">
+  <div class="wrap topin">
+    <a class="brand" href="teste.html">
+      <img src="logo-im.webp" alt="Logo IM">
+      IRMÃOS <span>MARVEL</span>
+    </a>
+    <nav class="nav">
+      <a class="active" href="teste.html">⌂ INÍCIO</a>
+      <a href="aq.html">🛡️ AQ</a>
+      <a href="aw.html">⚔️ AW</a>
+      <a href="raid.html">💀 RAID</a>
+      <a href="coliseu.html">🏆 COLISEU</a>
+      <a href="bg.html">📊 BG</a>
+      <a href="bigthing.html">💥 BIG THING</a>
+      <a href="membros.html">👥 MEMBROS</a>
+      <a href="oficiais.html">🔐 OFICIAIS</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <div class="hero">
+    <img src="banner-im-champions.webp"
+         alt="Banner cinematográfico IRMÃOS MARVEL">
+    <div class="hero-caption">
+      UNIÃO • ESTRATÉGIA • EVOLUÇÃO • CONQUISTAS
+    </div>
+  </div>
+
+  <div class="cards">
+    <a class="tile" style="--glow:#00b98188" href="aq.html">
+      <span class="symbol">🛡️</span>
+      <strong>AQ</strong>
+      <small>ALLIANCE QUEST</small>
+    </a>
+
+    <a class="tile" style="--glow:#d5294388" href="aw.html">
+      <span class="symbol">⚔️</span>
+      <strong>AW</strong>
+      <small>ALLIANCE WAR</small>
+    </a>
+
+    <a class="tile" style="--glow:#8247f888" href="raid.html">
+      <span class="symbol">💀</span>
+      <strong>RAID</strong>
+      <small>ALLIANCE RAID</small>
+    </a>
+
+    <a class="tile" style="--glow:#ff9a2488" href="coliseu.html">
+      <span class="symbol">🏆</span>
+      <strong>COLISEU</strong>
+      <small>ALIANÇA EM AÇÃO</small>
+    </a>
+
+    <a class="tile" style="--glow:#168bff88" href="bg.html">
+      <span class="symbol">📊</span>
+      <strong>BG</strong>
+      <small>BATTLEGROUNDS</small>
+    </a>
+
+    <a class="tile" style="--glow:#ffd26b88" href="bigthing.html">
+      <span class="symbol">💥</span>
+      <strong>BIG THING</strong>
+      <small>DESAFIOS ESPECIAIS</small>
+    </a>
+  </div>
+
+  <div class="section">
+
+    <section class="panel">
+      <h2>📢 AVISOS <span>DA ALIANÇA</span></h2>
+      <div class="notices" id="avisos-publicos">
+        <p class="status">A carregar avisos...</p>
+      </div>
+    </section>
+
+    <aside class="panel">
+      <h2>👥 A NOSSA <span>FORÇA</span></h2>
+      <div class="strength">
+        <div class="numbers">
+          <div class="number">
+            <b>30</b><small>MEMBROS</small>
+          </div>
+          <div class="number">
+            <b>M8</b><small>ALLIANCE QUEST</small>
+          </div>
+          <div class="number">
+            <b>AW</b><small>GUERRA</small>
+          </div>
+          <div class="number">
+            <b>IM</b><small>UMA FAMÍLIA</small>
+          </div>
+        </div>
+        <div class="motto">
+          “JUNTOS FAZEMOS<br>A DIFERENÇA”
+        </div>
+      </div>
+    </aside>
+
+  </div>
+</main>
+
+<footer>© IRMÃOS MARVEL • Comunidade não oficial</footer>
+
+<nav class="mobile">
+  <a class="active" href="teste.html">⌂ Início</a>
+  <a href="aq.html">🛡️ AQ</a>
+  <a href="aw.html">⚔️ AW</a>
+  <a href="raid.html">💀 RAID</a>
+  <a href="coliseu.html">🏆 Coliseu</a>
+  <a href="bg.html">📊 BG</a>
+  <a href="bigthing.html">💥 Big Thing</a>
+  <a href="membros.html">👥 Membros</a>
+  <a href="oficiais.html">🔐 Oficiais</a>
+</nav>
+
+<a class="wa"
+   href="https://chat.whatsapp.com/CraGl18qVXMJtIJjsd03pB"
+   target="_blank"
+   rel="noopener noreferrer"
+   aria-label="Grupo WhatsApp">☎</a>
+
+<script>
+const avisoBotoes=new Map();
+
+function avisoChave(a){
+  return a.id!==undefined &&
+         a.id!==null &&
+         String(a.id).trim()
+    ? 'id:'+String(a.id)
+    : 'texto:'+JSON.stringify([
+        a.title||'',
+        a.content||'',
+        a.updated_at||''
+      ]);
+}
+
+function mostrarGosto(item,estado){
+  item.button.disabled=false;
+  item.button.setAttribute(
+    'aria-pressed',
+    String(!!estado.liked)
+  );
+  item.button.textContent=
+    estado.liked?'👍 Gostaste':'👍 Gosto';
+
+  const n=Number(estado.count)||0;
+  item.counter.textContent=
+    n+' '+(n===1?'gosto':'gostos');
+}
+
+async function atualizarGostos(){
+  const ids=[...avisoBotoes.keys()];
+  if(!ids.length)return;
+
+  try{
+    const r=await fetch(
+      '/api/public/likes?ids='+
+      encodeURIComponent(JSON.stringify(ids)),
+      {credentials:'same-origin',cache:'no-store'}
+    );
+
+    if(!r.ok)throw Error();
+
+    const data=await r.json();
+
+    for(const id of ids){
+      mostrarGosto(
+        avisoBotoes.get(id),
+        data.likes?.[id]||{count:0,liked:false}
+      );
+    }
+  }catch(e){
+    for(const item of avisoBotoes.values()){
+      item.button.disabled=true;
+      item.counter.textContent='Gostos indisponíveis';
+    }
+  }
+}
+
+async function alternarGosto(id){
+  const item=avisoBotoes.get(id);
+  if(!item)return;
+
+  item.button.disabled=true;
+
+  try{
+    const r=await fetch('/api/public/likes',{
+      method:'POST',
+      credentials:'same-origin',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({id})
+    });
+
+    if(!r.ok)throw Error();
+
+    mostrarGosto(item,await r.json());
+  }catch(e){
+    item.button.disabled=false;
+    item.counter.textContent=
+      'Não foi possível guardar. Tenta novamente.';
+  }
+}
+
+async function carregarAvisos(){
+  const caixa=document.getElementById('avisos-publicos');
+
+  try{
+    const r=await fetch(
+      '/api/public/entries?section=avisos',
+      {cache:'no-store',credentials:'omit'}
+    );
+
+    if(!r.ok)throw Error();
+
+    const dados=await r.json();
+    if(!Array.isArray(dados.items))throw Error();
+
+    caixa.replaceChildren();
+    avisoBotoes.clear();
+
+    if(!dados.items.length){
+      const p=document.createElement('p');
+      p.className='status';
+      p.textContent='Ainda não existem avisos publicados.';
+      caixa.appendChild(p);
+      return;
+    }
+
+    for(const aviso of dados.items){
+      const artigo=document.createElement('article');
+      artigo.className='notice';
+
+      const h=document.createElement('h3');
+      h.textContent=String(aviso.title||'Aviso');
+
+      const p=document.createElement('p');
+      p.textContent=String(aviso.content||'');
+
+      artigo.append(h,p);
+
+      if(aviso.updated_at){
+        const small=document.createElement('small');
+        small.textContent=
+          'Atualizado: '+String(aviso.updated_at);
+        artigo.appendChild(small);
+      }
+
+      const id=avisoChave(aviso);
+      const linha=document.createElement('div');
+      const button=document.createElement('button');
+      const counter=document.createElement('span');
+
+      linha.className='notice-likes';
+      button.type='button';
+      button.className='like-button';
+      button.textContent='👍 Gosto';
+      button.disabled=true;
+      button.setAttribute('aria-pressed','false');
+
+      counter.className='like-count';
+      counter.textContent='A carregar gostos...';
+
+      button.addEventListener(
+        'click',
+        ()=>alternarGosto(id)
+      );
+
+      linha.append(button,counter);
+      artigo.appendChild(linha);
+
+      avisoBotoes.set(id,{button,counter});
+      caixa.appendChild(artigo);
+    }
+
+    await atualizarGostos();
+
+  }catch(e){
+    caixa.innerHTML=
+      '<p class="status">Não foi possível carregar os avisos. Tenta atualizar a página.</p>';
+  }
+}
+
+carregarAvisos();
+</script>
+
+</body>
+</html>
