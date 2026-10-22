@@ -13,17 +13,27 @@
   --blue:#49a8ff;
   --muted:#aebed4;
 }
+
 *{box-sizing:border-box}
+
 html{scroll-behavior:smooth}
+
 body{
   margin:0;
   background:radial-gradient(ellipse at 50% 5%,#14305c,#050a15 65%);
   color:#f5f7ff;
   font-family:system-ui,-apple-system,Segoe UI,sans-serif;
 }
-a{color:inherit;text-decoration:none}
-.wrap{max-width:1400px;margin:auto;padding:0 18px}
 
+a{color:inherit;text-decoration:none}
+
+.wrap{
+  max-width:1400px;
+  margin:auto;
+  padding:0 18px;
+}
+
+/* CABEÇALHO */
 .top{
   background:#030914f5;
   border-bottom:1px solid #806336;
@@ -32,12 +42,14 @@ a{color:inherit;text-decoration:none}
   z-index:5;
   backdrop-filter:blur(15px);
 }
+
 .topin{
   min-height:76px;
   display:flex;
   align-items:center;
   gap:18px;
 }
+
 .brand{
   display:flex;
   align-items:center;
@@ -46,13 +58,16 @@ a{color:inherit;text-decoration:none}
   font-size:21px;
   font-weight:950;
 }
+
 .brand img{
   width:50px;
   height:50px;
   object-fit:cover;
   border-radius:10px;
 }
-.brand span,.gold{color:var(--gold)}
+
+.brand span{color:var(--gold)}
+
 .nav{
   margin-left:auto;
   display:flex;
@@ -60,6 +75,7 @@ a{color:inherit;text-decoration:none}
   overflow-x:auto;
   scrollbar-width:none;
 }
+
 .nav a{
   font-weight:750;
   white-space:nowrap;
@@ -67,45 +83,38 @@ a{color:inherit;text-decoration:none}
   border-radius:7px;
   color:#d6e2f2;
 }
-.nav a:hover,.nav .active{
+
+.nav a:hover,
+.nav .active{
   color:var(--gold);
   background:#372b173d;
   border-bottom:2px solid var(--gold);
 }
 
+/* BANNER */
 .hero{
   margin:16px auto 20px;
   border:1px solid #a47d38;
   border-radius:14px;
   overflow:hidden;
-  position:relative;
   background:#091b35;
   box-shadow:0 0 55px #0055b633;
 }
+
 .hero img{
   display:block;
   width:100%;
   height:auto;
-}
-.hero-caption{
-  position:absolute;
-  bottom:0;
-  left:0;
-  right:0;
-  background:linear-gradient(transparent,#030914eb);
-  padding:24px 20px 13px;
-  text-align:center;
-  color:#dbe9ff;
-  font-size:12px;
-  letter-spacing:3px;
-  font-weight:800;
+  object-fit:contain;
 }
 
+/* CARTÕES DOS EVENTOS */
 .cards{
   display:grid;
   grid-template-columns:repeat(6,minmax(0,1fr));
   gap:12px;
 }
+
 .tile{
   min-height:145px;
   position:relative;
@@ -123,16 +132,23 @@ a{color:inherit;text-decoration:none}
   box-shadow:0 7px 18px #0007;
   transition:transform .2s,box-shadow .2s;
 }
+
 .tile:hover{
   transform:translateY(-4px);
   box-shadow:0 0 25px var(--glow);
 }
+
 .tile .symbol{
   font-size:40px;
   filter:drop-shadow(0 0 13px var(--glow));
   margin-bottom:7px;
 }
-.tile strong{font-size:23px;letter-spacing:.5px}
+
+.tile strong{
+  font-size:23px;
+  letter-spacing:.5px;
+}
+
 .tile small{
   color:#d0d5e2;
   font-size:10px;
@@ -140,12 +156,14 @@ a{color:inherit;text-decoration:none}
   margin-top:5px;
 }
 
+/* AVISOS E ESTATÍSTICAS */
 .section{
   display:grid;
   grid-template-columns:1.65fr 1fr;
   gap:16px;
   margin:22px 0 42px;
 }
+
 .panel{
   background:linear-gradient(160deg,#0c182c,#060d19);
   border:1px solid #8b6932;
@@ -153,24 +171,32 @@ a{color:inherit;text-decoration:none}
   overflow:hidden;
   box-shadow:0 10px 28px #0006;
 }
+
 .panel h2{
   margin:0;
   padding:17px 20px;
   border-bottom:1px solid #25364f;
   font-size:21px;
 }
+
 .panel h2 span{color:var(--gold)}
+
 .notices{padding:0 20px 16px}
+
 .notice{
   padding:18px 0;
   border-bottom:1px solid #273650;
 }
+
 .notice:last-child{border:0}
+
 .notice h3{
   margin:0 0 7px;
   font-size:18px;
   color:#fff;
+  overflow-wrap:anywhere;
 }
+
 .notice p{
   white-space:pre-wrap;
   overflow-wrap:anywhere;
@@ -178,17 +204,21 @@ a{color:inherit;text-decoration:none}
   color:#d1deef;
   line-height:1.55;
 }
+
 .notice small{
   display:block;
   color:#77b6f7;
   margin-top:9px;
 }
+
 .notice-likes{
   margin-top:13px;
   display:flex;
   align-items:center;
   gap:12px;
+  flex-wrap:wrap;
 }
+
 .like-button{
   border:1px solid #4169a2;
   background:#102e55;
@@ -198,20 +228,29 @@ a{color:inherit;text-decoration:none}
   font-weight:750;
   cursor:pointer;
 }
-.like-button[aria-pressed=true]{
+
+.like-button[aria-pressed="true"]{
   background:#1b63a7;
   border-color:#80c6ff;
 }
+
 .like-button:disabled{opacity:.55}
-.like-count{color:#a5c1e2;font-size:13px}
+
+.like-count{
+  color:#a5c1e2;
+  font-size:13px;
+}
+
 .status{color:#c3d0e3}
 
 .strength{padding:22px}
+
 .numbers{
   display:grid;
   grid-template-columns:repeat(2,1fr);
   gap:14px;
 }
+
 .number{
   background:#0e2037;
   border:1px solid #354c68;
@@ -219,15 +258,18 @@ a{color:inherit;text-decoration:none}
   text-align:center;
   padding:15px 6px;
 }
+
 .number b{
   display:block;
   font-size:26px;
   color:var(--gold);
 }
+
 .number small{
   font-size:11px;
   color:#c8d4e4;
 }
+
 .motto{
   text-align:center;
   color:var(--gold);
@@ -236,27 +278,38 @@ a{color:inherit;text-decoration:none}
   line-height:1.2;
   margin:28px 0 8px;
 }
+
+/* RODAPÉ */
 footer{
   text-align:center;
   border-top:1px solid #3c4454;
   color:#9aacc4;
   padding:24px 15px 105px;
 }
+
 .mobile{display:none}
+
+/* WHATSAPP */
 .wa{
   position:fixed;
   right:17px;
   bottom:22px;
   z-index:20;
-  background:#22bb67;
+  background:#25d366;
   color:white;
   border-radius:50%;
   height:54px;
   width:54px;
   display:grid;
   place-items:center;
-  font-size:26px;
   box-shadow:0 4px 20px #0008;
+  border:1px solid #ffffff55;
+}
+
+.wa svg{
+  width:31px;
+  height:31px;
+  fill:currentColor;
 }
 
 @media(max-width:1000px){
@@ -265,26 +318,36 @@ footer{
   .brand{font-size:17px}
   .tile{min-height:128px}
 }
+
+/* TELEMÓVEL */
 @media(max-width:700px){
   .wrap{padding:0 12px}
   .topin{min-height:65px}
   .brand img{width:42px;height:42px}
   .brand{font-size:18px}
   .nav{display:none}
+
   .hero{margin:12px auto}
+
   .hero img{
+    display:block;
     width:100%;
-    height:235px;
-    object-fit:cover;
-    object-position:center;
+    height:auto;
+    object-fit:contain;
   }
-  .hero-caption{font-size:9px;letter-spacing:1.5px}
-  .cards{grid-template-columns:repeat(2,1fr);gap:9px}
+
+  .cards{
+    grid-template-columns:repeat(2,1fr);
+    gap:9px;
+  }
+
   .tile{min-height:127px}
   .tile .symbol{font-size:34px}
   .tile strong{font-size:20px}
+
   .section{grid-template-columns:1fr}
   .panel h2{font-size:19px}
+
   .mobile{
     display:flex;
     position:fixed;
@@ -299,6 +362,7 @@ footer{
     z-index:10;
     scrollbar-width:none;
   }
+
   .mobile a{
     flex:1;
     min-width:62px;
@@ -308,11 +372,15 @@ footer{
     padding:8px 5px;
     color:#e5d5b7;
   }
+
   .mobile .active{
     background:#3a2b15;
     border-radius:7px;
   }
-  .wa{bottom:calc(87px + env(safe-area-inset-bottom))}
+
+  .wa{
+    bottom:calc(87px + env(safe-area-inset-bottom));
+  }
 }
 </style>
 </head>
@@ -325,6 +393,7 @@ footer{
       <img src="logo-im.webp" alt="Logo IM">
       IRMÃOS <span>MARVEL</span>
     </a>
+
     <nav class="nav">
       <a class="active" href="index.html">⌂ INÍCIO</a>
       <a href="aq.html">🛡️ AQ</a>
@@ -342,14 +411,13 @@ footer{
 <main class="wrap">
 
   <div class="hero">
-    <img src="banner-im-champions.webp"
-         alt="Banner cinematográfico IRMÃOS MARVEL">
-    <div class="hero-caption">
-      UNIÃO • ESTRATÉGIA • EVOLUÇÃO • CONQUISTAS
-    </div>
+    <img
+      src="banner-im-champions.webp"
+      alt="Banner cinematográfico IRMÃOS MARVEL">
   </div>
 
   <div class="cards">
+
     <a class="tile" style="--glow:#00b98188" href="aq.html">
       <span class="symbol">🛡️</span>
       <strong>AQ</strong>
@@ -385,6 +453,7 @@ footer{
       <strong>BIG THING</strong>
       <small>DESAFIOS ESPECIAIS</small>
     </a>
+
   </div>
 
   <div class="section">
@@ -398,21 +467,30 @@ footer{
 
     <aside class="panel">
       <h2>👥 A NOSSA <span>FORÇA</span></h2>
+
       <div class="strength">
         <div class="numbers">
           <div class="number">
-            <b>30</b><small>MEMBROS</small>
+            <b>30</b>
+            <small>MEMBROS</small>
           </div>
+
           <div class="number">
-            <b>M8</b><small>ALLIANCE QUEST</small>
+            <b>M8</b>
+            <small>ALLIANCE QUEST</small>
           </div>
+
           <div class="number">
-            <b>AW</b><small>GUERRA</small>
+            <b>AW</b>
+            <small>GUERRA</small>
           </div>
+
           <div class="number">
-            <b>IM</b><small>UMA FAMÍLIA</small>
+            <b>IM</b>
+            <small>UMA FAMÍLIA</small>
           </div>
         </div>
+
         <div class="motto">
           “JUNTOS FAZEMOS<br>A DIFERENÇA”
         </div>
@@ -420,9 +498,12 @@ footer{
     </aside>
 
   </div>
+
 </main>
 
-<footer>© IRMÃOS MARVEL • Comunidade não oficial</footer>
+<footer>
+  © IRMÃOS MARVEL • Comunidade não oficial
+</footer>
 
 <nav class="mobile">
   <a class="active" href="index.html">⌂ Início</a>
@@ -436,11 +517,19 @@ footer{
   <a href="oficiais.html">🔐 Oficiais</a>
 </nav>
 
-<a class="wa"
-   href="https://chat.whatsapp.com/CraGl18qVXMJtIJjsd03pB"
-   target="_blank"
-   rel="noopener noreferrer"
-   aria-label="Grupo WhatsApp">☎</a>
+<!-- WHATSAPP -->
+<a
+  class="wa"
+  href="https://chat.whatsapp.com/CraGl18qVXMJtIJjsd03pB"
+  target="_blank"
+  rel="noopener noreferrer"
+  aria-label="Entrar no grupo WhatsApp"
+  title="Grupo Geral WhatsApp">
+
+  <svg viewBox="0 0 32 32" aria-hidden="true">
+    <path d="M16 .8A15.1 15.1 0 0 0 3 23.5L.8 31.2l7.9-2.1A15.2 15.2 0 1 0 16 .8Zm0 27.6a12.3 12.3 0 0 1-6.3-1.7l-.5-.3-4.7 1.2 1.3-4.5-.3-.5a12.4 12.4 0 1 1 10.5 5.8Zm6.8-9.2c-.4-.2-2.2-1.1-2.5-1.2-.3-.1-.6-.2-.8.2-.2.3-.9 1.2-1.1 1.4-.2.2-1.6-.6-3.1-1.9-1.1-1-1.9-2.2-2.1-2.6-.2-.4 0-.6.2-.8l.6-.7c.2-.2.3-.4.4-.6.1-.2 0-.5 0-.7l-1.1-2.7c-.3-.7-.6-.6-.8-.6h-.7c-.3 0-.7.1-1 .5s-1.3 1.3-1.3 3.1 1.4 3.8c.2.3 2.6 4 6.2 5.6.9.4 1.6.6 2.1.8.9.3 1.7.2 2.3.1.7-.1 2.2-.9 2.5-1.8.3-.9.3-1.7.2-1.8-.1-.2-.3-.3-.7-.5Z"/>
+  </svg>
+</a>
 
 <script>
 const avisoBotoes=new Map();
@@ -459,14 +548,17 @@ function avisoChave(a){
 
 function mostrarGosto(item,estado){
   item.button.disabled=false;
+
   item.button.setAttribute(
     'aria-pressed',
     String(!!estado.liked)
   );
+
   item.button.textContent=
     estado.liked?'👍 Gostaste':'👍 Gosto';
 
   const n=Number(estado.count)||0;
+
   item.counter.textContent=
     n+' '+(n===1?'gosto':'gostos');
 }
@@ -479,7 +571,10 @@ async function atualizarGostos(){
     const r=await fetch(
       '/api/public/likes?ids='+
       encodeURIComponent(JSON.stringify(ids)),
-      {credentials:'same-origin',cache:'no-store'}
+      {
+        credentials:'same-origin',
+        cache:'no-store'
+      }
     );
 
     if(!r.ok)throw Error();
@@ -489,7 +584,10 @@ async function atualizarGostos(){
     for(const id of ids){
       mostrarGosto(
         avisoBotoes.get(id),
-        data.likes?.[id]||{count:0,liked:false}
+        data.likes?.[id]||{
+          count:0,
+          liked:false
+        }
       );
     }
   }catch(e){
@@ -510,13 +608,16 @@ async function alternarGosto(id){
     const r=await fetch('/api/public/likes',{
       method:'POST',
       credentials:'same-origin',
-      headers:{'Content-Type':'application/json'},
+      headers:{
+        'Content-Type':'application/json'
+      },
       body:JSON.stringify({id})
     });
 
     if(!r.ok)throw Error();
 
     mostrarGosto(item,await r.json());
+
   }catch(e){
     item.button.disabled=false;
     item.counter.textContent=
@@ -530,7 +631,10 @@ async function carregarAvisos(){
   try{
     const r=await fetch(
       '/api/public/entries?section=avisos',
-      {cache:'no-store',credentials:'omit'}
+      {
+        cache:'no-store',
+        credentials:'omit'
+      }
     );
 
     if(!r.ok)throw Error();
@@ -569,11 +673,13 @@ async function carregarAvisos(){
       }
 
       const id=avisoChave(aviso);
+
       const linha=document.createElement('div');
       const button=document.createElement('button');
       const counter=document.createElement('span');
 
       linha.className='notice-likes';
+
       button.type='button';
       button.className='like-button';
       button.textContent='👍 Gosto';
@@ -599,10 +705,12 @@ async function carregarAvisos(){
 
   }catch(e){
     caixa.replaceChildren();
+
     const p=document.createElement('p');
     p.className='status';
     p.textContent=
       'Não foi possível carregar os avisos. Tenta atualizar a página.';
+
     caixa.appendChild(p);
   }
 }
