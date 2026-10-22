@@ -5,6 +5,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#050b17">
+<meta name="description" content="Site oficial da comunidade IRMÃOS MARVEL. AQ, AW, RAID, BG, Coliseu e recrutamento.">
 <title>IRMÃOS MARVEL | Champions Edition</title>
 
 <style>
@@ -127,6 +128,73 @@ button{font:inherit}
   margin-top:5px;
 }
 
+/* NOVO CARTÃO DE RECRUTAMENTO */
+.recruitment-banner{
+  position:relative;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:24px;
+  margin:23px 0 0;
+  padding:26px 30px;
+  border:1px solid #b58b48;
+  border-radius:17px;
+  background:
+    radial-gradient(circle at 90% 15%,#2565a34a,transparent 50%),
+    linear-gradient(125deg,#102d50,#09172c 70%);
+  box-shadow:0 10px 30px #0006,0 0 25px #c9993820;
+}
+.recruitment-content{min-width:0}
+.recruitment-tag{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  padding:7px 12px;
+  border:1px solid #b58b48;
+  border-radius:50px;
+  background:#4a351c;
+  color:var(--gold);
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:1px;
+}
+.recruitment-banner h2{
+  margin:13px 0 9px;
+  font-size:clamp(23px,3.5vw,33px);
+  line-height:1.2;
+}
+.recruitment-banner h2 span{color:var(--gold)}
+.recruitment-banner p{
+  margin:0;
+  color:#c7dcef;
+  font-size:14px;
+  line-height:1.75;
+  max-width:720px;
+}
+.recruitment-button{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex-shrink:0;
+  gap:9px;
+  padding:16px 22px;
+  border:1px solid #d3a253;
+  border-radius:12px;
+  background:linear-gradient(135deg,#b68a47,#735020);
+  color:#fff5de;
+  font-weight:950;
+  font-size:14px;
+  text-align:center;
+  box-shadow:0 5px 20px #0005;
+  transition:transform .2s,box-shadow .2s;
+}
+.recruitment-button:hover{
+  transform:translateY(-3px);
+  box-shadow:0 8px 25px #ffc66a44;
+}
+.recruitment-button:active{transform:scale(.98)}
+
 /* ÁREA PRINCIPAL */
 .section{
   display:grid;
@@ -149,7 +217,7 @@ button{font:inherit}
 }
 .panel h2 span{color:var(--gold)}
 
-/* NOVOS AVISOS PREMIUM */
+/* AVISOS PREMIUM */
 .notices{
   padding:18px;
   display:flex;
@@ -161,8 +229,7 @@ button{font:inherit}
   padding:19px;
   border:1px solid #345478;
   border-radius:14px;
-  background:
-    linear-gradient(150deg,#13253e,#0a1629);
+  background:linear-gradient(150deg,#13253e,#0a1629);
   box-shadow:0 6px 20px #0004;
   transition:
     border-color .25s ease,
@@ -255,9 +322,7 @@ button{font:inherit}
   cursor:pointer;
   transition:background .2s,transform .2s;
 }
-.like-button:hover{
-  background:#22548a;
-}
+.like-button:hover{background:#22548a}
 .like-button:active{transform:scale(.96)}
 .like-button[aria-pressed="true"]{
   background:#1b63a7;
@@ -379,8 +444,10 @@ footer{
   animation:imCartaoEntrada .8s ease-out both;
   animation-delay:.35s;
 }
-.notice{
-  animation:imCartaoEntrada .5s ease-out both;
+.notice{animation:imCartaoEntrada .5s ease-out both}
+.recruitment-banner{
+  animation:imCartaoEntrada .75s ease-out both;
+  animation-delay:.45s;
 }
 
 /* MENU PREMIUM */
@@ -410,6 +477,19 @@ footer{
   .tile{min-height:127px}
   .tile .symbol{font-size:34px}
   .tile strong{font-size:20px}
+
+  .recruitment-banner{
+    margin-top:17px;
+    padding:23px 18px;
+    flex-direction:column;
+    align-items:stretch;
+    text-align:center;
+    gap:20px;
+  }
+  .recruitment-banner h2{font-size:25px}
+  .recruitment-banner p{font-size:13px}
+  .recruitment-button{width:100%}
+
   .section{grid-template-columns:1fr}
   .panel h2{font-size:19px}
   .notices{padding:12px}
@@ -524,7 +604,7 @@ footer{
 }
 
 @media(prefers-reduced-motion:reduce){
-  .hero,.tile,.panel,.notice{
+  .hero,.tile,.panel,.notice,.recruitment-banner{
     animation:none!important;
     transition:none!important;
   }
@@ -549,6 +629,7 @@ footer{
       <a href="bg.html">📊 BG</a>
       <a href="bigthing.html">💥 BIG THING</a>
       <a href="membros.html">👥 MEMBROS</a>
+      <a href="recrutamento.html">📝 RECRUTAMENTO</a>
       <a href="oficiais.html">🔐 OFICIAIS</a>
     </nav>
   </div>
@@ -593,6 +674,28 @@ footer{
       <small>DESAFIOS ESPECIAIS</small>
     </a>
   </div>
+
+  <!-- RECRUTAMENTO IM -->
+  <section class="recruitment-banner"
+           aria-labelledby="recruitment-title">
+    <div class="recruitment-content">
+      <span class="recruitment-tag">
+        🛡️ RECRUTAMENTO IRMÃOS MARVEL
+      </span>
+      <h2 id="recruitment-title">
+        QUERES FAZER PARTE DA <span>IM?</span>
+      </h2>
+      <p>
+        Procuramos jogadores dedicados, competitivos
+        e com espírito de equipa. Descobre os requisitos
+        e apresenta a tua candidatura à nossa aliança!
+      </p>
+    </div>
+    <a class="recruitment-button"
+       href="recrutamento.html">
+      📝 VER RECRUTAMENTO →
+    </a>
+  </section>
 
   <div class="section">
     <section class="panel">
@@ -668,6 +771,7 @@ footer{
     <a href="bg.html">📊 BG</a>
     <a href="bigthing.html">💥 Big Thing</a>
     <a href="membros.html">👥 Membros</a>
+    <a href="recrutamento.html">📝 Recrutamento</a>
     <a href="oficiais.html">🔐 Oficiais</a>
   </div>
 </div>
