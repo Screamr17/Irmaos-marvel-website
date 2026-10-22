@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#050b17">
-<title>Início | IRMÃOS MARVEL</title>
+<title>IRMÃOS MARVEL | Champions Edition</title>
 
 <style>
 :root{
@@ -92,7 +92,7 @@ button{font:inherit}
   object-fit:contain;
 }
 
-/* CARTÕES */
+/* CARTÕES DE EVENTOS */
 .cards{
   display:grid;
   grid-template-columns:repeat(6,minmax(0,1fr));
@@ -127,7 +127,7 @@ button{font:inherit}
   margin-top:5px;
 }
 
-/* AVISOS E ESTATÍSTICAS */
+/* ÁREA PRINCIPAL */
 .section{
   display:grid;
   grid-template-columns:1.65fr 1fr;
@@ -148,15 +148,70 @@ button{font:inherit}
   font-size:21px;
 }
 .panel h2 span{color:var(--gold)}
-.notices{padding:0 20px 16px}
-.notice{
-  padding:18px 0;
-  border-bottom:1px solid #273650;
+
+/* NOVOS AVISOS PREMIUM */
+.notices{
+  padding:18px;
+  display:flex;
+  flex-direction:column;
+  gap:14px;
 }
-.notice:last-child{border:0}
+.notice{
+  position:relative;
+  padding:19px;
+  border:1px solid #345478;
+  border-radius:14px;
+  background:
+    linear-gradient(150deg,#13253e,#0a1629);
+  box-shadow:0 6px 20px #0004;
+  transition:
+    border-color .25s ease,
+    box-shadow .25s ease,
+    transform .25s ease;
+}
+.notice:hover{
+  border-color:#6ba8e6;
+  box-shadow:0 0 24px #1763a52c;
+  transform:translateY(-2px);
+}
+.notice.featured{
+  border-color:#b58b48;
+  background:
+    radial-gradient(circle at 100% 0%,#66502630,transparent 65%),
+    linear-gradient(150deg,#1b273b,#0a1425);
+  box-shadow:0 0 25px #dba64a14;
+}
+.notice.featured:hover{
+  border-color:#ffd17c;
+  box-shadow:0 0 28px #dba64a30;
+}
+.notice-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-bottom:12px;
+}
+.notice-label{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  color:#82c4ff;
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:1px;
+  text-transform:uppercase;
+}
+.featured .notice-label{color:var(--gold)}
+.notice-position{
+  color:#8298b5;
+  font-size:11px;
+}
 .notice h3{
-  margin:0 0 7px;
-  font-size:18px;
+  margin:0 0 10px;
+  font-size:clamp(17px,2vw,21px);
+  line-height:1.35;
   color:#fff;
   overflow-wrap:anywhere;
 }
@@ -165,36 +220,71 @@ button{font:inherit}
   overflow-wrap:anywhere;
   margin:0;
   color:#d1deef;
-  line-height:1.55;
+  line-height:1.65;
+  font-size:14px;
 }
-.notice small{
-  display:block;
-  color:#77b6f7;
-  margin-top:9px;
-}
-.notice-likes{
-  margin-top:13px;
+.notice-bottom{
+  margin-top:18px;
+  padding-top:13px;
+  border-top:1px solid #33445e;
   display:flex;
   align-items:center;
+  justify-content:space-between;
   gap:12px;
+  flex-wrap:wrap;
+}
+.notice-date{
+  color:#91a9c8;
+  font-size:12px;
+  overflow-wrap:anywhere;
+}
+.notice-likes{
+  display:flex;
+  align-items:center;
+  gap:9px;
   flex-wrap:wrap;
 }
 .like-button{
   border:1px solid #4169a2;
-  background:#102e55;
+  background:#15385d;
   color:#e8f4ff;
-  border-radius:9px;
+  border-radius:10px;
   padding:9px 13px;
-  font-weight:750;
+  font-weight:800;
+  font-size:13px;
   cursor:pointer;
+  transition:background .2s,transform .2s;
 }
+.like-button:hover{
+  background:#22548a;
+}
+.like-button:active{transform:scale(.96)}
 .like-button[aria-pressed="true"]{
   background:#1b63a7;
   border-color:#80c6ff;
 }
-.like-button:disabled{opacity:.55}
-.like-count{color:#a5c1e2;font-size:13px}
+.like-button:disabled{
+  opacity:.55;
+  cursor:wait;
+}
+.like-count{
+  color:#a5c1e2;
+  font-size:12px;
+}
+.notice-empty{
+  text-align:center;
+  padding:28px 16px;
+  border:1px dashed #3b5776;
+  border-radius:13px;
+  color:#aabed8;
+}
+.notice-empty-icon{
+  font-size:30px;
+  margin-bottom:10px;
+}
 .status{color:#c3d0e3}
+
+/* ESTATÍSTICAS */
 .strength{padding:22px}
 .numbers{
   display:grid;
@@ -289,14 +379,14 @@ footer{
   animation:imCartaoEntrada .8s ease-out both;
   animation-delay:.35s;
 }
-.notice{animation:imCartaoEntrada .5s ease-out both}
+.notice{
+  animation:imCartaoEntrada .5s ease-out both;
+}
 
-/* NOVO MENU PREMIUM */
+/* MENU PREMIUM */
 .mobile-nav,
 .more-overlay,
-.more-panel{
-  display:none;
-}
+.more-panel{display:none}
 
 @media(max-width:1000px){
   .cards{grid-template-columns:repeat(3,1fr)}
@@ -312,11 +402,7 @@ footer{
   .brand{font-size:18px}
   .nav{display:none}
   .hero{margin:12px auto}
-  .hero img{
-    width:100%;
-    height:auto;
-    object-fit:contain;
-  }
+  .hero img{width:100%;height:auto;object-fit:contain}
   .cards{
     grid-template-columns:repeat(2,1fr);
     gap:9px;
@@ -326,6 +412,12 @@ footer{
   .tile strong{font-size:20px}
   .section{grid-template-columns:1fr}
   .panel h2{font-size:19px}
+  .notices{padding:12px}
+  .notice{padding:15px}
+  .notice-bottom{
+    align-items:flex-start;
+    flex-direction:column;
+  }
 
   .mobile-nav{
     display:grid;
@@ -343,7 +435,6 @@ footer{
     backdrop-filter:blur(16px);
     -webkit-backdrop-filter:blur(16px);
   }
-
   .mobile-nav a,
   .mobile-nav button{
     border:1px solid transparent;
@@ -361,19 +452,16 @@ footer{
     font-weight:750;
     cursor:pointer;
   }
-
   .mobile-nav .ico{
     font-size:23px;
     line-height:1;
   }
-
   .mobile-nav .active,
   .mobile-nav button[aria-expanded="true"]{
     background:#4a361b;
     border-color:#b48a48;
     color:#ffd17c;
   }
-
   .more-overlay{
     position:fixed;
     inset:0;
@@ -381,7 +469,6 @@ footer{
     background:#0009;
   }
   .more-overlay.open{display:block}
-
   .more-panel{
     position:fixed;
     left:10px;
@@ -395,7 +482,6 @@ footer{
     box-shadow:0 0 40px #000c;
   }
   .more-panel.open{display:block}
-
   .more-title{
     display:flex;
     align-items:center;
@@ -429,23 +515,14 @@ footer{
     font-size:14px;
     font-weight:750;
   }
-  .more-links a:active{
-    background:#263b58;
-  }
-  .more-links a:last-child{
-    grid-column:1/-1;
-  }
-
+  .more-links a:active{background:#263b58}
+  .more-links a:last-child{grid-column:1/-1}
   .wa{
     bottom:calc(90px + env(safe-area-inset-bottom));
   }
-
-  footer{
-    padding-bottom:115px;
-  }
+  footer{padding-bottom:115px}
 }
 
-/* ACESSIBILIDADE */
 @media(prefers-reduced-motion:reduce){
   .hero,.tile,.panel,.notice{
     animation:none!important;
@@ -463,7 +540,6 @@ footer{
       <img src="logo-im.webp" alt="Logo IM">
       IRMÃOS <span>MARVEL</span>
     </a>
-
     <nav class="nav">
       <a class="active" href="index.html">⌂ INÍCIO</a>
       <a href="aq.html">🛡️ AQ</a>
@@ -481,9 +557,8 @@ footer{
 <main class="wrap">
 
   <div class="hero">
-    <img
-      src="banner-im-champions.webp"
-      alt="Banner cinematográfico IRMÃOS MARVEL">
+    <img src="banner-im-champions.webp"
+         alt="Banner cinematográfico IRMÃOS MARVEL">
   </div>
 
   <div class="cards">
@@ -492,31 +567,26 @@ footer{
       <strong>AQ</strong>
       <small>ALLIANCE QUEST</small>
     </a>
-
     <a class="tile" style="--glow:#d5294388" href="aw.html">
       <span class="symbol">⚔️</span>
       <strong>AW</strong>
       <small>ALLIANCE WAR</small>
     </a>
-
     <a class="tile" style="--glow:#8247f888" href="raid.html">
       <span class="symbol">💀</span>
       <strong>RAID</strong>
       <small>ALLIANCE RAID</small>
     </a>
-
     <a class="tile" style="--glow:#ff9a2488" href="coliseu.html">
       <span class="symbol">🏆</span>
       <strong>COLISEU</strong>
       <small>ALIANÇA EM AÇÃO</small>
     </a>
-
     <a class="tile" style="--glow:#168bff88" href="bg.html">
       <span class="symbol">📊</span>
       <strong>BG</strong>
       <small>BATTLEGROUNDS</small>
     </a>
-
     <a class="tile" style="--glow:#ffd26b88" href="bigthing.html">
       <span class="symbol">💥</span>
       <strong>BIG THING</strong>
@@ -557,42 +627,36 @@ footer{
   </div>
 </main>
 
-<footer>© IRMÃOS MARVEL • Comunidade não oficial</footer>
+<footer>
+  © IRMÃOS MARVEL • Comunidade não oficial
+</footer>
 
-<!-- MENU INFERIOR DO TELEMÓVEL -->
+<!-- MENU INFERIOR -->
 <nav class="mobile-nav" aria-label="Navegação do telemóvel">
   <a class="active" href="index.html" aria-current="page">
-    <span class="ico">⌂</span>
-    <span>Início</span>
+    <span class="ico">⌂</span><span>Início</span>
   </a>
   <a href="aq.html">
-    <span class="ico">🛡️</span>
-    <span>AQ</span>
+    <span class="ico">🛡️</span><span>AQ</span>
   </a>
   <a href="aw.html">
-    <span class="ico">⚔️</span>
-    <span>AW</span>
+    <span class="ico">⚔️</span><span>AW</span>
   </a>
   <a href="raid.html">
-    <span class="ico">💀</span>
-    <span>RAID</span>
+    <span class="ico">💀</span><span>RAID</span>
   </a>
-  <button
-    id="more-button"
-    type="button"
-    aria-expanded="false"
-    aria-controls="more-panel">
-    <span class="ico">☰</span>
-    <span>Mais</span>
+  <button id="more-button" type="button"
+          aria-expanded="false"
+          aria-controls="more-panel">
+    <span class="ico">☰</span><span>Mais</span>
   </button>
 </nav>
 
-<!-- PAINEL MAIS -->
 <div class="more-overlay" id="more-overlay"></div>
 
-<div class="more-panel" id="more-panel" role="dialog"
-     aria-label="Mais páginas" aria-modal="true"
-     aria-hidden="true" inert>
+<div class="more-panel" id="more-panel"
+     role="dialog" aria-label="Mais páginas"
+     aria-modal="true" aria-hidden="true" inert>
   <div class="more-title">
     <span>⚔️ EXPLORAR ALIANÇA</span>
     <button class="more-close" id="more-close" type="button">
@@ -609,20 +673,18 @@ footer{
 </div>
 
 <!-- WHATSAPP -->
-<a
-  class="wa"
-  href="https://chat.whatsapp.com/CraGl18qVXMJtIJjsd03pB"
-  target="_blank"
-  rel="noopener noreferrer"
-  aria-label="Entrar no grupo WhatsApp"
-  title="Grupo Geral WhatsApp">
+<a class="wa"
+   href="https://chat.whatsapp.com/CraGl18qVXMJtIJjsd03pB"
+   target="_blank"
+   rel="noopener noreferrer"
+   aria-label="Entrar no grupo WhatsApp">
   <svg viewBox="0 0 32 32" aria-hidden="true">
     <path d="M16 .8A15.1 15.1 0 0 0 3 23.5L.8 31.2l7.9-2.1A15.2 15.2 0 1 0 16 .8Zm0 27.6a12.3 12.3 0 0 1-6.3-1.7l-.5-.3-4.7 1.2 1.3-4.5-.3-.5a12.4 12.4 0 1 1 10.5 5.8Zm6.8-9.2c-.4-.2-2.2-1.1-2.5-1.2-.3-.1-.6-.2-.8.2-.2.3-.9 1.2-1.1 1.4-.2.2-1.6-.6-3.1-1.9-1.1-1-1.9-2.2-2.1-2.6-.2-.4 0-.6.2-.8l.6-.7c.2-.2.3-.4.4-.6.1-.2 0-.5 0-.7l-1.1-2.7c-.3-.7-.6-.6-.8-.6h-.7c-.3 0-.7.1-1 .5s-1.3 1.3-1.3 3.1 1.4 3.8c.2.3 2.6 4 6.2 5.6.9.4 1.6.6 2.1.8.9.3 1.7.2 2.3.1.7-.1 2.2-.9 2.5-1.8.3-.9.3-1.7.2-1.8-.1-.2-.3-.3-.7-.5Z"/>
   </svg>
 </a>
 
 <script>
-/* MENU MAIS */
+/* MENU PREMIUM */
 const moreButton=document.getElementById('more-button');
 const morePanel=document.getElementById('more-panel');
 const moreOverlay=document.getElementById('more-overlay');
@@ -635,7 +697,6 @@ function fecharMais(){
   morePanel.inert=true;
   moreButton.setAttribute('aria-expanded','false');
 }
-
 function abrirMais(){
   morePanel.inert=false;
   morePanel.classList.add('open');
@@ -644,7 +705,6 @@ function abrirMais(){
   moreButton.setAttribute('aria-expanded','true');
   moreClose.focus();
 }
-
 moreButton.addEventListener('click',()=>{
   if(morePanel.classList.contains('open')){
     fecharMais();
@@ -652,25 +712,22 @@ moreButton.addEventListener('click',()=>{
     abrirMais();
   }
 });
-
 moreClose.addEventListener('click',()=>{
   fecharMais();
   moreButton.focus();
 });
 moreOverlay.addEventListener('click',fecharMais);
-
 document.addEventListener('keydown',e=>{
-  if(e.key==='Escape' && morePanel.classList.contains('open')){
+  if(e.key==='Escape'&&morePanel.classList.contains('open')){
     fecharMais();
     moreButton.focus();
   }
 });
-
 window.addEventListener('resize',()=>{
   if(window.innerWidth>700)fecharMais();
 });
 
-/* AVISOS E GOSTOS */
+/* SISTEMA DE GOSTOS */
 const avisoBotoes=new Map();
 
 function avisoChave(a){
@@ -707,12 +764,8 @@ async function atualizarGostos(){
     const r=await fetch(
       '/api/public/likes?ids='+
       encodeURIComponent(JSON.stringify(ids)),
-      {
-        credentials:'same-origin',
-        cache:'no-store'
-      }
+      {credentials:'same-origin',cache:'no-store'}
     );
-
     if(!r.ok)throw Error();
 
     const data=await r.json();
@@ -720,10 +773,7 @@ async function atualizarGostos(){
     for(const id of ids){
       mostrarGosto(
         avisoBotoes.get(id),
-        data.likes?.[id]||{
-          count:0,
-          liked:false
-        }
+        data.likes?.[id]||{count:0,liked:false}
       );
     }
   }catch(e){
@@ -744,16 +794,12 @@ async function alternarGosto(id){
     const r=await fetch('/api/public/likes',{
       method:'POST',
       credentials:'same-origin',
-      headers:{
-        'Content-Type':'application/json'
-      },
+      headers:{'Content-Type':'application/json'},
       body:JSON.stringify({id})
     });
-
     if(!r.ok)throw Error();
 
     mostrarGosto(item,await r.json());
-
   }catch(e){
     item.button.disabled=false;
     item.counter.textContent=
@@ -761,18 +807,15 @@ async function alternarGosto(id){
   }
 }
 
+/* CARREGAMENTO DOS AVISOS PREMIUM */
 async function carregarAvisos(){
   const caixa=document.getElementById('avisos-publicos');
 
   try{
     const r=await fetch(
       '/api/public/entries?section=avisos',
-      {
-        cache:'no-store',
-        credentials:'omit'
-      }
+      {cache:'no-store',credentials:'omit'}
     );
-
     if(!r.ok)throw Error();
 
     const dados=await r.json();
@@ -782,31 +825,54 @@ async function carregarAvisos(){
     avisoBotoes.clear();
 
     if(!dados.items.length){
-      const p=document.createElement('p');
-      p.className='status';
-      p.textContent='Ainda não existem avisos publicados.';
-      caixa.appendChild(p);
+      const vazio=document.createElement('div');
+      vazio.className='notice-empty';
+
+      const icone=document.createElement('div');
+      icone.className='notice-empty-icon';
+      icone.textContent='📢';
+
+      const texto=document.createElement('div');
+      texto.textContent=
+        'Ainda não existem avisos publicados.';
+
+      vazio.append(icone,texto);
+      caixa.appendChild(vazio);
       return;
     }
 
-    for(const aviso of dados.items){
+    dados.items.forEach((aviso,index)=>{
       const artigo=document.createElement('article');
-      artigo.className='notice';
+      artigo.className='notice'+(index===0?' featured':'');
 
-      const h=document.createElement('h3');
-      h.textContent=String(aviso.title||'Aviso');
+      const topo=document.createElement('div');
+      topo.className='notice-top';
 
-      const p=document.createElement('p');
-      p.textContent=String(aviso.content||'');
+      const etiqueta=document.createElement('span');
+      etiqueta.className='notice-label';
+      etiqueta.textContent=
+        index===0?'📌 DESTAQUE':'📢 INFORMAÇÃO';
 
-      artigo.append(h,p);
+      const posicao=document.createElement('span');
+      posicao.className='notice-position';
+      posicao.textContent='IRMÃOS MARVEL';
 
-      if(aviso.updated_at){
-        const small=document.createElement('small');
-        small.textContent=
-          'Atualizado: '+String(aviso.updated_at);
-        artigo.appendChild(small);
-      }
+      topo.append(etiqueta,posicao);
+
+      const titulo=document.createElement('h3');
+      titulo.textContent=String(aviso.title||'Aviso');
+
+      const conteudo=document.createElement('p');
+      conteudo.textContent=String(aviso.content||'');
+
+      const fundo=document.createElement('div');
+      fundo.className='notice-bottom';
+
+      const data=document.createElement('span');
+      data.className='notice-date';
+      data.textContent=aviso.updated_at
+        ? '📅 Atualizado: '+String(aviso.updated_at)
+        : '📢 Comunicado da aliança';
 
       const id=avisoChave(aviso);
       const linha=document.createElement('div');
@@ -823,28 +889,25 @@ async function carregarAvisos(){
       counter.className='like-count';
       counter.textContent='A carregar gostos...';
 
-      button.addEventListener(
-        'click',
-        ()=>alternarGosto(id)
-      );
+      button.addEventListener('click',()=>alternarGosto(id));
 
       linha.append(button,counter);
-      artigo.appendChild(linha);
+      fundo.append(data,linha);
+
+      artigo.append(topo,titulo,conteudo,fundo);
 
       avisoBotoes.set(id,{button,counter});
       caixa.appendChild(artigo);
-    }
+    });
 
     await atualizarGostos();
 
   }catch(e){
     caixa.replaceChildren();
-
     const p=document.createElement('p');
     p.className='status';
     p.textContent=
       'Não foi possível carregar os avisos. Tenta atualizar a página.';
-
     caixa.appendChild(p);
   }
 }
