@@ -1,45 +1,618 @@
+
 <!doctype html>
 <html lang="pt">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#050b17">
 <title>BG | IRMÃOS MARVEL</title>
 <style>
-:root{--navy:#031024;--panel:#071c39;--blue:#168bff;--cyan:#55caff;--line:#2864a0;--muted:#a9c3df}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Arial,sans-serif;background:radial-gradient(ellipse at 85% 5%,#124d99 0,transparent 30%),linear-gradient(180deg,#031024,#071b37 60%,#030c1c);min-height:100vh}a{color:inherit;text-decoration:none}.wrap{max-width:1160px;margin:auto;padding:0 20px}.top{position:sticky;top:0;z-index:5;background:#031024f5;border-bottom:1px solid #215d9b;backdrop-filter:blur(16px)}.topinner{display:flex;align-items:center;gap:14px;min-height:78px}.brand{display:flex;align-items:center;gap:10px;min-width:0}.brand img{height:55px;width:55px;border-radius:12px;object-fit:cover;box-shadow:0 0 14px #168bff80}.brand strong{display:block;font-weight:950;line-height:1.02;letter-spacing:.6px;font-size:20px}.brand strong span{color:#44b8ff}.brand small{display:block;color:#93c6ff;font-size:10px;letter-spacing:2px;margin-top:5px}.nav{display:flex;gap:6px;margin-left:auto;overflow:auto;scrollbar-width:none}.nav a{display:inline-block;border:1px solid transparent;color:#c7def7;border-radius:11px;padding:11px 12px;white-space:nowrap;font-weight:750}.nav a.active,.nav a:hover{background:linear-gradient(#238fff,#0962c9);color:white}.homeLink{display:inline-block;margin:25px 0;color:#79caff}.sectionTitle{text-align:center;margin:38px 0 20px}.sectionTitle h1{font-size:clamp(26px,4vw,40px);margin:7px 0}.sectionTitle p{color:var(--muted);margin:6px}.panel{border:1px solid #2866a7;background:#081d3a;border-radius:18px;padding:23px}.tableWrap{overflow-x:auto}.rank{width:100%;border-collapse:collapse}.rank th,.rank td{padding:12px;text-align:left;border-bottom:1px solid #29517a}.rank th{color:#78caff}.rank tr:last-child td{border-bottom:0}.officer-section{margin:32px 0 48px}.officer-section h2{font-size:clamp(22px,3vw,30px);margin:0 0 8px}.officer-section>p{color:var(--muted);margin:0 0 18px}.entry{padding:20px 22px;margin:12px 0;border:1px solid #2866a7;background:radial-gradient(circle at 90% 0,#1a72bc33,transparent 45%),#081d3a;border-radius:18px;overflow-wrap:anywhere}.entry h3{margin:0 0 10px;color:#e5f5ff;font-size:21px}.entry-content{white-space:pre-wrap;color:#c8e1f8;line-height:1.6}.entry-meta{display:flex;flex-wrap:wrap;gap:9px;align-items:center;margin-top:15px;color:#9cc8ed;font-size:12px}.group-tag{display:inline-block;background:#0c4984;color:#b9e8ff;border-radius:20px;padding:5px 10px;font-weight:750}.status{color:#bad5ef;padding:16px 18px;background:#081d3a;border:1px solid #2866a7;border-radius:13px}footer{text-align:center;color:#93b4d4;border-top:1px solid #245487;padding:25px 15px 95px}.mobile{display:none}
-@media(max-width:760px){.wrap{padding:0 14px}.topinner{min-height:67px}.brand img{width:44px;height:44px}.brand strong{font-size:17px}.brand small{font-size:9px}.nav{display:none}.sectionTitle{margin-top:25px}.panel{padding:12px}.rank th,.rank td{padding:11px 8px;font-size:14px}.mobile{display:flex;position:fixed;bottom:0;left:0;right:0;z-index:10;overflow-x:auto;gap:5px;padding:8px 8px calc(8px + env(safe-area-inset-bottom));background:#041329f7;border-top:1px solid #2c6eae;scrollbar-width:none}.mobile a{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:64px;flex:1;white-space:nowrap;border-radius:9px;color:#c2d8ef;padding:8px 5px;font-size:11px;font-weight:700}.mobile a.active{background:#176bce;color:white}}
+:root{
+ --navy:#031024;
+ --panel:#071c39;
+ --blue:#168bff;
+ --cyan:#55caff;
+ --gold:#ffc66a;
+ --line:#806336;
+ --muted:#a9c3df;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+ margin:0;
+ color:#fff;
+ font-family:system-ui,-apple-system,Segoe UI,Arial,sans-serif;
+ background:radial-gradient(ellipse at 85% 5%,#124d99 0,transparent 30%),
+ linear-gradient(180deg,#031024,#071b37 60%,#030c1c);
+ min-height:100vh;
+}
+a{color:inherit;text-decoration:none}
+button{font:inherit}
+.wrap{max-width:1160px;margin:auto;padding:0 20px}
+.top{
+ position:sticky;top:0;z-index:5;
+ background:#031024f5;
+ border-bottom:1px solid #806336;
+ backdrop-filter:blur(16px);
+ -webkit-backdrop-filter:blur(16px);
+}
+.topinner{
+ display:flex;align-items:center;
+ gap:14px;min-height:78px;
+}
+.brand{
+ display:flex;align-items:center;
+ gap:10px;min-width:0;
+}
+.brand img{
+ height:55px;width:55px;
+ border-radius:12px;object-fit:cover;
+ box-shadow:0 0 14px #168bff80;
+}
+.brand strong{
+ display:block;font-weight:950;
+ line-height:1.02;letter-spacing:.6px;
+ font-size:20px;
+}
+.brand strong span{color:var(--gold)}
+.brand small{
+ display:block;color:#93c6ff;
+ font-size:10px;letter-spacing:2px;
+ margin-top:5px;
+}
+.nav{
+ display:flex;gap:6px;margin-left:auto;
+ overflow:auto;scrollbar-width:none;
+}
+.nav a{
+ display:inline-block;
+ border:1px solid transparent;
+ color:#c7def7;border-radius:11px;
+ padding:11px 12px;
+ white-space:nowrap;font-weight:750;
+}
+.nav a.active,.nav a:hover{
+ background:#4a361b;
+ color:var(--gold);
+ border-color:#b48a48;
+}
+.homeLink{
+ display:inline-block;
+ margin:25px 0;
+ color:#79caff;
+}
+.sectionTitle{
+ text-align:center;
+ margin:25px 0;
+}
+.sectionTitle h1{
+ font-size:clamp(28px,5vw,42px);
+ margin:7px 0;
+ color:var(--gold);
+}
+.sectionTitle p{
+ color:var(--muted);
+ margin:6px;
+}
+.panel{
+ border:1px solid var(--line);
+ background:linear-gradient(155deg,#0c213e,#07172d);
+ border-radius:18px;
+ padding:23px;
+ box-shadow:0 8px 24px #0004;
+}
+.panel h2{margin:0 0 12px}
+.panel-desc{
+ color:var(--muted);
+ line-height:1.6;
+}
+.hall{margin:20px 0 28px}
+.seasons{
+ display:grid;
+ grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+ gap:16px;
+ margin-top:18px;
+}
+.season-card{
+ border:1px solid #a47b43;
+ background:linear-gradient(150deg,#142c4d,#081629);
+ border-radius:17px;
+ padding:19px;
+ min-width:0;
+}
+.season-card h3{
+ color:#ffd17c;
+ margin:0 0 15px;
+ font-size:20px;
+ overflow-wrap:anywhere;
+}
+.podium-row{
+ display:grid;
+ grid-template-columns:38px minmax(0,1fr) auto;
+ align-items:center;
+ gap:10px;
+ padding:13px 0;
+ border-bottom:1px solid #30465e;
+}
+.podium-row:last-child{border-bottom:0}
+.medal{font-size:25px}
+.player{
+ font-weight:800;
+ overflow-wrap:anywhere;
+}
+.points{
+ color:#a9cbea;
+ font-size:13px;
+ text-align:right;
+ overflow-wrap:anywhere;
+}
+.old-ranking{margin:25px 0 35px}
+.tableWrap{overflow-x:auto}
+.rank{
+ width:100%;
+ border-collapse:collapse;
+}
+.rank th,.rank td{
+ padding:12px;
+ text-align:left;
+ border-bottom:1px solid #29517a;
+}
+.rank th{color:#ffd17c}
+.rank tr:last-child td{border-bottom:0}
+.officer-section{margin:32px 0 48px}
+.officer-section h2{
+ font-size:clamp(22px,3vw,30px);
+ margin:0 0 8px;
+}
+.officer-section>p{
+ color:var(--muted);
+ margin:0 0 18px;
+}
+.entry{
+ padding:20px 22px;
+ margin:12px 0;
+ border:1px solid #806336;
+ background:radial-gradient(circle at 90% 0,#1a72bc33,transparent 45%),#081d3a;
+ border-radius:18px;
+ overflow-wrap:anywhere;
+}
+.entry h3{
+ margin:0 0 10px;
+ color:#e5f5ff;
+ font-size:21px;
+}
+.entry-content{
+ white-space:pre-wrap;
+ color:#c8e1f8;
+ line-height:1.6;
+}
+.entry-meta{
+ display:flex;flex-wrap:wrap;
+ gap:9px;align-items:center;
+ margin-top:15px;
+ color:#9cc8ed;font-size:12px;
+}
+.group-tag{
+ display:inline-block;
+ background:#0c4984;
+ color:#b9e8ff;
+ border-radius:20px;
+ padding:5px 10px;
+ font-weight:750;
+}
+.status{
+ color:#bad5ef;
+ padding:16px 18px;
+ background:#081d3a;
+ border:1px solid #2866a7;
+ border-radius:13px;
+ line-height:1.5;
+}
+footer{
+ text-align:center;
+ color:#93b4d4;
+ border-top:1px solid #806336;
+ padding:25px 15px 95px;
+}
+.mobile-nav,.more-overlay,.more-panel{display:none}
+
+@media(max-width:760px){
+ .wrap{padding:0 14px}
+ .topinner{min-height:67px}
+ .brand img{width:44px;height:44px}
+ .brand strong{font-size:17px}
+ .brand small{font-size:9px}
+ .nav{display:none}
+ .panel{padding:16px}
+ .rank th,.rank td{
+  padding:11px 8px;font-size:14px;
+ }
+ .seasons{grid-template-columns:1fr}
+ .mobile-nav{
+  display:grid;
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:5px;
+  position:fixed;
+  bottom:0;left:0;right:0;
+  z-index:30;
+  padding:9px 9px calc(9px + env(safe-area-inset-bottom));
+  background:#040c1cf7;
+  border-top:1px solid #a7803e;
+  box-shadow:0 -7px 28px #0009;
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+ }
+ .mobile-nav a,.mobile-nav button{
+  border:1px solid transparent;
+  border-radius:11px;
+  background:transparent;
+  color:#c7d7ec;
+  min-width:0;
+  padding:9px 2px;
+  display:flex;align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  gap:5px;font-size:11px;
+  font-weight:750;cursor:pointer;
+ }
+ .mobile-nav .ico{
+  font-size:23px;line-height:1;
+ }
+ .mobile-nav .active,
+ .mobile-nav button[aria-expanded="true"]{
+  background:#4a361b;
+  border-color:#b48a48;
+  color:#ffd17c;
+ }
+ .more-overlay{
+  position:fixed;inset:0;
+  z-index:24;background:#0009;
+ }
+ .more-overlay.open{display:block}
+ .more-panel{
+  position:fixed;
+  left:10px;right:10px;
+  bottom:calc(84px + env(safe-area-inset-bottom));
+  z-index:25;
+  border:1px solid #b48a48;
+  border-radius:18px;
+  background:linear-gradient(160deg,#142640,#050d1c);
+  padding:16px;
+  box-shadow:0 0 40px #000c;
+ }
+ .more-panel.open{display:block}
+ .more-title{
+  display:flex;align-items:center;
+  justify-content:space-between;
+  gap:10px;color:#ffd17c;
+  font-weight:900;margin-bottom:14px;
+ }
+ .more-close{
+  background:#25344d;color:white;
+  border:1px solid #65748a;
+  border-radius:9px;
+  padding:6px 11px;cursor:pointer;
+ }
+ .more-links{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+ }
+ .more-links a{
+  display:flex;align-items:center;
+  gap:10px;padding:14px 12px;
+  border:1px solid #344c6c;
+  border-radius:12px;
+  background:#11223b;
+  font-size:14px;font-weight:750;
+ }
+ .more-links a.active{
+  border-color:#b48a48;
+  background:#4a361b;
+  color:#ffd17c;
+ }
+ .more-links a:last-child{
+  grid-column:1/-1;
+ }
+ footer{padding-bottom:115px}
+}
 </style>
 </head>
 <body>
-<header class="top"><div class="wrap topinner"><a class="brand" href="index.html"><img src="logo-im.webp" alt="Logo IM"><div><strong>IRMÃOS <span>MARVEL</span></strong><small>MAIS QUE UM JOGO, UMA FAMÍLIA</small></div></a><nav class="nav"><a href="index.html">⌂ Início</a><a href="aq.html">🛡️ AQ M8</a><a href="aw.html">⚔️ AW</a><a href="raid.html">💀 RAID</a><a href="coliseu.html">🏆 Coliseu</a><a class="active" href="bg.html">📊 BG</a><a href="bigthing.html">💥 Big Thing</a><a href="membros.html">👥 Membros</a><a href="oficiais.html">🔐 Oficiais</a></nav></div></header>
-<main class="wrap"><a class="homeLink" href="index.html">← Voltar ao início</a><div class="sectionTitle"><h1>📊 BG — Battlegrounds</h1><p>Ranking histórico ilustrativo; não é atualizado automaticamente.</p></div>
-<div class="panel tableWrap"><table class="rank"><thead><tr><th>#</th><th>Jogador</th><th>Pontos</th></tr></thead><tbody><tr><td>1</td><td>Léo</td><td>263</td></tr><tr><td>2</td><td>Køruiu</td><td>165</td></tr><tr><td>3</td><td>Alex</td><td>157</td></tr><tr><td>4</td><td>Ryuchi</td><td>144</td></tr><tr><td>5</td><td>Leão</td><td>139</td></tr><tr><td>6</td><td>ScreaM</td><td>59</td></tr><tr><td>7</td><td>Louco 007</td><td>39</td></tr><tr><td>8</td><td>Doommania</td><td>34</td></tr><tr><td>9</td><td>SacidoCrime</td><td>32</td></tr><tr><td>10</td><td>Rodrigues</td><td>10</td></tr></tbody></table></div>
-<section class="officer-section" aria-labelledby="officer-title"><h2 id="officer-title">📢 Informações dos Oficiais — BG</h2><p>Comunicados, metas e orientações publicados pela equipa de oficiais.</p><div id="officer-entries" aria-live="polite"><div class="status">A carregar informações dos oficiais…</div></div></section>
+
+<header class="top">
+ <div class="wrap topinner">
+  <a class="brand" href="index.html">
+   <img src="logo-im.webp" alt="Logo IM">
+   <div>
+    <strong>IRMÃOS <span>MARVEL</span></strong>
+    <small>MAIS QUE UM JOGO, UMA FAMÍLIA</small>
+   </div>
+  </a>
+  <nav class="nav" aria-label="Navegação principal">
+   <a href="index.html">⌂ Início</a>
+   <a href="aq.html">🛡️ AQ M8</a>
+   <a href="aw.html">⚔️ AW</a>
+   <a href="raid.html">💀 RAID</a>
+   <a href="coliseu.html">🏆 Coliseu</a>
+   <a class="active" href="bg.html" aria-current="page">📊 BG</a>
+   <a href="bigthing.html">💥 Big Thing</a>
+   <a href="membros.html">👥 Membros</a>
+   <a href="oficiais.html">🔐 Oficiais</a>
+  </nav>
+ </div>
+</header>
+
+<main class="wrap">
+ <a class="homeLink" href="index.html">← Voltar ao início</a>
+
+ <div class="sectionTitle">
+  <h1>📊 BG — Battlegrounds</h1>
+  <p>Classificações, temporadas e conquistas da aliança.</p>
+ </div>
+
+ <section class="hall panel" aria-labelledby="hall-title">
+  <h2 id="hall-title">🏆 Hall da Fama — TOP 3 BG</h2>
+  <p class="panel-desc">
+   Os três melhores jogadores de cada temporada,
+   registados pelos oficiais da aliança.
+  </p>
+  <div id="bg-seasons" class="seasons" aria-live="polite">
+   <div class="status">A carregar temporadas...</div>
+  </div>
+ </section>
+
+ <section class="old-ranking" aria-labelledby="historico-title">
+  <h2 id="historico-title">📊 Ranking anterior</h2>
+  <p class="panel-desc">
+   Classificação histórica ilustrativa.
+   Estes valores não são atualizados automaticamente.
+  </p>
+  <div class="panel tableWrap">
+   <table class="rank">
+    <thead>
+     <tr><th>#</th><th>Jogador</th><th>Pontos</th></tr>
+    </thead>
+    <tbody>
+     <tr><td>1</td><td>Léo</td><td>263</td></tr>
+     <tr><td>2</td><td>Køruiu</td><td>165</td></tr>
+     <tr><td>3</td><td>Alex</td><td>157</td></tr>
+     <tr><td>4</td><td>Ryuchi</td><td>144</td></tr>
+     <tr><td>5</td><td>Leão</td><td>139</td></tr>
+     <tr><td>6</td><td>ScreaM</td><td>59</td></tr>
+     <tr><td>7</td><td>Louco 007</td><td>39</td></tr>
+     <tr><td>8</td><td>Doommania</td><td>34</td></tr>
+     <tr><td>9</td><td>SacidoCrime</td><td>32</td></tr>
+     <tr><td>10</td><td>Rodrigues</td><td>10</td></tr>
+    </tbody>
+   </table>
+  </div>
+ </section>
+
+ <section class="officer-section" aria-labelledby="officer-title">
+  <h2 id="officer-title">📢 Informações dos Oficiais — BG</h2>
+  <p>Comunicados, metas e orientações publicados pela equipa de oficiais.</p>
+  <div id="officer-entries" aria-live="polite">
+   <div class="status">A carregar informações dos oficiais…</div>
+  </div>
+ </section>
 </main>
+
 <footer>© IRMÃOS MARVEL • Comunidade não oficial</footer>
-<div class="mobile"><a href="index.html">⌂ Início</a><a href="aq.html">🛡️ AQ M8</a><a href="aw.html">⚔️ AW</a><a href="raid.html">💀 RAID</a><a href="coliseu.html">🏆 Coliseu</a><a class="active" href="bg.html">📊 BG</a><a href="bigthing.html">💥 Big Thing</a><a href="membros.html">👥 Membros</a><a href="oficiais.html">🔐 Oficiais</a></div>
+
+<nav class="mobile-nav" aria-label="Navegação do telemóvel">
+ <a href="index.html">
+  <span class="ico">⌂</span><span>Início</span>
+ </a>
+ <a href="aq.html">
+  <span class="ico">🛡️</span><span>AQ</span>
+ </a>
+ <a href="aw.html">
+  <span class="ico">⚔️</span><span>AW</span>
+ </a>
+ <a href="raid.html">
+  <span class="ico">💀</span><span>RAID</span>
+ </a>
+ <button id="more-button" class="active" type="button"
+  aria-expanded="false" aria-controls="more-panel">
+  <span class="ico">☰</span><span>Mais</span>
+ </button>
+</nav>
+
+<div class="more-overlay" id="more-overlay"></div>
+<div class="more-panel" id="more-panel"
+ role="dialog" aria-label="Mais páginas"
+ aria-modal="true" aria-hidden="true" inert>
+ <div class="more-title">
+  <span>⚔️ EXPLORAR ALIANÇA</span>
+  <button class="more-close" id="more-close" type="button">
+   Fechar ✕
+  </button>
+ </div>
+ <div class="more-links">
+  <a href="coliseu.html">🏆 Coliseu</a>
+  <a class="active" href="bg.html" aria-current="page">📊 BG</a>
+  <a href="bigthing.html">💥 Big Thing</a>
+  <a href="membros.html">👥 Membros</a>
+  <a href="oficiais.html">🔐 Oficiais</a>
+ </div>
+</div>
+
 <script>
-(async function(){
- const container=document.getElementById('officer-entries');
- const showStatus=message=>{const box=document.createElement('div');box.className='status';box.textContent=message;container.replaceChildren(box)};
+/* MENU PREMIUM */
+const moreButton=document.getElementById('more-button');
+const morePanel=document.getElementById('more-panel');
+const moreOverlay=document.getElementById('more-overlay');
+const moreClose=document.getElementById('more-close');
+
+function fecharMais(){
+ morePanel.classList.remove('open');
+ moreOverlay.classList.remove('open');
+ morePanel.setAttribute('aria-hidden','true');
+ morePanel.inert=true;
+ moreButton.setAttribute('aria-expanded','false');
+}
+function abrirMais(){
+ morePanel.inert=false;
+ morePanel.classList.add('open');
+ moreOverlay.classList.add('open');
+ morePanel.setAttribute('aria-hidden','false');
+ moreButton.setAttribute('aria-expanded','true');
+ moreClose.focus();
+}
+moreButton.addEventListener('click',()=>{
+ morePanel.classList.contains('open')?fecharMais():abrirMais();
+});
+moreClose.addEventListener('click',()=>{
+ fecharMais();
+ moreButton.focus();
+});
+moreOverlay.addEventListener('click',fecharMais);
+document.addEventListener('keydown',e=>{
+ if(e.key==='Escape'&&morePanel.classList.contains('open')){
+  fecharMais();moreButton.focus();
+ }
+});
+window.addEventListener('resize',()=>{
+ if(window.innerWidth>760)fecharMais();
+});
+
+/* HALL DA FAMA BG */
+async function carregarTemporadas(){
+ const container=document.getElementById('bg-seasons');
  try{
-  const response=await fetch('/api/public/entries?section=bg',{cache:'no-store',headers:{Accept:'application/json'}});
+  const response=await fetch('/api/public/bg-seasons',{
+   cache:'no-store',
+   headers:{Accept:'application/json'}
+  });
   if(!response.ok)throw new Error('HTTP '+response.status);
   const data=await response.json();
-  const items=Array.isArray(data.items)?data.items:[];
-  if(!items.length){showStatus('Ainda não existem informações publicadas pelos oficiais para BG.');return}
+  if(!Array.isArray(data.items))throw new Error('Resposta inválida');
+
   container.replaceChildren();
+
+  if(!data.items.length){
+   const p=document.createElement('p');
+   p.className='status';
+   p.textContent='Ainda não existem temporadas registadas.';
+   container.append(p);
+   return;
+  }
+
+  for(const season of data.items){
+   const card=document.createElement('article');
+   card.className='season-card';
+
+   const heading=document.createElement('h3');
+   heading.textContent='🏆 '+String(season.name||'Temporada');
+   card.append(heading);
+
+   const players=Array.isArray(season.players)?season.players:[];
+
+   for(const player of players.slice().sort((a,b)=>Number(a.position)-Number(b.position))){
+    const row=document.createElement('div');
+    row.className='podium-row';
+
+    const medal=document.createElement('span');
+    medal.className='medal';
+    medal.textContent=(
+     {1:'🥇',2:'🥈',3:'🥉'}[Number(player.position)]||'🏅'
+    );
+
+    const name=document.createElement('span');
+    name.className='player';
+    name.textContent=player.name||'Jogador';
+
+    const points=document.createElement('span');
+    points.className='points';
+    points.textContent=player.points==null?'':String(player.points)+' pts';
+
+    row.append(medal,name,points);
+    card.append(row);
+   }
+
+   container.append(card);
+  }
+
+ }catch(error){
+  console.error('Erro ao carregar temporadas BG:',error);
+  const box=document.createElement('div');
+  box.className='status';
+  box.textContent='O Hall da Fama ainda não está disponível. A gestão das temporadas será configurada no painel dos oficiais.';
+  container.replaceChildren(box);
+ }
+}
+carregarTemporadas();
+
+/* PUBLICAÇÕES DOS OFICIAIS */
+(async function(){
+ const container=document.getElementById('officer-entries');
+ const showStatus=message=>{
+  const box=document.createElement('div');
+  box.className='status';
+  box.textContent=message;
+  container.replaceChildren(box);
+ };
+ try{
+  const response=await fetch(
+   '/api/public/entries?section=bg',
+   {cache:'no-store',headers:{Accept:'application/json'}}
+  );
+  if(!response.ok)throw new Error('HTTP '+response.status);
+
+  const data=await response.json();
+  const items=Array.isArray(data.items)?data.items:[];
+
+  if(!items.length){
+   showStatus('Ainda não existem informações publicadas pelos oficiais para BG.');
+   return;
+  }
+
+  container.replaceChildren();
+
   for(const item of items){
-   const article=document.createElement('article');article.className='entry';
-   const title=document.createElement('h3');title.textContent=item.title||'Informação BG';article.append(title);
-   const content=document.createElement('div');content.className='entry-content';content.textContent=item.content||'';article.append(content);
-   const meta=document.createElement('div');meta.className='entry-meta';
-   if(item.group_name){const tag=document.createElement('span');tag.className='group-tag';tag.textContent=item.group_name;meta.append(tag)}
-   if(item.updated_at){const date=new Date(item.updated_at);if(!Number.isNaN(date.getTime())){const time=document.createElement('time');time.dateTime=date.toISOString();time.textContent='Atualizado: '+date.toLocaleString('pt-PT',{dateStyle:'short',timeStyle:'short'});meta.append(time)}}
+   const article=document.createElement('article');
+   article.className='entry';
+
+   const title=document.createElement('h3');
+   title.textContent=item.title||'Informação BG';
+   article.append(title);
+
+   const content=document.createElement('div');
+   content.className='entry-content';
+   content.textContent=item.content||'';
+   article.append(content);
+
+   const meta=document.createElement('div');
+   meta.className='entry-meta';
+
+   if(item.group_name){
+    const tag=document.createElement('span');
+    tag.className='group-tag';
+    tag.textContent=item.group_name;
+    meta.append(tag);
+   }
+
+   if(item.updated_at){
+    const date=new Date(item.updated_at);
+    if(!Number.isNaN(date.getTime())){
+     const time=document.createElement('time');
+     time.dateTime=date.toISOString();
+     time.textContent='Atualizado: '+date.toLocaleString(
+      'pt-PT',{dateStyle:'short',timeStyle:'short'}
+     );
+     meta.append(time);
+    }
+   }
+
    if(meta.childNodes.length)article.append(meta);
    container.append(article);
   }
- }catch(error){console.error('Erro ao carregar anúncios BG:',error);showStatus('Não foi possível carregar as informações dos oficiais. Tenta atualizar a página.')}
+ }catch(error){
+  console.error('Erro ao carregar anúncios BG:',error);
+  showStatus('Não foi possível carregar as informações dos oficiais. Tenta atualizar a página.');
+ }
 })();
 </script>
-</body></html>
+</body>
+</html>
