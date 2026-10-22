@@ -63,17 +63,13 @@ button:disabled{opacity:.5;cursor:not-allowed}
  box-shadow:0 12px 35px #0004;
  margin:22px 0;scroll-margin-top:100px
 }
-.admin-hero:first-child{
- text-align:center;padding:40px 25px
-}
+.admin-hero:first-child{text-align:center;padding:40px 25px}
 .admin-hero h1{
  font-size:clamp(32px,5vw,50px);
  margin:12px 0;font-weight:950
 }
 .admin-hero h1 span{color:var(--gold)}
-.admin-hero p,.roster-admin p{
- color:#bedaf3;line-height:1.7
-}
+.admin-hero p,.roster-admin p{color:#bedaf3;line-height:1.7}
 .admin-pill{
  display:inline-flex;align-items:center;
  background:#493719;border:1px solid #b48a48;
@@ -102,9 +98,7 @@ button:disabled{opacity:.5;cursor:not-allowed}
  padding:20px 10px;text-align:center;
  box-shadow:0 8px 25px #0003
 }
-.admin-stat b{
- display:block;font-size:32px;color:var(--gold)
-}
+.admin-stat b{display:block;font-size:32px;color:var(--gold)}
 .admin-stat small{color:#c0d8ee}
 .admin-section{
  font-size:clamp(24px,4vw,30px);
@@ -215,6 +209,83 @@ button:disabled{opacity:.5;cursor:not-allowed}
  background:#3b301f;color:#ffdc9b;
  border-radius:11px;font-size:13px;font-weight:800
 }
+
+/* RECRUTAMENTO */
+.recruitment-summary{
+ display:grid;
+ grid-template-columns:repeat(3,minmax(0,1fr));
+ gap:12px;margin:20px 0
+}
+.recruitment-stat{
+ text-align:center;
+ background:#091d3a;
+ border:1px solid #3973aa;
+ border-radius:13px;padding:18px 8px
+}
+.recruitment-stat b{
+ display:block;font-size:27px;color:var(--gold)
+}
+.recruitment-stat small{color:#bcd7ef;font-size:12px}
+.recruitment-controls{
+ display:flex;flex-wrap:wrap;gap:10px;margin:16px 0
+}
+.recruitment-controls button{
+ border:1px solid #5caaf0;
+ background:linear-gradient(135deg,#125fae,#093d80);
+ color:white;border-radius:11px;
+ padding:13px 16px;font-weight:850
+}
+.recruitment-controls .open-rec{
+ background:#126449;border-color:#43c99d
+}
+.recruitment-controls .close-rec{
+ background:#763343;border-color:#e0889c
+}
+.recruitment-controls button:disabled{opacity:.45}
+.rec-state{
+ display:inline-block;
+ padding:6px 11px;
+ border-radius:30px;
+ font-size:12px;
+ font-weight:900;
+ border:1px solid #477fb6;
+ background:#123052;color:#b9ddff
+}
+.rec-state.pending{color:#ffe0a2;border-color:#b48a48;background:#4b371b}
+.rec-state.approved{color:#a4ffdc;border-color:#35a77e;background:#124a39}
+.rec-state.rejected{color:#ffb4c2;border-color:#b85a72;background:#512334}
+.rec-card-title{
+ display:flex;align-items:center;
+ justify-content:space-between;
+ flex-wrap:wrap;gap:10px
+}
+.rec-card-title h3{margin:0;color:#ffdc9b}
+.rec-details{
+ white-space:pre-wrap;
+ color:#d4e5f8;
+ line-height:1.85
+}
+.rec-message{
+ white-space:pre-wrap;
+ background:#07172d;
+ border-left:3px solid var(--gold);
+ padding:12px;
+ border-radius:7px;
+ color:#d4e5f8;
+ line-height:1.6
+}
+.rec-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}
+.rec-actions button{
+ padding:11px 14px;
+ border:1px solid #5caaf0;
+ border-radius:10px;
+ background:#125fae;
+ color:white;
+ font-weight:850
+}
+.rec-actions button.approve{background:#126449;border-color:#43c99d}
+.rec-actions button.reject{background:#763343;border-color:#e0889c}
+
 .mobile-nav,.more-overlay,.more-panel{display:none}
 footer{
  text-align:center;color:#93b4d4;
@@ -236,6 +307,11 @@ footer{
  .admin-stat{padding:15px 5px}
  .admin-stat b{font-size:24px}
  .admin-team,.admin-card{padding:18px}
+ .recruitment-summary{gap:7px}
+ .recruitment-stat{padding:14px 4px}
+ .recruitment-stat b{font-size:22px}
+ .recruitment-stat small{font-size:10px}
+ .recruitment-controls button{flex:1}
  .mobile-nav{
   display:grid;grid-template-columns:repeat(5,minmax(0,1fr));
   gap:5px;position:fixed;bottom:0;left:0;right:0;
@@ -308,6 +384,7 @@ footer{
 <a href="bg.html">📊 BG</a>
 <a href="bigthing.html">💥 Big Thing</a>
 <a href="membros.html">👥 Membros</a>
+<a href="recrutamento.html">📝 Recrutamento</a>
 <a class="active" aria-current="page" href="oficiais.html">🔐 Oficiais</a>
 </nav>
 </div>
@@ -321,6 +398,7 @@ footer{
 <p>Bem-vindo ao painel dos responsáveis da IRMÃOS MARVEL. Gere os jogadores, organiza os grupos e acompanha os eventos da aliança.</p>
 <div class="admin-actions">
 <a href="membros.html">👥 Ver os membros</a>
+<a href="recrutamento.html">📝 Página de recrutamento</a>
 <a href="index.html">⌂ Página inicial</a>
 </div>
 </section>
@@ -332,6 +410,7 @@ footer{
 </div>
 
 <nav class="quick-links" aria-label="Acesso rápido às ferramentas">
+<a href="#gestao-recrutamento">📝 Recrutamento</a>
 <a href="#gestao-v13">✍️ Publicações</a>
 <a href="#gestao-membros">👥 Jogadores</a>
 <a href="#troca-membros">🔄 Trocas</a>
@@ -363,7 +442,50 @@ footer{
 <article class="admin-card"><h2>🏆 Coliseu</h2><p>Metas e objetivos da aliança.</p><a class="admin-link" href="coliseu.html">Abrir →</a></article>
 <article class="admin-card"><h2>📊 Battlegrounds</h2><p>Hall da Fama TOP 3 por temporada.</p><a class="admin-link" href="bg.html">Abrir →</a></article>
 <article class="admin-card"><h2>💥 Big Thing</h2><p>Informações e estratégias do evento.</p><a class="admin-link" href="bigthing.html">Abrir →</a></article>
+<article class="admin-card">
+<h2>📝 Recrutamento</h2>
+<p>Abre e fecha candidaturas, analisa jogadores interessados e aprova ou rejeita pedidos.</p>
+<a class="admin-link" href="#gestao-recrutamento">Gerir candidaturas →</a>
+</article>
 </div>
+
+<!-- GESTÃO DE RECRUTAMENTO -->
+<section class="roster-admin" id="gestao-recrutamento">
+<span class="admin-pill">🛡️ RECRUTAMENTO • CLOUDFARE D1</span>
+<h2>📝 Gestão de Recrutamento IM</h2>
+<p>Controla a abertura das candidaturas e decide quais jogadores podem juntar-se à aliança. Aprovar uma candidatura não adiciona automaticamente o jogador aos membros.</p>
+
+<div class="roster-status" id="rec-status" role="status">
+A verificar ligação segura ao recrutamento…
+</div>
+
+<div class="recruitment-controls">
+<button class="open-rec" id="rec-open" type="button" disabled>🟢 Abrir recrutamento</button>
+<button class="close-rec" id="rec-close" type="button" disabled>🔴 Fechar recrutamento</button>
+<button id="rec-refresh" type="button">↻ Atualizar</button>
+<a class="admin-link" href="recrutamento.html">🌐 Ver página pública</a>
+</div>
+
+<div class="recruitment-summary">
+<div class="recruitment-stat"><b id="rec-pending-count">0</b><small>⏳ Pendentes</small></div>
+<div class="recruitment-stat"><b id="rec-approved-count">0</b><small>✅ Aprovadas</small></div>
+<div class="recruitment-stat"><b id="rec-rejected-count">0</b><small>❌ Rejeitadas</small></div>
+</div>
+
+<h3>📋 Candidaturas recebidas</h3>
+
+<div class="roster-toolbar" id="rec-filters">
+<button type="button" data-status="pending" class="selected">⏳ Pendentes</button>
+<button type="button" data-status="approved">✅ Aprovadas</button>
+<button type="button" data-status="rejected">❌ Rejeitadas</button>
+<button type="button" data-status="all">📋 Todas</button>
+</div>
+
+<div class="roster-status" id="rec-count" role="status">
+A carregar candidaturas…
+</div>
+<div class="roster-list" id="rec-list" aria-live="polite"></div>
+</section>
 
 <section id="gestao-v13" class="admin-hero">
 <span class="admin-pill">⚙️ GESTÃO ONLINE • D1</span>
@@ -496,6 +618,7 @@ footer{
 <a href="bg.html">📊 BG</a>
 <a href="bigthing.html">💥 Big Thing</a>
 <a href="membros.html">👥 Membros</a>
+<a href="recrutamento.html">📝 Recrutamento</a>
 <a class="active" aria-current="page" href="oficiais.html">🔐 Oficiais</a>
 </div>
 </div>
@@ -534,6 +657,7 @@ window.addEventListener('resize',()=>{
 });
 </script>
 
+<!-- PUBLICAÇÕES -->
 <script>
 (()=>{
  const areas={
@@ -665,6 +789,7 @@ window.addEventListener('resize',()=>{
 })();
 </script>
 
+<!-- GESTÃO DE MEMBROS E TROCAS -->
 <script>
 (()=>{
  const $=id=>document.getElementById(id);
@@ -853,6 +978,7 @@ window.addEventListener('resize',()=>{
 })();
 </script>
 
+<!-- HISTÓRICO DE ALTERAÇÕES -->
 <script>
 (()=>{
  const $=id=>document.getElementById(id);
@@ -1015,6 +1141,7 @@ window.addEventListener('resize',()=>{
 })();
 </script>
 
+<!-- HALL DA FAMA BG -->
 <script>
 (()=>{
  const $=id=>document.getElementById(id);
@@ -1197,6 +1324,295 @@ window.addEventListener('resize',()=>{
  clearButton.onclick=clearForm;
  refresh.onclick=load;
  clearForm();
+ load();
+})();
+</script>
+
+<!-- GESTÃO DE RECRUTAMENTO -->
+<script>
+(()=>{
+ const $=id=>document.getElementById(id);
+ const status=$('rec-status');
+ const count=$('rec-count');
+ const list=$('rec-list');
+ const openButton=$('rec-open');
+ const closeButton=$('rec-close');
+ const refreshButton=$('rec-refresh');
+ const filters=$('rec-filters');
+
+ let items=[];
+ let isOpen=false;
+ let connected=false;
+ let busy=false;
+ let filter='pending';
+
+ async function request(method='GET',body){
+  const response=await fetch('/api/recruitment',{
+   method,
+   credentials:'same-origin',
+   cache:'no-store',
+   headers:{
+    Accept:'application/json',
+    ...(body?{'Content-Type':'application/json'}:{})
+   },
+   ...(body?{body:JSON.stringify(body)}:{})
+  });
+
+  const data=await response.json().catch(()=>({
+   error:'A API não devolveu JSON. Verifica a sessão Cloudflare Access.'
+  }));
+
+  if(!response.ok){
+   throw Error(data.error||'Erro HTTP '+response.status);
+  }
+  if(data.error)throw Error(data.error);
+  return data;
+ }
+
+ function setBusy(value){
+  busy=value;
+  openButton.disabled=value||!connected||isOpen;
+  closeButton.disabled=value||!connected||!isOpen;
+  refreshButton.disabled=value;
+  filters.querySelectorAll('button').forEach(b=>b.disabled=value);
+ }
+
+ function updateStatus(){
+  status.textContent=isOpen
+   ?'🟢 RECRUTAMENTO ABERTO — Os jogadores podem enviar candidaturas.'
+   :'🔴 RECRUTAMENTO FECHADO — Não são aceites novas candidaturas.';
+ }
+
+ function dateText(value){
+  if(!value)return '—';
+  const normalized=/^\d{4}-\d\d-\d\d \d\d:\d\d:\d\d$/.test(value)
+   ?value.replace(' ','T')+'Z':value;
+  const date=new Date(normalized);
+  return Number.isNaN(date.getTime())
+   ?String(value)
+   :date.toLocaleString('pt-PT',{
+    dateStyle:'short',
+    timeStyle:'short',
+    timeZone:'Europe/Lisbon'
+   });
+ }
+
+ function makeButton(label,handler,className=''){
+  const button=document.createElement('button');
+  button.type='button';
+  button.textContent=label;
+  button.className=className;
+  button.addEventListener('click',handler);
+  return button;
+ }
+
+ function render(){
+  list.replaceChildren();
+
+  for(const button of filters.querySelectorAll('button')){
+   button.classList.toggle(
+    'selected',
+    button.dataset.status===filter
+   );
+  }
+
+  const pending=items.filter(x=>x.status==='pending').length;
+  const approved=items.filter(x=>x.status==='approved').length;
+  const rejected=items.filter(x=>x.status==='rejected').length;
+
+  $('rec-pending-count').textContent=pending;
+  $('rec-approved-count').textContent=approved;
+  $('rec-rejected-count').textContent=rejected;
+
+  count.textContent=
+   '📋 Total: '+items.length+
+   ' · ⏳ Pendentes: '+pending+
+   ' · ✅ Aprovadas: '+approved+
+   ' · ❌ Rejeitadas: '+rejected;
+
+  const visible=items.filter(
+   x=>filter==='all'||x.status===filter
+  );
+
+  if(!visible.length){
+   const empty=document.createElement('p');
+   empty.textContent='Não existem candidaturas nesta categoria.';
+   list.append(empty);
+   return;
+  }
+
+  const labels={
+   pending:'⏳ Pendente',
+   approved:'✅ Aprovada',
+   rejected:'❌ Rejeitada'
+  };
+
+  for(const item of visible){
+   const card=document.createElement('article');
+   card.className='roster-item';
+
+   const heading=document.createElement('div');
+   heading.className='rec-card-title';
+
+   const title=document.createElement('h3');
+   title.textContent='👤 '+String(item.name||'Jogador');
+
+   const state=document.createElement('span');
+   state.className='rec-state '+String(item.status||'pending');
+   state.textContent=labels[item.status]||String(item.status);
+
+   heading.append(title,state);
+
+   const details=document.createElement('p');
+   details.className='rec-details';
+   details.textContent=
+    '🏅 Prestígio: '+Number(item.prestige).toLocaleString('pt-PT')+
+    '\n⚔️ AW: '+String(item.aw||'—')+
+    '\n🏆 BG: '+Number(item.bg_points).toLocaleString('pt-PT')+
+    '\n🛡️ Grupo: '+String(item.preferred_group||'Sem preferência')+
+    '\n💬 Discord: '+String(item.discord||'—')+
+    '\n📅 Enviada: '+dateText(item.created_at);
+
+   card.append(heading,details);
+
+   if(item.message){
+    const message=document.createElement('p');
+    message.className='rec-message';
+    message.textContent='📝 Mensagem:\n'+String(item.message);
+    card.append(message);
+   }
+
+   const actions=document.createElement('div');
+   actions.className='rec-actions';
+
+   async function review(nextStatus){
+    if(busy||!connected)return;
+
+    const action=nextStatus==='approved'
+     ?'aprovar'
+     :nextStatus==='rejected'
+      ?'rejeitar'
+      :'repor como pendente';
+
+    if(!confirm('Queres '+action+' a candidatura de '+item.name+'?')){
+     return;
+    }
+
+    setBusy(true);
+    status.textContent='⏳ A guardar decisão…';
+
+    try{
+     const result=await request('POST',{
+      action:'review',
+      id:Number(item.id),
+      status:nextStatus
+     });
+
+     if(!result.ok)throw Error('Não foi possível guardar a decisão.');
+     await load();
+    }catch(error){
+     status.textContent='⚠️ '+error.message;
+    }finally{
+     setBusy(false);
+    }
+   }
+
+   if(item.status!=='approved'){
+    actions.append(
+     makeButton('✅ Aprovar',()=>review('approved'),'approve')
+    );
+   }
+
+   if(item.status!=='rejected'){
+    actions.append(
+     makeButton('❌ Rejeitar',()=>review('rejected'),'reject')
+    );
+   }
+
+   if(item.status!=='pending'){
+    actions.append(
+     makeButton('↩️ Repor pendente',()=>review('pending'))
+    );
+   }
+
+   card.append(actions);
+   list.append(card);
+  }
+ }
+
+ async function load(){
+  setBusy(true);
+  status.textContent='⏳ A consultar a base de dados…';
+
+  try{
+   const data=await request();
+
+   if(!Array.isArray(data.items)||typeof data.open!=='boolean'){
+    throw Error('Resposta inválida da API de recrutamento.');
+   }
+
+   connected=true;
+   isOpen=data.open;
+   items=data.items;
+
+   updateStatus();
+   render();
+  }catch(error){
+   connected=false;
+   items=[];
+   list.replaceChildren();
+   $('rec-pending-count').textContent='—';
+   $('rec-approved-count').textContent='—';
+   $('rec-rejected-count').textContent='—';
+   count.textContent='Candidaturas indisponíveis.';
+   status.textContent=
+    '⚠️ '+error.message+
+    ' Verifica /api/recruitment, D1 e Cloudflare Access.';
+  }finally{
+   setBusy(false);
+  }
+ }
+
+ async function changeStatus(nextOpen){
+  if(busy||!connected)return;
+
+  const action=nextOpen?'abrir':'fechar';
+
+  if(!confirm('Confirmas que queres '+action+' o recrutamento?')){
+   return;
+  }
+
+  setBusy(true);
+  status.textContent='⏳ A atualizar recrutamento…';
+
+  try{
+   const result=await request('POST',{
+    action:'set_status',
+    open:nextOpen
+   });
+
+   if(!result.ok)throw Error('Não foi possível atualizar o recrutamento.');
+
+   await load();
+  }catch(error){
+   status.textContent='⚠️ '+error.message;
+  }finally{
+   setBusy(false);
+  }
+ }
+
+ openButton.onclick=()=>changeStatus(true);
+ closeButton.onclick=()=>changeStatus(false);
+ refreshButton.onclick=load;
+
+ filters.addEventListener('click',event=>{
+  const button=event.target.closest('button[data-status]');
+  if(!button)return;
+
+  filter=button.dataset.status;
+  render();
+ });
+
  load();
 })();
 </script>
