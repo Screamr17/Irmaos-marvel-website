@@ -14,23 +14,30 @@ function reply(data, status = 200) {
   });
 }
 
-function validOrigin(request) {
-  const origin = request.headers.get("Origin");
-  return origin === new URL(request.url).origin;
+function sameOrigin(request) {
+  return request.headers.get("Origin") ===
+    new URL(request.url).origin;
 }
 
 async function readBody(request) {
+  const length = Number(
+    request.headers.get("Content-Length") || 0
+  );
+
+  if (length > MAX_BODY) {
+    throw Error("Pedido demasiado grande");
+  }
+
   const text = await request.text();
 
   if (text.length > MAX_BODY) {
-    throw new Error("Pedido demasiado grande");
+    throw Error("Pedido demasiado grande");
   }
 
   return JSON.parse(text);
 }
 
-export async function onRequest(context) {
-  const { request, env } = context;
+export async function onRequest({ request, env }) {
   const db = env.DB;
 
   if (!db) {
@@ -44,15 +51,13 @@ export async function onRequest(context) {
     if (request.method === "GET") {
       const result = await db.prepare(`
         SELECT
-          m.id,
-          COALESCE(a.player_name, 'Jogador') AS name,
-          m.message,
-          m.created_at
-        FROM chat_messages m
-        LEFT JOIN chat_accounts a
-          ON a.id = m.member_id
-        WHERE m.deleted_at IS NULL
-        ORDER BY m.id DESC
+          id,
+          player_name AS name,
+          message,
+          created_at
+        FROM chat_messages
+        WHERE deleted_at IS NULL
+        ORDER BY id DESC
         LIMIT 60
       `).all();
 
@@ -69,7 +74,7 @@ export async function onRequest(context) {
       }, 405);
     }
 
-    if (!validOrigin(request)) {
+    if (!sameOrigin(request)) {
       return reply({
         ok: false,
         error: "Origem não autorizada"
@@ -94,8 +99,18 @@ export async function onRequest(context) {
       }, 400);
     }
 
-    const name = String(body.name || "").trim();
-    const message = String(body.message || "").trim();
+    if (
+      typeof body.name !== "string" ||
+      typeof body.message !== "string"
+    ) {
+      return reply({
+        ok: false,
+        error: "Nome ou mensagem inválidos"
+      }, 400);
+    }
+
+    const name = body.name.trim();
+    const message = body.message.trim();
 
     if (
       !name ||
@@ -110,26 +125,34 @@ export async function onRequest(context) {
     }
 
     /*
-      Esta versão é pública.
-      Vamos guardar o nome diretamente na mensagem.
-      Não depende de uma conta de jogador.
+      Limite global simples:
+      no máximo 3 mensagens em 10 segundos.
+
+      Este limite protege contra rajadas,
+      mas não substitui rate limiting por IP
+      ou Cloudflare Turnstile.
     */
+    const recent = await db.prepare(`
+      SELECT COUNT(*) AS total
+      FROM chat_messages
+      WHERE created_at >= datetime('now', '-10 seconds')
+    `).first();
+
+    if (Number(recent?.total || 0) >= 3) {
+      return reply({
+        ok: false,
+        error: "Muitas mensagens. Aguarda alguns segundos."
+      }, 429);
+    }
 
     await db.prepare(`
       INSERT INTO chat_messages (
         member_id,
+        player_name,
         message
       )
-      VALUES (
-        0,
-        ?
-      )
-    `).bind(
-      JSON.stringify({
-        name,
-        text: message
-      })
-    ).run();
+      VALUES (0, ?, ?)
+    `).bind(name, message).run();
 
     return reply({ ok: true });
 
