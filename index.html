@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#050b17">
-<meta name="description" content="Site oficial da comunidade IRMÃOS MARVEL. AQ, AW, RAID, BG, Coliseu e recrutamento.">
+<meta name="description" content="Comunidade IRMÃOS MARVEL. AQ, AW, RAID, BG, Coliseu e recrutamento.">
 <title>IRMÃOS MARVEL | Champions Edition</title>
 <style>
 :root{--gold:#ffc66a;--blue:#49a8ff;--muted:#aebed4}
@@ -27,25 +27,15 @@ footer{text-align:center;border-top:1px solid #3c4454;color:#9aacc4;padding:24px
 @media(max-width:1000px){.cards{grid-template-columns:repeat(3,1fr)}.nav{font-size:12px}.brand{font-size:17px}.tile{min-height:128px}}
 @media(max-width:700px){.wrap{padding:0 12px}.topin{min-height:65px}.brand img{width:42px;height:42px}.brand{font-size:18px}.nav{display:none}.hero{margin:12px auto}.hero img{width:100%;height:auto;object-fit:contain}.cards{grid-template-columns:repeat(2,1fr);gap:9px}.tile{min-height:127px}.tile .symbol{font-size:34px}.tile strong{font-size:20px}.recruitment-banner{margin-top:17px;padding:23px 18px;flex-direction:column;align-items:stretch;text-align:center;gap:20px}.recruitment-banner h2{font-size:25px}.recruitment-banner p{font-size:13px}.recruitment-button{width:100%}.section{grid-template-columns:1fr}.panel h2{font-size:19px}.notices{padding:12px}.notice{padding:15px}.notice-bottom{align-items:flex-start;flex-direction:column}.mobile-nav{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;position:fixed;bottom:0;left:0;right:0;z-index:30;padding:9px 9px calc(9px + env(safe-area-inset-bottom));background:#040c1cf7;border-top:1px solid #a7803e;box-shadow:0 -7px 28px #0009;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}.mobile-nav a,.mobile-nav button{border:1px solid transparent;border-radius:11px;background:transparent;color:#c7d7ec;min-width:0;padding:9px 2px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:5px;font-size:11px;font-weight:750;cursor:pointer}.mobile-nav .ico{font-size:23px;line-height:1}.mobile-nav .active,.mobile-nav button[aria-expanded="true"]{background:#4a361b;border-color:#b48a48;color:#ffd17c}.more-overlay{position:fixed;inset:0;z-index:24;background:#0009}.more-overlay.open{display:block}.more-panel{position:fixed;left:10px;right:10px;bottom:calc(84px + env(safe-area-inset-bottom));z-index:25;border:1px solid #b48a48;border-radius:18px;background:linear-gradient(160deg,#142640,#050d1c);padding:16px;box-shadow:0 0 40px #000c}.more-panel.open{display:block}.more-title{display:flex;align-items:center;justify-content:space-between;gap:10px;color:#ffd17c;font-weight:900;margin-bottom:14px}.more-close{background:#25344d;color:white;border:1px solid #65748a;border-radius:9px;padding:6px 11px;cursor:pointer}.more-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.more-links a{display:flex;align-items:center;gap:10px;padding:14px 12px;border:1px solid #344c6c;border-radius:12px;background:#11223b;font-size:14px;font-weight:750}.more-links a:active{background:#263b58}.more-links a:last-child{grid-column:1/-1}.wa{bottom:calc(90px + env(safe-area-inset-bottom))}footer{padding-bottom:115px}}
 @media(prefers-reduced-motion:reduce){.hero,.tile,.panel,.notice,.recruitment-banner{animation:none!important;transition:none!important}}
+/* CHAT IM */
 .im-chat-toggle{position:fixed;right:17px;bottom:88px;z-index:21;width:54px;height:54px;border:1px solid #b5dfff;border-radius:50%;background:linear-gradient(145deg,#248fff,#0955bd);color:#fff;box-shadow:0 4px 20px #0009;display:grid;place-items:center;cursor:pointer;font-size:25px}
 .im-chat-toggle:focus-visible,.im-chat-close:focus-visible{outline:3px solid #ffc66a;outline-offset:3px}
-.im-chat-window{position:fixed;right:17px;bottom:153px;z-index:22;width:min(370px,calc(100vw - 24px));height:min(490px,calc(100dvh - 185px));display:none;flex-direction:column;overflow:hidden;border:1px solid #ad8243;border-radius:17px;background:#071426;color:#f5f7ff;box-shadow:0 14px 45px #000c}
-.im-chat-window.open{display:flex}
-.im-chat-head{display:flex;justify-content:space-between;align-items:center;padding:13px 14px;background:linear-gradient(120deg,#173c6c,#08192f);border-bottom:1px solid #456080}
-.im-chat-head strong{color:#ffc66a;font-size:15px}
-.im-chat-head small{display:block;color:#bcd4ed;font-size:11px;margin-top:3px}
-.im-chat-close{background:#203d61;border:1px solid #6685a9;color:#fff;border-radius:8px;padding:6px 10px;cursor:pointer}
-.im-chat-messages{flex:1;overflow:auto;padding:14px;display:flex;flex-direction:column;gap:11px}
-.im-chat-note{font-size:13px;color:#c1d4eb;line-height:1.5;text-align:center;padding:15px 8px}
-.im-chat-message{padding:10px 12px;border-radius:11px;background:#142c4a;border:1px solid #31547c;overflow-wrap:anywhere}
-.im-chat-message b{display:block;color:#ffc66a;font-size:12px;margin-bottom:4px}
-.im-chat-message p{margin:0;white-space:pre-wrap;font-size:13px;line-height:1.45}
-.im-chat-message time{display:block;text-align:right;font-size:10px;color:#9bb4d0;margin-top:5px}
-.im-chat-form{display:flex;gap:7px;padding:10px;border-top:1px solid #324f71;background:#091b33}
-.im-chat-form input{min-width:0;flex:1;border:1px solid #48678d;border-radius:9px;padding:10px;background:#0e2745;color:#fff;font:inherit;font-size:13px}
-.im-chat-form button{border:0;border-radius:9px;padding:0 13px;background:#168bff;color:white;font-weight:900;cursor:pointer}
-.im-chat-form button:disabled,.im-chat-form input:disabled{opacity:.55;cursor:not-allowed}
-@media(max-width:700px){.im-chat-toggle{bottom:calc(156px + env(safe-area-inset-bottom))}.im-chat-window{right:12px;bottom:calc(222px + env(safe-area-inset-bottom));height:min(460px,calc(100dvh - 245px))}}
+.im-chat-window{position:fixed;right:17px;bottom:153px;z-index:22;width:min(370px,calc(100vw - 24px));height:min(490px,calc(100dvh - 185px));min-height:220px;display:none;flex-direction:column;overflow:hidden;border:1px solid #ad8243;border-radius:17px;background:#071426;color:#f5f7ff;box-shadow:0 14px 45px #000c}
+.im-chat-window.open{display:flex}.im-chat-head{display:flex;justify-content:space-between;align-items:center;padding:13px 14px;background:linear-gradient(120deg,#173c6c,#08192f);border-bottom:1px solid #456080}.im-chat-head strong{color:#ffc66a;font-size:15px}.im-chat-head small{display:block;color:#bcd4ed;font-size:11px;margin-top:3px}.im-chat-close{background:#203d61;border:1px solid #6685a9;color:#fff;border-radius:8px;padding:6px 10px;cursor:pointer}
+.im-chat-identity{padding:9px 11px;background:#0c203a;border-bottom:1px solid #324f71;display:flex;align-items:center;gap:8px}.im-chat-identity label{font-size:12px;color:#ffc66a;white-space:nowrap}.im-chat-identity input{min-width:0;flex:1;border:1px solid #48678d;border-radius:8px;padding:8px;background:#0e2745;color:#fff;font:inherit;font-size:13px}
+.im-chat-messages{flex:1;min-height:0;overflow:auto;padding:14px;display:flex;flex-direction:column;gap:11px}.im-chat-note{font-size:13px;color:#c1d4eb;line-height:1.5;text-align:center;padding:15px 8px}.im-chat-message{padding:10px 12px;border-radius:11px;background:#142c4a;border:1px solid #31547c;overflow-wrap:anywhere}.im-chat-message b{display:block;color:#ffc66a;font-size:12px;margin-bottom:4px}.im-chat-message p{margin:0;white-space:pre-wrap;font-size:13px;line-height:1.45}.im-chat-message time{display:block;text-align:right;font-size:10px;color:#9bb4d0;margin-top:5px}
+.im-chat-status{font-size:11px;padding:5px 12px;color:#bed4ed;background:#0a1c32}.im-chat-form{display:flex;gap:7px;padding:10px;border-top:1px solid #324f71;background:#091b33}.im-chat-form input{min-width:0;flex:1;border:1px solid #48678d;border-radius:9px;padding:10px;background:#0e2745;color:#fff;font:inherit;font-size:13px}.im-chat-form button{border:0;border-radius:9px;padding:0 13px;background:#168bff;color:white;font-weight:900;cursor:pointer}.im-chat-form button:disabled,.im-chat-form input:disabled{opacity:.55;cursor:not-allowed}
+@media(max-width:700px){.im-chat-toggle{bottom:calc(156px + env(safe-area-inset-bottom))}.im-chat-window{right:12px;bottom:calc(222px + env(safe-area-inset-bottom));height:min(460px,calc(100dvh - 245px));min-height:180px}}
 </style>
 </head>
 <body>
@@ -58,18 +48,21 @@ footer{text-align:center;border-top:1px solid #3c4454;color:#9aacc4;padding:24px
 <nav class="mobile-nav" aria-label="Navegação do telemóvel"><a class="active" href="index.html" aria-current="page"><span class="ico">⌂</span><span>Início</span></a><a href="aq.html"><span class="ico">🛡️</span><span>AQ</span></a><a href="aw.html"><span class="ico">⚔️</span><span>AW</span></a><a href="raid.html"><span class="ico">💀</span><span>RAID</span></a><button id="more-button" type="button" aria-expanded="false" aria-controls="more-panel"><span class="ico">☰</span><span>Mais</span></button></nav>
 <div class="more-overlay" id="more-overlay"></div><div class="more-panel" id="more-panel" role="dialog" aria-label="Mais páginas" aria-modal="true" aria-hidden="true" inert><div class="more-title"><span>⚔️ EXPLORAR ALIANÇA</span><button class="more-close" id="more-close" type="button">Fechar ✕</button></div><div class="more-links"><a href="coliseu.html">🏆 Coliseu</a><a href="bg.html">📊 BG</a><a href="bigthing.html">💥 Big Thing</a><a href="membros.html">👥 Membros</a><a href="recrutamento.html">📝 Recrutamento</a><a href="oficiais.html">🔐 Oficiais</a></div></div>
 <a class="wa" href="https://chat.whatsapp.com/CraGl18qVXMJtIJjsd03pB" target="_blank" rel="noopener noreferrer" aria-label="Entrar no grupo WhatsApp"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 .8A15.1 15.1 0 0 0 3 23.5L.8 31.2l7.9-2.1A15.2 15.2 0 1 0 16 .8Zm0 27.6a12.3 12.3 0 0 1-6.3-1.7l-.5-.3-4.7 1.2 1.3-4.5-.3-.5a12.4 12.4 0 1 1 10.5 5.8Zm6.8-9.2c-.4-.2-2.2-1.1-2.5-1.2-.3-.1-.6-.2-.8.2-.2.3-.9 1.2-1.1 1.4-.2.2-1.6-.6-3.1-1.9-1.1-1-1.9-2.2-2.1-2.6-.2-.4 0-.6.2-.8l.6-.7c.2-.2.3-.4.4-.6.1-.2 0-.5 0-.7l-1.1-2.7c-.3-.7-.6-.6-.8-.6h-.7c-.3 0-.7.1-1 .5s-1.3 1.3-1.3 3.1 1.4 3.8c.2.3 2.6 4 6.2 5.6.9.4 1.6.6 2.1.8.9.3 1.7.2 2.3.1.7-.1 2.2-.9 2.5-1.8.3-.9.3-1.7.2-1.8-.1-.2-.3-.3-.7-.5Z"/></svg></a>
-<!-- CHAT IM: inserir imediatamente antes de <script> no index.html -->
 <button class="im-chat-toggle" id="im-chat-toggle" type="button" aria-label="Abrir chat da aliança" aria-controls="im-chat-window" aria-expanded="false">💬</button>
-<section class="im-chat-window" id="im-chat-window" role="dialog" aria-label="Chat geral IRMÃOS MARVEL" aria-hidden="true">
-  <div class="im-chat-head"><div><strong>💬 CHAT IRMÃOS MARVEL</strong><small>Chat geral da aliança</small></div><button type="button" class="im-chat-close" id="im-chat-close" aria-label="Fechar chat">✕</button></div>
+<section class="im-chat-window" id="im-chat-window" aria-label="Chat geral IRMÃOS MARVEL" aria-hidden="true">
+  <div class="im-chat-head"><div><strong>💬 CHAT IRMÃOS MARVEL</strong><small>Chat geral • mensagens públicas</small></div><button type="button" class="im-chat-close" id="im-chat-close" aria-label="Fechar chat">✕</button></div>
+  <div class="im-chat-identity"><label for="im-chat-name">Nome Marvel</label><input id="im-chat-name" maxlength="30" placeholder="Ex.: SCREAM" autocomplete="nickname" aria-label="O teu nome no Marvel"></div>
   <div class="im-chat-messages" id="im-chat-messages" aria-live="polite"><div class="im-chat-note">A ligar ao chat…</div></div>
-  <form class="im-chat-form" id="im-chat-form"><input id="im-chat-input" maxlength="500" placeholder="Escrever mensagem…" aria-label="Mensagem" autocomplete="off" disabled><button type="submit" id="im-chat-send" disabled>➤</button></form>
+  <div class="im-chat-status" id="im-chat-status" role="status">A ligar…</div>
+  <form class="im-chat-form" id="im-chat-form"><input id="im-chat-input" maxlength="500" placeholder="Escrever mensagem…" aria-label="Mensagem" autocomplete="off" disabled><button type="submit" id="im-chat-send" disabled aria-label="Enviar mensagem">➤</button></form>
 </section>
 <script>
+/* MENU */
 const moreButton=document.getElementById('more-button'),morePanel=document.getElementById('more-panel'),moreOverlay=document.getElementById('more-overlay'),moreClose=document.getElementById('more-close');
 function fecharMais(){morePanel.classList.remove('open');moreOverlay.classList.remove('open');morePanel.setAttribute('aria-hidden','true');morePanel.inert=true;moreButton.setAttribute('aria-expanded','false')}
 function abrirMais(){morePanel.inert=false;morePanel.classList.add('open');moreOverlay.classList.add('open');morePanel.setAttribute('aria-hidden','false');moreButton.setAttribute('aria-expanded','true');moreClose.focus()}
 moreButton.addEventListener('click',()=>morePanel.classList.contains('open')?fecharMais():abrirMais());moreClose.addEventListener('click',()=>{fecharMais();moreButton.focus()});moreOverlay.addEventListener('click',fecharMais);document.addEventListener('keydown',e=>{if(e.key==='Escape'&&morePanel.classList.contains('open')){fecharMais();moreButton.focus()}});window.addEventListener('resize',()=>{if(window.innerWidth>700)fecharMais()});
+/* GOSTOS */
 const avisoBotoes=new Map();
 function avisoChave(a){return a.id!==undefined&&a.id!==null&&String(a.id).trim()?'id:'+String(a.id):'texto:'+JSON.stringify([a.title||'',a.content||'',a.updated_at||''])}
 function mostrarGosto(item,estado){item.button.disabled=false;item.button.setAttribute('aria-pressed',String(!!estado.liked));item.button.textContent=estado.liked?'👍 Gostaste':'👍 Gosto';const n=Number(estado.count)||0;item.counter.textContent=n+' '+(n===1?'gosto':'gostos')}
@@ -77,22 +70,38 @@ async function atualizarGostos(){const ids=[...avisoBotoes.keys()];if(!ids.lengt
 async function alternarGosto(id){const item=avisoBotoes.get(id);if(!item)return;item.button.disabled=true;try{const r=await fetch('/api/public/likes',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({id})});if(!r.ok)throw Error();mostrarGosto(item,await r.json())}catch(e){item.button.disabled=false;item.counter.textContent='Não foi possível guardar. Tenta novamente.'}}
 async function carregarAvisos(){const caixa=document.getElementById('avisos-publicos');try{const r=await fetch('/api/public/entries?section=avisos',{cache:'no-store',credentials:'omit'});if(!r.ok)throw Error();const dados=await r.json();if(!Array.isArray(dados.items))throw Error();caixa.replaceChildren();avisoBotoes.clear();if(!dados.items.length){const vazio=document.createElement('div');vazio.className='notice-empty';const icone=document.createElement('div');icone.className='notice-empty-icon';icone.textContent='📢';const texto=document.createElement('div');texto.textContent='Ainda não existem avisos publicados.';vazio.append(icone,texto);caixa.appendChild(vazio);return}dados.items.forEach((aviso,index)=>{const artigo=document.createElement('article');artigo.className='notice'+(index===0?' featured':'');const topo=document.createElement('div');topo.className='notice-top';const etiqueta=document.createElement('span');etiqueta.className='notice-label';etiqueta.textContent=index===0?'📌 DESTAQUE':'📢 INFORMAÇÃO';const posicao=document.createElement('span');posicao.className='notice-position';posicao.textContent='IRMÃOS MARVEL';topo.append(etiqueta,posicao);const titulo=document.createElement('h3');titulo.textContent=String(aviso.title||'Aviso');const conteudo=document.createElement('p');conteudo.textContent=String(aviso.content||'');const fundo=document.createElement('div');fundo.className='notice-bottom';const data=document.createElement('span');data.className='notice-date';data.textContent=aviso.updated_at?'📅 Atualizado: '+String(aviso.updated_at):'📢 Comunicado da aliança';const id=avisoChave(aviso);const linha=document.createElement('div'),button=document.createElement('button'),counter=document.createElement('span');linha.className='notice-likes';button.type='button';button.className='like-button';button.textContent='👍 Gosto';button.disabled=true;button.setAttribute('aria-pressed','false');counter.className='like-count';counter.textContent='A carregar gostos...';button.addEventListener('click',()=>alternarGosto(id));linha.append(button,counter);fundo.append(data,linha);artigo.append(topo,titulo,conteudo,fundo);avisoBotoes.set(id,{button,counter});caixa.appendChild(artigo)});await atualizarGostos()}catch(e){caixa.replaceChildren();const p=document.createElement('p');p.className='status';p.textContent='Não foi possível carregar os avisos. Tenta atualizar a página.';caixa.appendChild(p)}}
 carregarAvisos();
-/* CHAT IM — acrescentar antes de </script> no index.html.
-   Exige backend seguro em /api/chat: GET {ok:true,messages:[{id,name,text,created_at}]};
-   POST {text} autenticado com sessão do membro. Nunca aceitar nome ou cargo fornecido pelo navegador. */
+/* CHAT IM: API pública /api/chat: GET {ok,messages:[{id,name,message,created_at}]}; POST {action:'send',name,message} */
 (()=>{
- const toggle=document.getElementById('im-chat-toggle'),panel=document.getElementById('im-chat-window'),close=document.getElementById('im-chat-close'),list=document.getElementById('im-chat-messages'),form=document.getElementById('im-chat-form'),input=document.getElementById('im-chat-input'),send=document.getElementById('im-chat-send');
- let timer=null,loading=false,sending=false;
+ const toggle=document.getElementById('im-chat-toggle');
+ const panel=document.getElementById('im-chat-window');
+ const close=document.getElementById('im-chat-close');
+ const list=document.getElementById('im-chat-messages');
+ const form=document.getElementById('im-chat-form');
+ const nameInput=document.getElementById('im-chat-name');
+ const input=document.getElementById('im-chat-input');
+ const send=document.getElementById('im-chat-send');
+ const status=document.getElementById('im-chat-status');
+ let timer=null,loading=false,sending=false,connected=false;
+ try{nameInput.value=localStorage.getItem('im_chat_name')||''}catch(e){}
+ nameInput.addEventListener('change',()=>{try{localStorage.setItem('im_chat_name',nameInput.value.trim())}catch(e){}});
  const note=t=>{list.replaceChildren();const d=document.createElement('div');d.className='im-chat-note';d.textContent=t;list.append(d)};
+ const formatTime=value=>{
+  if(!value)return '';
+  const raw=String(value);
+  const iso=/^\d{4}-\d\d-\d\d \d\d:\d\d:\d\d$/.test(raw)?raw.replace(' ','T')+'Z':raw;
+  const date=new Date(iso);
+  if(Number.isNaN(date.getTime()))return raw;
+  return date.toLocaleTimeString('pt-PT',{hour:'2-digit',minute:'2-digit'});
+ };
  const render=messages=>{
   const atBottom=list.scrollHeight-list.scrollTop-list.clientHeight<65;
   list.replaceChildren();
   if(!messages.length){note('Ainda não existem mensagens. Sê o primeiro a escrever!');return}
   for(const m of messages){
    const article=document.createElement('article');article.className='im-chat-message';
-   const who=document.createElement('b');who.textContent=String(m.name||'Membro');
-   const body=document.createElement('p');body.textContent=String(m.text||'');
-   const time=document.createElement('time');time.textContent=m.created_at?String(m.created_at):'';
+   const who=document.createElement('b');who.textContent=String(m.name||'Jogador');
+   const body=document.createElement('p');body.textContent=String(m.message||'');
+   const time=document.createElement('time');time.textContent=formatTime(m.created_at);
    article.append(who,body,time);list.append(article);
   }
   if(atBottom)list.scrollTop=list.scrollHeight;
@@ -102,26 +111,43 @@ carregarAvisos();
   loading=true;
   try{
    const r=await fetch('/api/chat',{credentials:'same-origin',cache:'no-store'});
-   if(r.status===401||r.status===403){input.disabled=true;send.disabled=true;note('🔒 Chat privado. Precisas de acesso de membro para participar.');return}
-   if(!r.ok)throw Error('API indisponível');
-   const data=await r.json();if(data.ok!==true||!Array.isArray(data.messages))throw Error('Resposta inválida');
-   input.disabled=false;send.disabled=false;render(data.messages);
-  }catch(e){input.disabled=true;send.disabled=true;note('⚙️ O chat ainda precisa de ser ligado à API e à autenticação dos membros.');}
+   if(!r.ok)throw Error('HTTP '+r.status);
+   const data=await r.json();
+   if(data.ok!==true||!Array.isArray(data.messages))throw Error('Resposta inválida');
+   connected=true;input.disabled=false;send.disabled=sending;
+   status.textContent='💬 Chat geral • qualquer visitante pode participar';
+   render(data.messages);
+  }catch(e){connected=false;input.disabled=true;send.disabled=true;status.textContent='⚠️ Não foi possível ligar ao chat';note('O chat está temporariamente indisponível. Tenta novamente daqui a pouco.');}
   finally{loading=false}
  }
- function setOpen(open){panel.classList.toggle('open',open);panel.setAttribute('aria-hidden',String(!open));toggle.setAttribute('aria-expanded',String(open));toggle.setAttribute('aria-label',open?'Fechar chat da aliança':'Abrir chat da aliança');clearInterval(timer);timer=null;if(open){refresh();timer=setInterval(refresh,5000)}else toggle.focus()}
+ function setOpen(open){
+  panel.classList.toggle('open',open);
+  panel.setAttribute('aria-hidden',String(!open));
+  toggle.setAttribute('aria-expanded',String(open));
+  toggle.setAttribute('aria-label',open?'Fechar chat da aliança':'Abrir chat da aliança');
+  clearInterval(timer);timer=null;
+  if(open){refresh();timer=setInterval(refresh,5000)}else toggle.focus();
+ }
  toggle.addEventListener('click',()=>setOpen(!panel.classList.contains('open')));
  close.addEventListener('click',()=>setOpen(false));
  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&panel.classList.contains('open'))setOpen(false)});
  form.addEventListener('submit',async e=>{
-  e.preventDefault();const message=input.value.trim();if(!message||sending||input.disabled)return;
-  sending=true;send.disabled=true;
-  try{const r=await fetch('/api/chat',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:message})});if(!r.ok)throw Error();input.value='';await refresh()}
-  catch(e){alert('Não foi possível enviar. Verifica o acesso ao chat e tenta novamente.')}
-  finally{sending=false;send.disabled=input.disabled}
+  e.preventDefault();
+  const name=nameInput.value.trim(),message=input.value.trim();
+  if(!connected||sending)return;
+  if(!name||name.length>30){status.textContent='⚠️ Escreve o teu nome Marvel (máximo 30 caracteres).';nameInput.focus();return}
+  if(!message||message.length>500)return;
+  try{localStorage.setItem('im_chat_name',name)}catch(e){}
+  sending=true;send.disabled=true;status.textContent='A enviar…';
+  try{
+   const r=await fetch('/api/chat',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'send',name,message})});
+   const data=await r.json().catch(()=>({}));
+   if(!r.ok||data.ok!==true)throw Error(data.error||'Não foi possível enviar');
+   input.value='';status.textContent='Mensagem enviada ✓';await refresh();
+  }catch(e){status.textContent='⚠️ '+e.message}
+  finally{sending=false;send.disabled=!connected}
  });
 })();
-
 </script>
 </body>
 </html>
