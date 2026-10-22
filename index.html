@@ -22,6 +22,7 @@ body{
   font-family:system-ui,-apple-system,Segoe UI,sans-serif;
 }
 a{color:inherit;text-decoration:none}
+button{font:inherit}
 .wrap{max-width:1400px;margin:auto;padding:0 18px}
 
 /* CABEÇALHO */
@@ -194,7 +195,6 @@ a{color:inherit;text-decoration:none}
 .like-button:disabled{opacity:.55}
 .like-count{color:#a5c1e2;font-size:13px}
 .status{color:#c3d0e3}
-
 .strength{padding:22px}
 .numbers{
   display:grid;
@@ -233,7 +233,6 @@ footer{
   color:#9aacc4;
   padding:24px 15px 105px;
 }
-.mobile{display:none}
 
 /* WHATSAPP */
 .wa{
@@ -257,30 +256,16 @@ footer{
   fill:currentColor;
 }
 
-/* ANIMAÇÕES CINEMATOGRÁFICAS */
+/* ANIMAÇÕES */
 @keyframes imBannerEntrada{
-  from{
-    opacity:0;
-    transform:translateY(18px) scale(.97);
-  }
-  to{
-    opacity:1;
-    transform:translateY(0) scale(1);
-  }
+  from{opacity:0;transform:translateY(18px) scale(.97)}
+  to{opacity:1;transform:translateY(0) scale(1)}
 }
 @keyframes imCartaoEntrada{
-  from{
-    opacity:0;
-    transform:translateY(22px);
-  }
-  to{
-    opacity:1;
-    transform:translateY(0);
-  }
+  from{opacity:0;transform:translateY(22px)}
+  to{opacity:1;transform:translateY(0)}
 }
-.hero{
-  animation:imBannerEntrada .85s ease-out both;
-}
+.hero{animation:imBannerEntrada .85s ease-out both}
 .tile{
   animation:imCartaoEntrada .65s ease-out both;
   transition:
@@ -294,27 +279,25 @@ footer{
 .tile:nth-child(4){animation-delay:.36s}
 .tile:nth-child(5){animation-delay:.44s}
 .tile:nth-child(6){animation-delay:.52s}
-
-.tile:hover,
-.tile:focus-visible{
+.tile:hover,.tile:focus-visible{
   transform:translateY(-5px);
   border-color:#ffc66a;
-  box-shadow:
-    0 0 22px var(--glow),
-    0 0 8px #ffc66a55;
+  box-shadow:0 0 22px var(--glow),0 0 8px #ffc66a55;
 }
-.tile:active{
-  transform:scale(.97);
-}
+.tile:active{transform:scale(.97)}
 .panel{
   animation:imCartaoEntrada .8s ease-out both;
   animation-delay:.35s;
 }
-.notice{
-  animation:imCartaoEntrada .5s ease-out both;
+.notice{animation:imCartaoEntrada .5s ease-out both}
+
+/* NOVO MENU PREMIUM */
+.mobile-nav,
+.more-overlay,
+.more-panel{
+  display:none;
 }
 
-/* TABLETS */
 @media(max-width:1000px){
   .cards{grid-template-columns:repeat(3,1fr)}
   .nav{font-size:12px}
@@ -322,7 +305,6 @@ footer{
   .tile{min-height:128px}
 }
 
-/* TELEMÓVEIS */
 @media(max-width:700px){
   .wrap{padding:0 12px}
   .topin{min-height:65px}
@@ -331,7 +313,6 @@ footer{
   .nav{display:none}
   .hero{margin:12px auto}
   .hero img{
-    display:block;
     width:100%;
     height:auto;
     object-fit:contain;
@@ -345,35 +326,122 @@ footer{
   .tile strong{font-size:20px}
   .section{grid-template-columns:1fr}
   .panel h2{font-size:19px}
-  .mobile{
-    display:flex;
+
+  .mobile-nav{
+    display:grid;
+    grid-template-columns:repeat(5,minmax(0,1fr));
+    gap:5px;
     position:fixed;
     bottom:0;
     left:0;
     right:0;
-    background:#050b17f7;
-    border-top:1px solid #997536;
-    overflow:auto;
+    z-index:30;
+    padding:9px 9px calc(9px + env(safe-area-inset-bottom));
+    background:#040c1cf7;
+    border-top:1px solid #a7803e;
+    box-shadow:0 -7px 28px #0009;
+    backdrop-filter:blur(16px);
+    -webkit-backdrop-filter:blur(16px);
+  }
+
+  .mobile-nav a,
+  .mobile-nav button{
+    border:1px solid transparent;
+    border-radius:11px;
+    background:transparent;
+    color:#c7d7ec;
+    min-width:0;
+    padding:9px 2px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
     gap:5px;
-    padding:8px 7px calc(8px + env(safe-area-inset-bottom));
-    z-index:10;
-    scrollbar-width:none;
-  }
-  .mobile a{
-    flex:1;
-    min-width:62px;
-    text-align:center;
-    white-space:nowrap;
     font-size:11px;
-    padding:8px 5px;
-    color:#e5d5b7;
+    font-weight:750;
+    cursor:pointer;
   }
-  .mobile .active{
-    background:#3a2b15;
-    border-radius:7px;
+
+  .mobile-nav .ico{
+    font-size:23px;
+    line-height:1;
   }
+
+  .mobile-nav .active,
+  .mobile-nav button[aria-expanded="true"]{
+    background:#4a361b;
+    border-color:#b48a48;
+    color:#ffd17c;
+  }
+
+  .more-overlay{
+    position:fixed;
+    inset:0;
+    z-index:24;
+    background:#0009;
+  }
+  .more-overlay.open{display:block}
+
+  .more-panel{
+    position:fixed;
+    left:10px;
+    right:10px;
+    bottom:calc(84px + env(safe-area-inset-bottom));
+    z-index:25;
+    border:1px solid #b48a48;
+    border-radius:18px;
+    background:linear-gradient(160deg,#142640,#050d1c);
+    padding:16px;
+    box-shadow:0 0 40px #000c;
+  }
+  .more-panel.open{display:block}
+
+  .more-title{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    color:#ffd17c;
+    font-weight:900;
+    margin-bottom:14px;
+  }
+  .more-close{
+    background:#25344d;
+    color:white;
+    border:1px solid #65748a;
+    border-radius:9px;
+    padding:6px 11px;
+    cursor:pointer;
+  }
+  .more-links{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:10px;
+  }
+  .more-links a{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:14px 12px;
+    border:1px solid #344c6c;
+    border-radius:12px;
+    background:#11223b;
+    font-size:14px;
+    font-weight:750;
+  }
+  .more-links a:active{
+    background:#263b58;
+  }
+  .more-links a:last-child{
+    grid-column:1/-1;
+  }
+
   .wa{
-    bottom:calc(87px + env(safe-area-inset-bottom));
+    bottom:calc(90px + env(safe-area-inset-bottom));
+  }
+
+  footer{
+    padding-bottom:115px;
   }
 }
 
@@ -395,6 +463,7 @@ footer{
       <img src="logo-im.webp" alt="Logo IM">
       IRMÃOS <span>MARVEL</span>
     </a>
+
     <nav class="nav">
       <a class="active" href="index.html">⌂ INÍCIO</a>
       <a href="aq.html">🛡️ AQ</a>
@@ -423,26 +492,31 @@ footer{
       <strong>AQ</strong>
       <small>ALLIANCE QUEST</small>
     </a>
+
     <a class="tile" style="--glow:#d5294388" href="aw.html">
       <span class="symbol">⚔️</span>
       <strong>AW</strong>
       <small>ALLIANCE WAR</small>
     </a>
+
     <a class="tile" style="--glow:#8247f888" href="raid.html">
       <span class="symbol">💀</span>
       <strong>RAID</strong>
       <small>ALLIANCE RAID</small>
     </a>
+
     <a class="tile" style="--glow:#ff9a2488" href="coliseu.html">
       <span class="symbol">🏆</span>
       <strong>COLISEU</strong>
       <small>ALIANÇA EM AÇÃO</small>
     </a>
+
     <a class="tile" style="--glow:#168bff88" href="bg.html">
       <span class="symbol">📊</span>
       <strong>BG</strong>
       <small>BATTLEGROUNDS</small>
     </a>
+
     <a class="tile" style="--glow:#ffd26b88" href="bigthing.html">
       <span class="symbol">💥</span>
       <strong>BIG THING</strong>
@@ -451,7 +525,6 @@ footer{
   </div>
 
   <div class="section">
-
     <section class="panel">
       <h2>📢 AVISOS <span>DA ALIANÇA</span></h2>
       <div class="notices" id="avisos-publicos">
@@ -481,26 +554,61 @@ footer{
         </div>
       </div>
     </aside>
-
   </div>
 </main>
 
-<footer>
-  © IRMÃOS MARVEL • Comunidade não oficial
-</footer>
+<footer>© IRMÃOS MARVEL • Comunidade não oficial</footer>
 
-<nav class="mobile">
-  <a class="active" href="index.html">⌂ Início</a>
-  <a href="aq.html">🛡️ AQ</a>
-  <a href="aw.html">⚔️ AW</a>
-  <a href="raid.html">💀 RAID</a>
-  <a href="coliseu.html">🏆 Coliseu</a>
-  <a href="bg.html">📊 BG</a>
-  <a href="bigthing.html">💥 Big Thing</a>
-  <a href="membros.html">👥 Membros</a>
-  <a href="oficiais.html">🔐 Oficiais</a>
+<!-- MENU INFERIOR DO TELEMÓVEL -->
+<nav class="mobile-nav" aria-label="Navegação do telemóvel">
+  <a class="active" href="index.html" aria-current="page">
+    <span class="ico">⌂</span>
+    <span>Início</span>
+  </a>
+  <a href="aq.html">
+    <span class="ico">🛡️</span>
+    <span>AQ</span>
+  </a>
+  <a href="aw.html">
+    <span class="ico">⚔️</span>
+    <span>AW</span>
+  </a>
+  <a href="raid.html">
+    <span class="ico">💀</span>
+    <span>RAID</span>
+  </a>
+  <button
+    id="more-button"
+    type="button"
+    aria-expanded="false"
+    aria-controls="more-panel">
+    <span class="ico">☰</span>
+    <span>Mais</span>
+  </button>
 </nav>
 
+<!-- PAINEL MAIS -->
+<div class="more-overlay" id="more-overlay"></div>
+
+<div class="more-panel" id="more-panel" role="dialog"
+     aria-label="Mais páginas" aria-modal="true"
+     aria-hidden="true" inert>
+  <div class="more-title">
+    <span>⚔️ EXPLORAR ALIANÇA</span>
+    <button class="more-close" id="more-close" type="button">
+      Fechar ✕
+    </button>
+  </div>
+  <div class="more-links">
+    <a href="coliseu.html">🏆 Coliseu</a>
+    <a href="bg.html">📊 BG</a>
+    <a href="bigthing.html">💥 Big Thing</a>
+    <a href="membros.html">👥 Membros</a>
+    <a href="oficiais.html">🔐 Oficiais</a>
+  </div>
+</div>
+
+<!-- WHATSAPP -->
 <a
   class="wa"
   href="https://chat.whatsapp.com/CraGl18qVXMJtIJjsd03pB"
@@ -514,6 +622,55 @@ footer{
 </a>
 
 <script>
+/* MENU MAIS */
+const moreButton=document.getElementById('more-button');
+const morePanel=document.getElementById('more-panel');
+const moreOverlay=document.getElementById('more-overlay');
+const moreClose=document.getElementById('more-close');
+
+function fecharMais(){
+  morePanel.classList.remove('open');
+  moreOverlay.classList.remove('open');
+  morePanel.setAttribute('aria-hidden','true');
+  morePanel.inert=true;
+  moreButton.setAttribute('aria-expanded','false');
+}
+
+function abrirMais(){
+  morePanel.inert=false;
+  morePanel.classList.add('open');
+  moreOverlay.classList.add('open');
+  morePanel.setAttribute('aria-hidden','false');
+  moreButton.setAttribute('aria-expanded','true');
+  moreClose.focus();
+}
+
+moreButton.addEventListener('click',()=>{
+  if(morePanel.classList.contains('open')){
+    fecharMais();
+  }else{
+    abrirMais();
+  }
+});
+
+moreClose.addEventListener('click',()=>{
+  fecharMais();
+  moreButton.focus();
+});
+moreOverlay.addEventListener('click',fecharMais);
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape' && morePanel.classList.contains('open')){
+    fecharMais();
+    moreButton.focus();
+  }
+});
+
+window.addEventListener('resize',()=>{
+  if(window.innerWidth>700)fecharMais();
+});
+
+/* AVISOS E GOSTOS */
 const avisoBotoes=new Map();
 
 function avisoChave(a){
