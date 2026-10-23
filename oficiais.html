@@ -362,6 +362,15 @@ footer{
  }
  .more-links a:last-child{grid-column:1/-1}
 }
+
+/* AQ: seletores visíveis e confortáveis no telemóvel */
+.aq-lines{display:grid;gap:12px;margin:18px 0}
+.aq-line{display:grid;grid-template-columns:minmax(90px,150px) minmax(0,1fr) auto;gap:12px;align-items:center;background:#061b37;border:1px solid #3973aa;border-radius:13px;padding:13px}
+.aq-line label{color:#ffc66a;font-weight:850}
+.aq-line select{width:100%;min-width:0;background:#06162e;border:1px solid #5289c0;color:#fff;border-radius:10px;padding:12px}
+.aq-line button{border:1px solid #b48a48;background:#514022;color:#ffdc9b;border-radius:10px;padding:12px;font-weight:800}
+.aq-line button:disabled{opacity:.55}
+@media(max-width:760px){.aq-line{grid-template-columns:1fr}.aq-line button{width:100%}}
 </style>
 </head>
 <body>
@@ -411,7 +420,8 @@ footer{
 
 <nav class="quick-links" aria-label="Acesso rápido às ferramentas">
 <a href="#gestao-recrutamento">📝 Recrutamento</a>
-<a href="#gestao-v13">✍️ Publicações</a>
+<a href="#gestao-aq">🛡️ Caminhos AQ M8</a>
+ <a href="#gestao-v13">✍️ Publicações</a>
 <a href="#gestao-membros">👥 Jogadores</a>
 <a href="#troca-membros">🔄 Trocas</a>
 <a href="#historico-membros">📜 Histórico</a>
@@ -485,6 +495,30 @@ A verificar ligação segura ao recrutamento…
 A carregar candidaturas…
 </div>
 <div class="roster-list" id="rec-list" aria-live="polite"></div>
+</section>
+
+
+<!-- GESTÃO AQ M8 INTEGRADA -->
+<section class="roster-admin" id="gestao-aq">
+ <span class="admin-pill">🛡️ AQ MAPA 8 • GESTÃO DOS OFICIAIS</span>
+ <h2>🛡️ Gestão dos Caminhos AQ M8</h2>
+ <p>Escolhe os jogadores que já estão registados em Membros. As atribuições são independentes por grupo e Tier.</p>
+ <div class="roster-toolbar" id="aq-groups" aria-label="Grupos AQ">
+  <button type="button" data-group="1" class="selected">G1</button>
+  <button type="button" data-group="2">G2</button>
+  <button type="button" data-group="3">G3</button>
+ </div>
+ <div class="roster-toolbar" id="aq-tiers" aria-label="Tiers AQ">
+  <button type="button" data-tier="1" class="selected">Tier 1 · 7 linhas</button>
+  <button type="button" data-tier="2">Tier 2 · 9 linhas</button>
+  <button type="button" data-tier="3">Tier 3 · 8 linhas</button>
+ </div>
+ <div class="roster-status" id="aq-status" role="status">A carregar os jogadores da aliança…</div>
+ <div id="aq-lines" class="aq-lines" aria-live="polite"></div>
+ <div class="recruitment-controls">
+  <button type="button" id="aq-refresh">↻ Atualizar jogadores e caminhos</button>
+  <a class="admin-link" href="aq.html">🌐 Ver página pública AQ</a>
+ </div>
 </section>
 
 <section id="gestao-v13" class="admin-hero">
@@ -1617,8 +1651,116 @@ window.addEventListener('resize',()=>{
 })();
 </script>
 
-<!-- GESTÃO DOS CAMINHOS AQ M8 -->
-<script src="aq-oficiais.js" defer></script>
+<!-- GESTÃO DOS CAMINHOS AQ M8 • INTEGRADA NESTE HTML -->
+<script>
+(()=>{
+ 'use strict';
+ const $=id=>document.getElementById(id);
+ const counts={1:7,2:9,3:8};
+ let group=1,tier=1,members=[],assignments=[],loading=false,ready=false;
+ const status=message=>$('aq-status').textContent=message;
+ const lineContainer=$('aq-lines');
+ function pickItems(data){
+  if(Array.isArray(data))return data;
+  if(Array.isArray(data?.items))return data.items;
+  if(Array.isArray(data?.members))return data.members;
+  if(Array.isArray(data?.assignments))return data.assignments;
+  if(Array.isArray(data?.data))return data.data;
+  return null;
+ }
+ async function request(url,options={}){
+  const response=await fetch(url,{credentials:'same-origin',cache:'no-store',headers:{Accept:'application/json',...(options.body?{'Content-Type':'application/json'}:{})},...options});
+  const type=response.headers.get('content-type')||'';
+  if(!type.includes('json'))throw Error('A rota '+url+' não devolveu JSON (HTTP '+response.status+'). Confirma a Cloudflare Access e a publicação da API.');
+  const data=await response.json();
+  if(!response.ok||data?.error)throw Error(data?.error||'Erro HTTP '+response.status+' em '+url);
+  return data;
+ }
+ function memberGroup(member){
+  const raw=member.group_no??member.group??member.group_name??member.grupo;
+  const match=String(raw??'').match(/[123]/);
+  return match?Number(match[0]):0;
+ }
+ function assignmentLine(item){return Number(item.line_no??item.line??item.linha??item.path_no)}
+ function assignmentGroup(item){return Number(String(item.group_no??item.group??item.group_name??'').replace(/\D/g,''))}
+ function assignmentTier(item){return Number(item.tier??item.tier_no)}
+ function assignmentMember(item){return String(item.member_id??item.player_id??item.member?.id??'')}
+ function showSelection(){
+  for(const b of $('aq-groups').querySelectorAll('button'))b.classList.toggle('selected',Number(b.dataset.group)===group);
+  for(const b of $('aq-tiers').querySelectorAll('button'))b.classList.toggle('selected',Number(b.dataset.tier)===tier);
+ }
+ function render(){
+  showSelection();lineContainer.replaceChildren();
+  const players=members.filter(m=>memberGroup(m)===group).sort((a,b)=>Number(a.position||0)-Number(b.position||0));
+  const existing=assignments.filter(a=>assignmentGroup(a)===group&&assignmentTier(a)===tier);
+  if(!ready){status('⚠️ Não foi possível carregar a lista de jogadores.');return}
+  status('✓ G'+group+' · Tier '+tier+' · '+players.length+' jogadores disponíveis · '+existing.filter(a=>assignmentMember(a)).length+' linha(s) atribuída(s).');
+  if(!players.length){
+   const note=document.createElement('p');note.className='roster-status';
+   note.textContent='⚠️ Não foram encontrados jogadores do G'+group+' na resposta de /api/members. Verifica o grupo atribuído aos membros no painel Jogadores.';
+   lineContainer.append(note);
+  }
+  for(let i=1;i<=counts[tier];i++){
+   const line=document.createElement('div');line.className='aq-line';
+   const label=document.createElement('label');label.textContent='Linha '+i;
+   const select=document.createElement('select');select.setAttribute('aria-label','Jogador da linha '+i);select.disabled=!players.length;
+   const empty=document.createElement('option');empty.value='';empty.textContent='— Por atribuir —';select.append(empty);
+   for(const player of players){const option=document.createElement('option');option.value=String(player.id);option.textContent=player.name;select.append(option)}
+   const assigned=existing.find(a=>assignmentLine(a)===i);
+   if(assigned){
+    const id=assignmentMember(assigned);
+    if(id&&!players.some(m=>String(m.id)===id)){
+     const old=document.createElement('option');old.value=id;old.textContent=(assigned.member_name||'Jogador de outro grupo')+' (não disponível)';select.append(old);
+    }
+    select.value=id;
+   }
+   const save=document.createElement('button');save.type='button';save.textContent='💾 Guardar';save.disabled=!players.length;
+   save.onclick=async()=>{
+    if(loading)return;
+    const chosen=select.value;
+    const duplicate=[...lineContainer.querySelectorAll('select')].some(s=>s!==select&&s.value&&s.value===chosen);
+    if(chosen&&duplicate){status('⚠️ Este jogador já está selecionado noutra linha do mesmo Tier.');return}
+    loading=true;save.disabled=true;save.textContent='A guardar…';
+    try{
+     const payload={group_no:group,tier,line_no:i,member_id:chosen?Number(chosen):null};
+     // A API deve aceitar POST com este corpo, incluindo member_id:null para limpar.
+     await request('/api/aq-assignments',{method:'POST',body:JSON.stringify(payload)});
+     await load();status('✓ Linha '+i+' guardada. G'+group+' · Tier '+tier+'.');
+    }catch(error){status('⚠️ Não foi possível guardar a linha '+i+': '+error.message)}
+    finally{loading=false;save.disabled=false;save.textContent='💾 Guardar'}
+   };
+   line.append(label,select,save);lineContainer.append(line);
+  }
+ }
+ async function load(){
+  if(loading&&ready)return;
+  status('A carregar os jogadores e os caminhos…');
+  const results=await Promise.allSettled([request('/api/members'),request('/api/aq-assignments')]);
+  const memberResult=results[0],assignmentResult=results[1];
+  if(memberResult.status==='rejected'){
+   ready=false;lineContainer.replaceChildren();
+   status('⚠️ Erro ao carregar /api/members: '+memberResult.reason.message);
+   return;
+  }
+  const players=pickItems(memberResult.value);
+  if(!players){ready=false;lineContainer.replaceChildren();status('⚠️ A resposta de /api/members não contém uma lista de jogadores.');return}
+  members=players;ready=true;
+  if(assignmentResult.status==='fulfilled'){
+   const items=pickItems(assignmentResult.value);
+   assignments=items||[];
+   render();
+   if(!items)status('⚠️ Jogadores carregados, mas a API de caminhos devolveu um formato inesperado.');
+  }else{
+   assignments=[];render();
+   status('⚠️ '+members.length+' jogadores carregados. Não foi possível consultar os caminhos guardados: '+assignmentResult.reason.message);
+  }
+ }
+ $('aq-groups').addEventListener('click',event=>{const b=event.target.closest('button[data-group]');if(!b)return;group=Number(b.dataset.group);render()});
+ $('aq-tiers').addEventListener('click',event=>{const b=event.target.closest('button[data-tier]');if(!b)return;tier=Number(b.dataset.tier);render()});
+ $('aq-refresh').addEventListener('click',load);
+ load();
+})();
+</script>
 
 </body>
 </html>
