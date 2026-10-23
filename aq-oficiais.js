@@ -2,10 +2,9 @@
 (() => {
   "use strict";
 
-  const API = "/api/aq-assignments";
-  const MEMBERS_API = "/api/members";
+  const $ = id => document.getElementById(id);
 
-  const LIMITS = {
+  const limits = {
     1: 7,
     2: 9,
     3: 8
@@ -16,11 +15,7 @@
   let members = [];
   let assignments = [];
   let busy = false;
-  let loaded = false;
 
-  const $ = id => document.getElementById(id);
-
-  // Criar o painel AQ
   const section = document.createElement("section");
 
   section.className = "roster-admin";
@@ -34,25 +29,36 @@
     <h2>🛡️ Gestão dos Caminhos AQ M8</h2>
 
     <p>
-      Organiza os caminhos de cada jogador nos três
-      grupos da aliança. Cada Tier tem atribuições
-      independentes.
+      Escolhe o grupo e o Tier.
+      Cada jogador pode ocupar apenas uma linha
+      em cada Tier.
+      As alterações ficam visíveis na página pública AQ.
     </p>
 
     <div class="roster-toolbar" id="aq-group-tabs">
-      <button type="button" data-aq-group="1"
-        class="selected">G1</button>
-      <button type="button" data-aq-group="2">G2</button>
-      <button type="button" data-aq-group="3">G3</button>
+      <button type="button"
+        data-aq-group="1" class="selected">G1</button>
+
+      <button type="button"
+        data-aq-group="2">G2</button>
+
+      <button type="button"
+        data-aq-group="3">G3</button>
     </div>
 
     <div class="roster-toolbar" id="aq-tier-tabs">
-      <button type="button" data-aq-tier="1"
-        class="selected">Tier 1 · 7 linhas</button>
-      <button type="button" data-aq-tier="2">
+      <button type="button"
+        data-aq-tier="1" class="selected">
+        Tier 1 · 7 linhas
+      </button>
+
+      <button type="button"
+        data-aq-tier="2">
         Tier 2 · 9 linhas
       </button>
-      <button type="button" data-aq-tier="3">
+
+      <button type="button"
+        data-aq-tier="3">
         Tier 3 · 8 linhas
       </button>
     </div>
@@ -64,44 +70,40 @@
 
     <div id="aq-admin-lines" class="v13-list"></div>
 
-    <div class="quick-links">
-      <button type="button" id="aq-admin-refresh"
-        class="admin-link">
-        ↻ Atualizar caminhos
-      </button>
+    <button type="button"
+      id="aq-admin-refresh"
+      class="admin-link">
+      ↻ Atualizar caminhos
+    </button>
 
-      <a class="admin-link" href="aq.html">
-        🌐 Ver página pública AQ
-      </a>
-    </div>
+    <a class="admin-link" href="aq.html">
+      🌐 Ver página pública AQ
+    </a>
   `;
 
-  // Inserir antes do painel de publicações
-  const reference = $("gestao-v13");
+  const before = $("gestao-v13");
 
-  if (reference) {
-    reference.before(section);
+  if (before) {
+    before.before(section);
   } else {
     document.querySelector("main")?.append(section);
   }
 
-  // Adicionar atalho no topo
-  const quickLinks = document.querySelector(".quick-links");
+  const quick = document.querySelector(".quick-links");
 
-  if (quickLinks) {
-    const link = document.createElement("a");
-    link.href = "#gestao-aq";
-    link.textContent = "🛡️ Caminhos AQ";
-    quickLinks.append(link);
+  if (quick) {
+    const a = document.createElement("a");
+    a.href = "#gestao-aq";
+    a.textContent = "🛡️ Caminhos AQ";
+    quick.append(a);
   }
 
-  function status(message) {
+  const status = message => {
     $("aq-admin-status").textContent = message;
-  }
+  };
 
-  async function getData(url) {
+  async function get(url) {
     const response = await fetch(url, {
-      method: "GET",
       credentials: "same-origin",
       cache: "no-store",
       headers: {
@@ -110,20 +112,20 @@
     });
 
     const data = await response.json().catch(() => ({
-      error: "Resposta inválida do servidor."
+      error: "Resposta não JSON"
     }));
 
     if (!response.ok) {
-      throw new Error(
-        data.error || "Erro HTTP " + response.status
+      throw Error(
+        data.error || "HTTP " + response.status
       );
     }
 
     return data;
   }
 
-  async function saveLine(line, memberId) {
-    const response = await fetch(API, {
+  async function save(line, memberId) {
+    const response = await fetch("/api/aq-assignments", {
       method: "POST",
       credentials: "same-origin",
       headers: {
@@ -139,11 +141,11 @@
     });
 
     const data = await response.json().catch(() => ({
-      error: "Resposta inválida do servidor."
+      error: "Resposta não JSON"
     }));
 
     if (!response.ok || !data.ok) {
-      throw new Error(
+      throw Error(
         data.error || "Não foi possível guardar."
       );
     }
@@ -152,44 +154,33 @@
   }
 
   function render() {
-    const groupTabs = $("aq-group-tabs");
-    const tierTabs = $("aq-tier-tabs");
-    const container = $("aq-admin-lines");
+    for (const button of
+      $("aq-group-tabs").querySelectorAll("button")) {
 
-    for (const button of groupTabs.querySelectorAll("button")) {
       button.classList.toggle(
         "selected",
         Number(button.dataset.aqGroup) === group
       );
     }
 
-    for (const button of tierTabs.querySelectorAll("button")) {
+    for (const button of
+      $("aq-tier-tabs").querySelectorAll("button")) {
+
       button.classList.toggle(
         "selected",
         Number(button.dataset.aqTier) === tier
       );
     }
 
-    container.replaceChildren();
+    const target = $("aq-admin-lines");
+    target.replaceChildren();
 
-    if (!loaded) return;
+    const roster = members.filter(
+      member => Number(member.group_no) === group
+    );
 
-    const roster = members
-      .filter(player => Number(player.group_no) === group)
-      .sort((a, b) =>
-        Number(a.position || 0) -
-        Number(b.position || 0)
-      );
+    for (let line = 1; line <= limits[tier]; line++) {
 
-    if (!roster.length) {
-      status(
-        "⚠️ Não existem jogadores disponíveis no G" +
-        group + ". Verifica a lista de membros."
-      );
-      return;
-    }
-
-    for (let line = 1; line <= LIMITS[tier]; line++) {
       const existing = assignments.find(item =>
         Number(item.group_no) === group &&
         Number(item.tier) === tier &&
@@ -223,19 +214,21 @@
       free.textContent = "🟢 Livre";
       select.append(free);
 
-      for (const player of roster) {
+      for (const member of roster) {
+
         const assignedElsewhere = assignments.some(item =>
           Number(item.group_no) === group &&
           Number(item.tier) === tier &&
-          Number(item.member_id) === Number(player.id) &&
+          Number(item.member_id) === Number(member.id) &&
           Number(item.line_no) !== line
         );
 
         const option = document.createElement("option");
 
-        option.value = String(player.id);
-        option.textContent = player.name +
-          (assignedElsewhere ? " · Já atribuído" : "");
+        option.value = String(member.id);
+
+        option.textContent = member.name +
+          (assignedElsewhere ? " (já atribuído)" : "");
 
         option.disabled = assignedElsewhere;
 
@@ -247,19 +240,22 @@
         : "";
 
       if (select.selectedIndex < 0 && existing) {
+
         const unknown = document.createElement("option");
+
         unknown.value = String(existing.member_id);
         unknown.textContent = "⚠️ Jogador não encontrado";
+
         select.append(unknown);
         select.value = unknown.value;
       }
 
-      const save = document.createElement("button");
+      const button = document.createElement("button");
+      button.type = "button";
 
-      save.type = "button";
-      save.textContent = "💾 Guardar linha " + line;
+      button.textContent = "💾 Guardar linha " + line;
 
-      save.style.cssText = `
+      button.style.cssText = `
         margin-top:12px;
         background:#125fae;
         color:white;
@@ -269,66 +265,71 @@
         font-weight:850;
       `;
 
-      save.onclick = async () => {
+      button.onclick = async () => {
         if (busy) return;
 
         busy = true;
-        save.disabled = true;
+        button.disabled = true;
 
-        const selectedGroup = group;
-        const selectedTier = tier;
-
-        const memberId = select.value === ""
+        const chosen = select.value === ""
           ? null
           : Number(select.value);
 
         status(
-          "⏳ A guardar G" + selectedGroup +
-          " · Tier " + selectedTier +
+          "⏳ A guardar G" + group +
+          " · Tier " + tier +
           " · Linha " + line + "…"
         );
 
         try {
-          await saveLine(line, memberId);
+          await save(line, chosen);
           await load();
 
           status(
-            "✓ Caminho guardado! G" + selectedGroup +
-            " · Tier " + selectedTier +
+            "✓ Caminho guardado na D1. G" + group +
+            " · Tier " + tier +
             " · Linha " + line
           );
+
         } catch (error) {
           status("⚠️ " + error.message);
-          save.disabled = false;
+          button.disabled = false;
+
         } finally {
           busy = false;
         }
       };
 
-      card.append(heading, select, save);
-      container.append(card);
+      card.append(heading, select, button);
+      target.append(card);
+    }
+
+    if (!roster.length) {
+      status(
+        "⚠️ Nenhum jogador encontrado no G" + group +
+        ". Confirma /api/members."
+      );
     }
   }
 
   async function load() {
-    status("⏳ A carregar dados da Cloudflare D1…");
+    status("⏳ A carregar D1…");
 
     try {
-      const [aqData, memberData] = await Promise.all([
-        getData(API),
-        getData(MEMBERS_API)
+      const [aq, membersData] = await Promise.all([
+        get("/api/aq-assignments"),
+        get("/api/members")
       ]);
 
       if (
-        !Array.isArray(aqData.items) ||
-        !Array.isArray(memberData.items)
+        !Array.isArray(aq.items) ||
+        !Array.isArray(membersData.items)
       ) {
-        throw new Error("Dados inválidos das APIs.");
+        throw Error("Dados inválidos da API.");
       }
 
-      assignments = aqData.items;
-      members = memberData.items;
-      loaded = true;
+      assignments = aq.items;
+      members = membersData.items;
 
       render();
 
@@ -337,11 +338,15 @@
         Number(item.tier) === tier
       ).length;
 
-      status(
-        "✓ G" + group +
-        " · Tier " + tier +
-        " · " + count + " linha(s) atribuída(s)."
-      );
+      if (members.some(
+        member => Number(member.group_no) === group
+      )) {
+        status(
+          "✓ G" + group +
+          " · Tier " + tier +
+          " · " + count + " linhas atribuídas."
+        );
+      }
 
     } catch (error) {
       status("⚠️ " + error.message);
@@ -349,26 +354,22 @@
   }
 
   $("aq-group-tabs").onclick = event => {
-    if (busy) return;
-
     const button = event.target.closest(
-      "button[data-aq-group]"
+      "[data-aq-group]"
     );
 
-    if (!button) return;
+    if (!button || busy) return;
 
     group = Number(button.dataset.aqGroup);
     render();
   };
 
   $("aq-tier-tabs").onclick = event => {
-    if (busy) return;
-
     const button = event.target.closest(
-      "button[data-aq-tier]"
+      "[data-aq-tier]"
     );
 
-    if (!button) return;
+    if (!button || busy) return;
 
     tier = Number(button.dataset.aqTier);
     render();
