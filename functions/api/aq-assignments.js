@@ -12,29 +12,28 @@ function json(data, status = 200) {
   });
 }
 
-function decodeBase64(value) {
+function b64(value) {
   const normalized = value
     .replace(/-/g, "+")
     .replace(/_/g, "/");
 
-  const padded = normalized +
-    "=".repeat((4 - normalized.length % 4) % 4);
-
   return Uint8Array.from(
-    atob(padded),
+    atob(
+      normalized +
+      "=".repeat((4 - normalized.length % 4) % 4)
+    ),
     character => character.charCodeAt(0)
   );
 }
 
-function decodeJSON(value) {
+function decode(value) {
   return JSON.parse(
-    new TextDecoder().decode(decodeBase64(value))
+    new TextDecoder().decode(b64(value))
   );
 }
 
-// Verifica o JWT do Cloudflare Access
-// e confirma que o e-mail é de um oficial.
-async function getOfficer(request, env) {
+// Verificação de segurança dos oficiais
+async function identity(request, env) {
   try {
     const token = request.headers.get(
       "Cf-Access-Jwt-Assertion"
@@ -43,8 +42,7 @@ async function getOfficer(request, env) {
     if (
       !token ||
       !env.ACCESS_TEAM_DOMAIN ||
-      !env.ACCESS_AUD ||
-      !env.OFFICER_EMAILS
+      !env.ACCESS_AUD
     ) {
       return null;
     }
@@ -52,10 +50,10 @@ async function getOfficer(request, env) {
     const parts = token.split(".");
     if (parts.length !== 3) return null;
 
-    const [headerPart, payloadPart, signature] = parts;
+    const [h, p, s] = parts;
 
-    const header = decodeJSON(headerPart);
-    const payload = decodeJSON(payloadPart);
+    const header = decode(h);
+    const payload = decode(p);
 
     const domain = env.ACCESS_TEAM_DOMAIN
       .replace(/^https?:\/\//, "")
@@ -65,15 +63,15 @@ async function getOfficer(request, env) {
     const now = Math.floor(Date.now() / 1000);
 
     if (
-      header.alg !== "RS256" ||
-      !header.kid ||
       payload.iss !== issuer ||
       !Array.isArray(payload.aud) ||
       !payload.aud.includes(env.ACCESS_AUD) ||
-      !Number.isFinite(payload.exp) ||
+      !payload.exp ||
       payload.exp <= now ||
       (payload.nbf && payload.nbf > now) ||
-      typeof payload.email !== "string"
+      !payload.email ||
+      !header.kid ||
+      header.alg !== "RS256"
     ) {
       return null;
     }
@@ -84,9 +82,9 @@ async function getOfficer(request, env) {
 
     if (!response.ok) return null;
 
-    const certificates = await response.json();
+    const keys = await response.json();
 
-    const jwk = (certificates.keys || []).find(
+    const jwk = (keys.keys || []).find(
       key =>
         key.kid === header.kid &&
         key.kty === "RSA"
@@ -108,25 +106,27 @@ async function getOfficer(request, env) {
     const valid = await crypto.subtle.verify(
       "RSASSA-PKCS1-v1_5",
       key,
-      decodeBase64(signature),
-      new TextEncoder().encode(
-        headerPart + "." + payloadPart
-      )
+      b64(s),
+      new TextEncoder().encode(h + "." + p)
     );
 
     if (!valid) return null;
 
-    const email = payload.email.trim().toLowerCase();
+    const email = payload.email
+      .trim()
+      .toLowerCase();
 
-    const allowed = env.OFFICER_EMAILS
+    const allowed = (env.OFFICER_EMAILS || "")
       .split(",")
       .map(value => value.trim().toLowerCase())
       .filter(Boolean);
 
-    return allowed.includes(email) ? email : null;
+    return allowed.includes(email)
+      ? email
+      : null;
 
   } catch (error) {
-    console.error("AQ Access verification failed", error);
+    console.error("AQ Access:", error);
     return null;
   }
 }
@@ -166,17 +166,17 @@ export async function onRequest({ request, env }) {
     }, 503);
   }
 
-  const method = request.method;
-
-  if (!["GET", "PUT", "DELETE"].includes(method)) {
+  if (
+    !["GET", "POST", "DELETE"].includes(request.method)
+  ) {
     return json({
       error: "Método não permitido."
     }, 405);
   }
 
   try {
-    // Consulta pública para a página aq.html
-    if (method === "GET") {
+    // Leitura pública
+    if (request.method === "GET") {
       const items = await readAssignments(env.DB);
 
       return json({
@@ -186,8 +186,8 @@ export async function onRequest({ request, env }) {
       });
     }
 
-    // A partir daqui, apenas oficiais autorizados.
-    const officer = await getOfficer(request, env);
+    // Gravação reservada aos oficiais
+    const officer = await identity(request, env);
 
     if (!officer) {
       return json({
@@ -205,7 +205,11 @@ export async function onRequest({ request, env }) {
       }, 400);
     }
 
-    if (!data || typeof data !== "object") {
+    if (
+      !data ||
+      typeof data !== "object" ||
+      Array.isArray(data)
+    ) {
       return json({
         error: "Dados inválidos."
       }, 400);
@@ -221,8 +225,12 @@ export async function onRequest({ request, env }) {
       }, 400);
     }
 
-    // Libertar uma linha.
-    if (method === "DELETE") {
+    // Libertar uma linha
+    if (
+      request.method === "DELETE" ||
+      data.member_id === null ||
+      data.member_id === ""
+    ) {
       await env.DB.prepare(`
         DELETE FROM aq_assignments
         WHERE group_no = ?
@@ -236,7 +244,6 @@ export async function onRequest({ request, env }) {
       });
     }
 
-    // Guardar um jogador numa linha.
     const memberId = Number(data.member_id);
 
     if (
@@ -244,15 +251,14 @@ export async function onRequest({ request, env }) {
       memberId <= 0
     ) {
       return json({
-        error: "Seleciona um jogador válido."
+        error: "Jogador inválido."
       }, 400);
     }
 
-    // Confirma que o jogador pertence ao grupo.
-    // Pressupõe a tabela members(id, group_no).
+    // Confirma que o jogador existe no grupo
     const member = await env.DB.prepare(`
       SELECT id, name, group_no
-      FROM members
+      FROM alliance_members
       WHERE id = ?
         AND group_no = ?
       LIMIT 1
@@ -264,8 +270,7 @@ export async function onRequest({ request, env }) {
       }, 400);
     }
 
-    // Impede que o jogador ocupe outra linha
-    // dentro do mesmo Tier e grupo.
+    // Impede o mesmo jogador em duas linhas
     const existing = await env.DB.prepare(`
       SELECT line_no
       FROM aq_assignments
@@ -291,9 +296,6 @@ export async function onRequest({ request, env }) {
       }, 409);
     }
 
-    // Atualiza a linha existente ou cria uma nova.
-    // As restrições UNIQUE da D1 também impedem
-    // duplicações em pedidos simultâneos.
     try {
       await env.DB.prepare(`
         INSERT INTO aq_assignments (
@@ -332,7 +334,7 @@ export async function onRequest({ request, env }) {
 
     return json({
       ok: true,
-      message: "Atribuição guardada.",
+      message: "Caminho guardado.",
       assignment: {
         group_no: group,
         tier,
@@ -344,12 +346,12 @@ export async function onRequest({ request, env }) {
     });
 
   } catch (error) {
-    console.error("AQ assignments API:", error);
+    console.error("AQ API:", error);
 
     return json({
       error:
-        "Erro na API AQ. Verifica a tabela, " +
-        "as colunas e a ligação D1."
+        "Erro no servidor. Verifica as tabelas " +
+        "da D1 e a configuração Cloudflare."
     }, 500);
   }
 }
