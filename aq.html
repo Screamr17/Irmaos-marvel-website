@@ -1,579 +1,172 @@
-
 <!doctype html>
 <html lang="pt">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#050b17">
 <title>AQ M8 | IRMÃOS MARVEL</title>
-
 <style>
-:root{
-  --navy:#031024;
-  --panel:#071c39;
-  --blue:#168bff;
-  --cyan:#55caff;
-  --gold:#ffc66a;
-  --line:#2864a0;
-  --muted:#a9c3df;
-}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{
-  margin:0;
-  color:white;
-  font-family:system-ui,-apple-system,Segoe UI,Arial,sans-serif;
-  background:
-    radial-gradient(ellipse at 85% 5%,#124d99 0,transparent 30%),
-    linear-gradient(180deg,#031024,#071b37 60%,#030c1c);
-  min-height:100vh;
-}
-a{color:inherit;text-decoration:none}
-button{font:inherit}
-.wrap{max-width:1160px;margin:auto;padding:0 20px}
+:root{--navy:#031024;--panel:#071c39;--blue:#168bff;--cyan:#55caff;--line:#2864a0;--muted:#a9c3df}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:white;font-family:system-ui,-apple-system,Segoe UI,Arial,sans-serif;background:radial-gradient(ellipse at 85% 5%,#124d99 0,transparent 30%),linear-gradient(180deg,#031024,#071b37 60%,#030c1c);min-height:100vh}a{color:inherit;text-decoration:none}.wrap{max-width:1160px;margin:auto;padding:0 20px}.top{position:sticky;top:0;z-index:5;background:#031024f5;border-bottom:1px solid #215d9b;backdrop-filter:blur(16px)}.topinner{display:flex;align-items:center;gap:14px;min-height:78px}.brand{display:flex;align-items:center;gap:10px;min-width:0}.brand img{height:55px;width:55px;border-radius:12px;object-fit:cover;box-shadow:0 0 14px #168bff80}.brand strong{display:block;font-weight:950;line-height:1.02;letter-spacing:.6px;font-size:20px}.brand strong span{color:#44b8ff}.brand small{display:block;color:#93c6ff;font-size:10px;letter-spacing:2px;margin-top:5px}.nav{display:flex;gap:6px;margin-left:auto;overflow:auto;scrollbar-width:none}.nav a{display:inline-block;border:1px solid transparent;color:#c7def7;border-radius:11px;padding:11px 12px;white-space:nowrap;font-weight:750}.nav a.active,.nav a:hover{background:linear-gradient(#238fff,#0962c9);color:white;box-shadow:0 0 15px #168bff77}.homeLink{display:inline-block;margin:25px 0;color:#79caff}.sectionTitle{text-align:center;margin:20px 0 25px}.sectionTitle h1{font-size:clamp(30px,5vw,46px);margin:8px 0}.sectionTitle p{color:var(--muted)}.detail{padding:24px;border:1px solid #2866a7;background:#081d3a;border-radius:18px;margin:14px 0}.detail h2{margin:0 0 14px}.detail p{color:#bad5ef;line-height:1.55}.infoGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.infoGrid .detail{margin:0}.btn{display:inline-block;border:1px solid #68c9ff;border-radius:12px;padding:13px 18px;background:linear-gradient(135deg,#168bff,#0753b4);color:white;font-weight:850;box-shadow:0 5px 20px #0088ff40;margin:20px 0 45px}.entry{border-top:1px solid #29517a;padding:17px 0}.entry:first-child{border-top:0;padding-top:0}.entry h3{margin:6px 0;color:#fff;font-size:20px;overflow-wrap:anywhere}.entry p{white-space:pre-wrap;overflow-wrap:anywhere;margin:9px 0;color:#c9e0f7}.entry small{color:#77caff}.entry .group{display:inline-block;background:#124c8f;color:#bde9ff;border:1px solid #397cbd;padding:4px 10px;border-radius:999px;font-weight:800;font-size:12px}.status{color:#b9d5ef}.error{color:#ffd1a9}footer{text-align:center;color:#93b4d4;border-top:1px solid #245487;padding:25px 15px 95px}.mobile{display:none}
+@media(max-width:760px){.wrap{padding:0 14px}.topinner{min-height:67px}.brand img{width:44px;height:44px}.brand strong{font-size:17px}.brand small{font-size:9px}.nav{display:none}.infoGrid{grid-template-columns:1fr}.detail{padding:19px}.mobile{display:flex;position:fixed;bottom:0;left:0;right:0;z-index:10;overflow-x:auto;gap:5px;padding:8px 8px calc(8px + env(safe-area-inset-bottom));background:#041329f7;border-top:1px solid #2c6eae;scrollbar-width:none}.mobile a{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:68px;flex:1;white-space:nowrap;font-size:12px;font-weight:700;color:#cfe7ff;border-radius:10px;padding:10px 7px}.mobile a.active{background:#1678df;color:white}}
 
-/* CABEÇALHO */
-.top{
-  position:sticky;
-  top:0;
-  z-index:5;
-  background:#031024f5;
-  border-bottom:1px solid #806336;
-  backdrop-filter:blur(16px);
-  -webkit-backdrop-filter:blur(16px);
-}
-.topinner{
-  display:flex;
-  align-items:center;
-  gap:14px;
-  min-height:78px;
-}
-.brand{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  min-width:0;
-}
-.brand img{
-  height:55px;
-  width:55px;
-  border-radius:12px;
-  object-fit:cover;
-  box-shadow:0 0 14px #168bff80;
-}
-.brand strong{
-  display:block;
-  font-weight:950;
-  line-height:1.02;
-  letter-spacing:.6px;
-  font-size:20px;
-}
+:root{--gold:#ffc66a}
+.sectionTitle h1{color:var(--gold)}
+.detail{border-color:#806336;background:linear-gradient(155deg,#0c213e,#07172d)}
+.top,footer{border-color:#806336}
 .brand strong span{color:var(--gold)}
-.brand small{
-  display:block;
-  color:#93c6ff;
-  font-size:10px;
-  letter-spacing:2px;
-  margin-top:5px;
-}
-.nav{
-  display:flex;
-  gap:6px;
-  margin-left:auto;
-  overflow:auto;
-  scrollbar-width:none;
-}
-.nav a{
-  display:inline-block;
-  border:1px solid transparent;
-  color:#c7def7;
-  border-radius:11px;
-  padding:11px 12px;
-  white-space:nowrap;
-  font-weight:750;
-}
-.nav a.active,.nav a:hover{
-  background:#4a361b;
-  color:var(--gold);
-  border-color:#b48a48;
-}
-
-/* CONTEÚDO AQ */
-.homeLink{
-  display:inline-block;
-  margin:25px 0;
-  color:#79caff;
-}
-.sectionTitle{
-  text-align:center;
-  margin:20px 0 25px;
-}
-.sectionTitle h1{
-  font-size:clamp(30px,5vw,46px);
-  margin:8px 0;
-  color:var(--gold);
-}
-.sectionTitle p{color:var(--muted)}
-.detail{
-  padding:24px;
-  border:1px solid #806336;
-  background:linear-gradient(155deg,#0c213e,#07172d);
-  border-radius:18px;
-  margin:14px 0;
-  box-shadow:0 8px 24px #0004;
-}
-.detail h2{margin:0 0 14px}
-.detail p{color:#bad5ef;line-height:1.55}
-.infoGrid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:14px;
-}
-.infoGrid .detail{margin:0}
-.btn{
-  display:inline-block;
-  border:1px solid #d3a35b;
-  border-radius:12px;
-  padding:13px 18px;
-  background:linear-gradient(135deg,#73501f,#33230f);
-  color:#ffe0a4;
-  font-weight:850;
-  box-shadow:0 5px 20px #0006;
-  margin:20px 0 45px;
-}
-.entry{
-  border-top:1px solid #29517a;
-  padding:17px 0;
-}
-.entry:first-child{
-  border-top:0;
-  padding-top:0;
-}
-.entry h3{
-  margin:6px 0;
-  color:#fff;
-  font-size:20px;
-  overflow-wrap:anywhere;
-}
-.entry p{
-  white-space:pre-wrap;
-  overflow-wrap:anywhere;
-  margin:9px 0;
-  color:#c9e0f7;
-}
-.entry small{color:#77caff}
-.entry .group{
-  display:inline-block;
-  background:#124c8f;
-  color:#bde9ff;
-  border:1px solid #397cbd;
-  padding:4px 10px;
-  border-radius:999px;
-  font-weight:800;
-  font-size:12px;
-}
-.status{color:#b9d5ef}
-.error{color:#ffd1a9}
-footer{
-  text-align:center;
-  color:#93b4d4;
-  border-top:1px solid #806336;
-  padding:25px 15px 95px;
-}
-
-/* ANIMAÇÕES */
-@keyframes imEntrada{
-  from{
-    opacity:0;
-    transform:translateY(18px);
-  }
-  to{
-    opacity:1;
-    transform:translateY(0);
-  }
-}
-.sectionTitle,.detail{
-  animation:imEntrada .65s ease-out both;
-}
-.infoGrid .detail:nth-child(2){animation-delay:.12s}
-.infoGrid .detail:nth-child(3){animation-delay:.24s}
-
-/* MENU PREMIUM */
-.mobile-nav,.more-overlay,.more-panel{
-  display:none;
-}
-
+.map-panel{margin:20px 0 25px;border:1px solid #b98b47;border-radius:18px;background:linear-gradient(145deg,#101f40,#061326);padding:14px;box-shadow:0 14px 45px #0007}
+.map-panel h2{margin:2px 0 10px;color:#ffd38d}
+.map-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:12px 0}
+.map-actions button,.aq-action{border:1px solid #d1a45e;border-radius:9px;background:#47351e;color:#ffdfa6;padding:10px 13px;font-weight:800;cursor:pointer}
+.map-actions span{margin-right:auto;color:#bed5f1;font-size:13px}
+.map-viewport{height:min(76vh,900px);min-height:430px;overflow:auto;background:#071226;border:1px solid #7b613a;border-radius:10px;-webkit-overflow-scrolling:touch}
+.map-viewport img{display:block;width:100%;max-width:none;height:auto}
+.map-help{font-size:13px;color:#b9cde7;line-height:1.5}
+.aq-groups{margin:26px 0}
+.aq-groups h2{color:#ffd38d}
+.aq-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:12px 0}
+.aq-tabs button{padding:13px 5px;background:#112a4c;border:1px solid #547099;color:white;border-radius:10px;font-weight:900;cursor:pointer}
+.aq-tabs button[aria-selected=true]{background:#6b4b20;border-color:#ffc66a;color:#ffe2a8}
+.aq-roster{padding:16px;background:#0b2040;border:1px solid #88693c;border-radius:14px}
+.aq-roster h3{margin:0 0 10px}
+.aq-line{display:grid;grid-template-columns:84px minmax(0,1fr);align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #ffffff1b}
+.aq-line label{font-weight:800;color:#ffd18a}
+.aq-line select{width:100%;min-width:0;background:#07162e;color:white;border:1px solid #496c9b;border-radius:9px;padding:12px;font:inherit}
+.aq-roster textarea{width:100%;min-height:120px;background:#07162e;color:white;border:1px solid #496c9b;border-radius:9px;padding:12px;font:inherit}
+.aq-editor{margin-top:16px;border-top:1px solid #49618a;padding-top:14px}
+.aq-editor summary{cursor:pointer;color:#ffd38d;font-weight:800}
+.aq-editor p,.aq-notice{font-size:13px;color:#b8cbe3;line-height:1.55}
+.aq-buttons{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.aq-notice{padding:12px;border:1px dashed #62789c;border-radius:9px;margin:14px 0 0}
+.mobile-nav,.more-overlay,.more-panel{display:none}
 @media(max-width:760px){
-  .wrap{padding:0 14px}
-  .topinner{min-height:67px}
-  .brand img{width:44px;height:44px}
-  .brand strong{font-size:17px}
-  .brand small{font-size:9px}
-  .nav{display:none}
-  .infoGrid{grid-template-columns:1fr}
-  .detail{padding:19px}
-
-  .mobile-nav{
-    display:grid;
-    grid-template-columns:repeat(5,minmax(0,1fr));
-    gap:5px;
-    position:fixed;
-    bottom:0;
-    left:0;
-    right:0;
-    z-index:30;
-    padding:9px 9px calc(9px + env(safe-area-inset-bottom));
-    background:#040c1cf7;
-    border-top:1px solid #a7803e;
-    box-shadow:0 -7px 28px #0009;
-    backdrop-filter:blur(16px);
-    -webkit-backdrop-filter:blur(16px);
-  }
-  .mobile-nav a,
-  .mobile-nav button{
-    border:1px solid transparent;
-    border-radius:11px;
-    background:transparent;
-    color:#c7d7ec;
-    min-width:0;
-    padding:9px 2px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    flex-direction:column;
-    gap:5px;
-    font-size:11px;
-    font-weight:750;
-    cursor:pointer;
-  }
-  .mobile-nav .ico{
-    font-size:23px;
-    line-height:1;
-  }
-  .mobile-nav .active,
-  .mobile-nav button[aria-expanded="true"]{
-    background:#4a361b;
-    border-color:#b48a48;
-    color:#ffd17c;
-  }
-  .more-overlay{
-    position:fixed;
-    inset:0;
-    z-index:24;
-    background:#0009;
-  }
-  .more-overlay.open{display:block}
-
-  .more-panel{
-    position:fixed;
-    left:10px;
-    right:10px;
-    bottom:calc(84px + env(safe-area-inset-bottom));
-    z-index:25;
-    border:1px solid #b48a48;
-    border-radius:18px;
-    background:linear-gradient(160deg,#142640,#050d1c);
-    padding:16px;
-    box-shadow:0 0 40px #000c;
-  }
-  .more-panel.open{display:block}
-  .more-title{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:10px;
-    color:#ffd17c;
-    font-weight:900;
-    margin-bottom:14px;
-  }
-  .more-close{
-    background:#25344d;
-    color:white;
-    border:1px solid #65748a;
-    border-radius:9px;
-    padding:6px 11px;
-    cursor:pointer;
-  }
-  .more-links{
-    display:grid;
-    grid-template-columns:repeat(2,minmax(0,1fr));
-    gap:10px;
-  }
-  .more-links a{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    padding:14px 12px;
-    border:1px solid #344c6c;
-    border-radius:12px;
-    background:#11223b;
-    font-size:14px;
-    font-weight:750;
-  }
-  .more-links a:active{background:#263b58}
-  .more-links a:last-child{grid-column:1/-1}
-  footer{padding-bottom:115px}
+.mobile{display:none!important}
+.mobile-nav{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;position:fixed;bottom:0;left:0;right:0;z-index:30;padding:9px 9px calc(9px + env(safe-area-inset-bottom));background:#040c1cf7;border-top:1px solid #a7803e}
+.mobile-nav a,.mobile-nav button{border:1px solid transparent;border-radius:11px;background:transparent;color:#c7d7ec;min-width:0;padding:9px 2px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:5px;font-size:11px;font-weight:750;cursor:pointer;text-decoration:none}
+.mobile-nav .ico{font-size:23px;line-height:1}.mobile-nav .active,.mobile-nav button[aria-expanded=true]{background:#4a361b;border-color:#b48a48;color:#ffd17c}
+.more-overlay{position:fixed;inset:0;z-index:24;background:#0009}.more-overlay.open{display:block}
+.more-panel{position:fixed;left:10px;right:10px;bottom:calc(84px + env(safe-area-inset-bottom));z-index:25;border:1px solid #b48a48;border-radius:18px;background:linear-gradient(160deg,#142640,#050d1c);padding:16px;box-shadow:0 0 40px #000c}
+.more-panel.open{display:block}.more-title{display:flex;align-items:center;justify-content:space-between;gap:10px;color:#ffd17c;font-weight:900;margin-bottom:14px}
+.more-close{background:#25344d;color:white;border:1px solid #65748a;border-radius:9px;padding:6px 11px}
+.more-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.more-links a{display:flex;align-items:center;gap:10px;padding:14px 12px;border:1px solid #344c6c;border-radius:12px;background:#11223b;font-size:14px;font-weight:750}
+.more-links a:last-child{grid-column:1/-1}
 }
 
-@media(prefers-reduced-motion:reduce){
-  .sectionTitle,.detail{animation:none!important}
-}
 </style>
 </head>
-
 <body>
+<header class="top"><div class="wrap topinner"><a class="brand" href="index.html"><img src="logo-im.webp" alt="Logo IM"><div><strong>IRMÃOS <span>MARVEL</span></strong><small>MAIS QUE UM JOGO, UMA FAMÍLIA</small></div></a><nav class="nav"><a href="index.html">⌂ Início</a><a class="active" href="aq.html">🛡️ AQ M8</a><a href="aw.html">⚔️ AW</a><a href="raid.html">💀 RAID</a><a href="coliseu.html">🏆 Coliseu</a><a href="bg.html">📊 BG</a><a href="bigthing.html">💥 Big Thing</a><a href="membros.html">👥 Membros</a><a href="oficiais.html">🔐 Oficiais</a></nav></div></header>
+<main class="wrap"><a class="homeLink" href="index.html">← Voltar ao início</a><div class="sectionTitle"><h1>🛡️ AQ M8</h1><p>Planeamento da Alliance Quest — Mapa 8</p></div>
+<section class="detail" aria-labelledby="updates-heading"><h2 id="updates-heading">📢 Informações dos Oficiais — AQ M8</h2><div id="aq-entries" aria-live="polite"><p class="status">A carregar informações...</p></div></section>
 
-<header class="top">
-  <div class="wrap topinner">
-    <a class="brand" href="index.html">
-      <img src="logo-im.webp" alt="Logo IM">
-      <div>
-        <strong>IRMÃOS <span>MARVEL</span></strong>
-        <small>MAIS QUE UM JOGO, UMA FAMÍLIA</small>
-      </div>
-    </a>
+<section class="map-panel" aria-labelledby="mapa-heading">
+ <h2 id="mapa-heading">👑 MAPA AQ M8 · IRMÃOS MARVEL</h2>
+ <div class="map-actions"><span>Mapa inteiro · Setores 3, 2 e 1</span><button id="map-minus" type="button">−</button><button id="map-plus" type="button">+</button><button id="map-reset" type="button">Repor</button></div>
+ <div class="map-viewport" id="map-viewport"><img id="aq-map-img" src="mapa-aq-m8-im.webp" alt="Mapa AQ M8 dos IRMÃOS MARVEL, com os três setores completos"></div>
+ <p class="map-help">📱 Usa os botões para ampliar e desliza para percorrer o mapa. Mapa de referência: Guia MTC, com apresentação visual IRMÃOS MARVEL. Os detalhes pequenos devem ser confirmados no mapa original.</p>
+</section>
+<section class="aq-groups" aria-labelledby="aq-organization-title">
+ <h2 id="aq-organization-title">⚔️ Organização dos caminhos</h2>
+ <p class="map-help">Seleciona G1, G2 ou G3 para consultar ou preparar as atribuições das linhas.</p>
+ <div class="aq-tabs" role="tablist" aria-label="Grupo AQ">
+  <button type="button" role="tab" data-aq-group="G1" aria-selected="true">G1</button>
+  <button type="button" role="tab" data-aq-group="G2" aria-selected="false">G2</button>
+  <button type="button" role="tab" data-aq-group="G3" aria-selected="false">G3</button>
+ </div>
+ <div class="aq-roster">
+  <h3 id="aq-group-heading">Grupo 1 — G1</h3>
+  <div id="aq-lines"></div>
+  <details class="aq-editor" id="aq-editor">
+   <summary>✏️ Preparar lista de membros e atribuições</summary>
+   <p>Escreve os 10 membros deste grupo, um por linha. Depois escolhe o responsável por cada caminho.</p>
+   <textarea id="aq-member-names" aria-label="Nomes dos membros do grupo" placeholder="Nome do membro 1&#10;Nome do membro 2&#10;Nome do membro 3"></textarea>
+   <div class="aq-buttons"><button class="aq-action" id="aq-save-names" type="button">Guardar nomes neste iPhone</button><button class="aq-action" id="aq-copy" type="button">Copiar organização</button></div>
+  </details>
+  <p class="aq-notice">🔒 <strong>Versão de preparação:</strong> estas escolhas ficam apenas neste navegador, não são publicadas para a aliança. A edição exclusiva dos oficiais e a partilha entre dispositivos exigem uma API protegida e armazenamento D1, que ainda não estão ligados.</p>
+ </div>
+</section>
 
-    <nav class="nav">
-      <a href="index.html">⌂ Início</a>
-      <a class="active" href="aq.html">🛡️ AQ M8</a>
-      <a href="aw.html">⚔️ AW</a>
-      <a href="raid.html">💀 RAID</a>
-      <a href="coliseu.html">🏆 Coliseu</a>
-      <a href="bg.html">📊 BG</a>
-      <a href="bigthing.html">💥 Big Thing</a>
-      <a href="membros.html">👥 Membros</a>
-      <a href="oficiais.html">🔐 Oficiais</a>
-    </nav>
-  </div>
-</header>
+<div class="infoGrid"><section class="detail"><h2>Grupos</h2><strong>G1 • G2 • G3</strong><p>Consulta a lista de membros e as atribuições oficiais.</p></section><section class="detail"><h2>Caminhos</h2><strong>A definir pelos oficiais</strong><p>Segue as orientações antes de avançar.</p></section><section class="detail"><h2>Estado</h2><strong>Informações atualizadas pelos oficiais</strong><p>Atualiza esta página para consultar os anúncios mais recentes.</p></section></div>
+<a class="btn" href="membros.html">Consultar membros →</a></main>
+<footer>© IRMÃOS MARVEL • Comunidade não oficial</footer>
 
-<main class="wrap">
-
-  <a class="homeLink" href="index.html">
-    ← Voltar ao início
-  </a>
-
-  <div class="sectionTitle">
-    <h1>🛡️ AQ M8</h1>
-    <p>Planeamento da Alliance Quest — Mapa 8</p>
-  </div>
-
-  <section class="detail" aria-labelledby="updates-heading">
-    <h2 id="updates-heading">
-      📢 Informações dos Oficiais — AQ M8
-    </h2>
-    <div id="aq-entries" aria-live="polite">
-      <p class="status">A carregar informações...</p>
-    </div>
-  </section>
-
-  <div class="infoGrid">
-    <section class="detail">
-      <h2>Grupos</h2>
-      <strong>G1 • G2 • G3</strong>
-      <p>
-        Consulta a lista de membros e as atribuições oficiais.
-      </p>
-    </section>
-
-    <section class="detail">
-      <h2>Caminhos</h2>
-      <strong>A definir pelos oficiais</strong>
-      <p>Segue as orientações antes de avançar.</p>
-    </section>
-
-    <section class="detail">
-      <h2>Estado</h2>
-      <strong>Informações atualizadas pelos oficiais</strong>
-      <p>
-        Atualiza esta página para consultar os anúncios mais recentes.
-      </p>
-    </section>
-  </div>
-
-  <a class="btn" href="membros.html">
-    Consultar membros →
-  </a>
-
-</main>
-
-<footer>
-  © IRMÃOS MARVEL • Comunidade não oficial
-</footer>
-
-<!-- MENU PREMIUM INFERIOR -->
 <nav class="mobile-nav" aria-label="Navegação do telemóvel">
-  <a href="index.html">
-    <span class="ico">⌂</span>
-    <span>Início</span>
-  </a>
-
-  <a class="active" href="aq.html" aria-current="page">
-    <span class="ico">🛡️</span>
-    <span>AQ</span>
-  </a>
-
-  <a href="aw.html">
-    <span class="ico">⚔️</span>
-    <span>AW</span>
-  </a>
-
-  <a href="raid.html">
-    <span class="ico">💀</span>
-    <span>RAID</span>
-  </a>
-
-  <button
-    id="more-button"
-    type="button"
-    aria-expanded="false"
-    aria-controls="more-panel">
-    <span class="ico">☰</span>
-    <span>Mais</span>
-  </button>
+<a href="index.html"><span class="ico">⌂</span><span>Início</span></a>
+<a class="active" href="aq.html" aria-current="page"><span class="ico">🛡️</span><span>AQ</span></a>
+<a href="aw.html"><span class="ico">⚔️</span><span>AW</span></a>
+<a href="raid.html"><span class="ico">💀</span><span>RAID</span></a>
+<button id="more-button" type="button" aria-expanded="false" aria-controls="more-panel"><span class="ico">☰</span><span>Mais</span></button>
 </nav>
-
-<!-- MENU MAIS -->
 <div class="more-overlay" id="more-overlay"></div>
-
-<div class="more-panel" id="more-panel"
-     role="dialog"
-     aria-label="Mais páginas"
-     aria-modal="true"
-     aria-hidden="true"
-     inert>
-
-  <div class="more-title">
-    <span>⚔️ EXPLORAR ALIANÇA</span>
-    <button class="more-close" id="more-close" type="button">
-      Fechar ✕
-    </button>
-  </div>
-
-  <div class="more-links">
-    <a href="coliseu.html">🏆 Coliseu</a>
-    <a href="bg.html">📊 BG</a>
-    <a href="bigthing.html">💥 Big Thing</a>
-    <a href="membros.html">👥 Membros</a>
-    <a href="oficiais.html">🔐 Oficiais</a>
-  </div>
-</div>
+<div class="more-panel" id="more-panel" role="dialog" aria-label="Mais páginas" aria-modal="true" aria-hidden="true" inert>
+<div class="more-title"><span>⚔️ EXPLORAR ALIANÇA</span><button class="more-close" id="more-close" type="button">Fechar ✕</button></div>
+<div class="more-links">
+<a href="coliseu.html">🏆 Coliseu</a><a href="bg.html">📊 BG</a><a href="bigthing.html">💥 Big Thing</a>
+<a href="imunidades.html">🧬 Imunidades</a><a href="sinergias.html">🔗 Sinergias</a>
+<a href="membros.html">👥 Membros</a><a href="oficiais.html">🔐 Oficiais</a>
+</div></div>
 
 <script>
-/* MENU PREMIUM */
-const moreButton=document.getElementById('more-button');
-const morePanel=document.getElementById('more-panel');
-const moreOverlay=document.getElementById('more-overlay');
-const moreClose=document.getElementById('more-close');
-
-function fecharMais(){
-  morePanel.classList.remove('open');
-  moreOverlay.classList.remove('open');
-  morePanel.setAttribute('aria-hidden','true');
-  morePanel.inert=true;
-  moreButton.setAttribute('aria-expanded','false');
-}
-function abrirMais(){
-  morePanel.inert=false;
-  morePanel.classList.add('open');
-  moreOverlay.classList.add('open');
-  morePanel.setAttribute('aria-hidden','false');
-  moreButton.setAttribute('aria-expanded','true');
-  moreClose.focus();
-}
-moreButton.addEventListener('click',()=>{
-  if(morePanel.classList.contains('open')){
-    fecharMais();
-  }else{
-    abrirMais();
-  }
-});
-moreClose.addEventListener('click',()=>{
-  fecharMais();
-  moreButton.focus();
-});
-moreOverlay.addEventListener('click',fecharMais);
-document.addEventListener('keydown',e=>{
-  if(e.key==='Escape'&&morePanel.classList.contains('open')){
-    fecharMais();
-    moreButton.focus();
-  }
-});
-window.addEventListener('resize',()=>{
-  if(window.innerWidth>760)fecharMais();
-});
-
-/* INFORMAÇÕES AQ DOS OFICIAIS */
 (async function loadAQ(){
-  const container=document.getElementById('aq-entries');
-
-  try{
-    const response=await fetch(
-      '/api/public/entries?section=aq',
-      {cache:'no-store'}
-    );
-
-    if(!response.ok){
-      throw new Error('HTTP '+response.status);
-    }
-
-    const data=await response.json();
-
-    if(!Array.isArray(data.items)){
-      throw new Error('Resposta inválida');
-    }
-
-    container.replaceChildren();
-
-    if(data.items.length===0){
-      const p=document.createElement('p');
-      p.className='status';
-      p.textContent=
-        'Ainda não existem informações publicadas para AQ M8.';
-      container.append(p);
-      return;
-    }
-
-    for(const item of data.items){
-      const article=document.createElement('article');
-      article.className='entry';
-
-      if(item.group_name){
-        const group=document.createElement('span');
-        group.className='group';
-        group.textContent=item.group_name;
-        article.append(group);
-      }
-
-      const title=document.createElement('h3');
-      title.textContent=item.title||'Informação AQ';
-      article.append(title);
-
-      const content=document.createElement('p');
-      content.textContent=item.content||'';
-      article.append(content);
-
-      if(item.updated_at){
-        const small=document.createElement('small');
-        small.textContent='Atualizado: '+String(item.updated_at);
-        article.append(small);
-      }
-
-      container.append(article);
-    }
-
-  }catch(e){
-    container.replaceChildren();
-
-    const p=document.createElement('p');
-    p.className='error';
-    p.textContent=
-      'Não foi possível carregar as informações da AQ. Atualiza a página e tenta novamente.';
-
-    container.append(p);
+ const container=document.getElementById('aq-entries');
+ try{
+  const response=await fetch('/api/public/entries?section=aq',{cache:'no-store'});
+  if(!response.ok)throw new Error('HTTP '+response.status);
+  const data=await response.json();
+  if(!Array.isArray(data.items))throw new Error('Resposta inválida');
+  container.replaceChildren();
+  if(data.items.length===0){const p=document.createElement('p');p.className='status';p.textContent='Ainda não existem informações publicadas para AQ M8.';container.append(p);return;}
+  for(const item of data.items){
+   const article=document.createElement('article');article.className='entry';
+   if(item.group_name){const group=document.createElement('span');group.className='group';group.textContent=item.group_name;article.append(group);}
+   const title=document.createElement('h3');title.textContent=item.title||'Informação AQ';article.append(title);
+   const content=document.createElement('p');content.textContent=item.content||'';article.append(content);
+   if(item.updated_at){const small=document.createElement('small');small.textContent='Atualizado: '+String(item.updated_at);article.append(small);}
+   container.append(article);
   }
+ }catch(e){container.replaceChildren();const p=document.createElement('p');p.className='error';p.textContent='Não foi possível carregar as informações da AQ. Atualiza a página e tenta novamente.';container.append(p);}
 })();
-</script>
 
-</body>
-</html>
+(()=>{
+const moreButton=document.getElementById('more-button'),panel=document.getElementById('more-panel'),overlay=document.getElementById('more-overlay');
+function close(){panel.classList.remove('open');overlay.classList.remove('open');panel.setAttribute('aria-hidden','true');panel.inert=true;moreButton.setAttribute('aria-expanded','false')}
+moreButton.addEventListener('click',()=>{if(panel.classList.contains('open')){close();return}panel.inert=false;panel.classList.add('open');overlay.classList.add('open');panel.setAttribute('aria-hidden','false');moreButton.setAttribute('aria-expanded','true');document.getElementById('more-close').focus()});
+document.getElementById('more-close').addEventListener('click',close);overlay.addEventListener('click',close);
+document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});window.addEventListener('resize',()=>{if(innerWidth>760)close()});
+const map=document.getElementById('aq-map-img'),viewport=document.getElementById('map-viewport');let zoom=1;
+function setZoom(n){zoom=Math.min(5,Math.max(1,n));map.style.width=(zoom*100)+'%'}
+document.getElementById('map-plus').onclick=()=>setZoom(zoom+.5);
+document.getElementById('map-minus').onclick=()=>setZoom(zoom-.5);
+document.getElementById('map-reset').onclick=()=>{setZoom(1);viewport.scrollTop=0;viewport.scrollLeft=0};
+let group='G1',data={};try{data=JSON.parse(localStorage.getItem('im-aq-m8-assignments-v1')||'{}')}catch(e){}
+for(const g of ['G1','G2','G3']){if(!data[g])data[g]={names:[],lines:{}}}
+const names=document.getElementById('aq-member-names'),lines=document.getElementById('aq-lines');
+function save(){try{localStorage.setItem('im-aq-m8-assignments-v1',JSON.stringify(data))}catch(e){alert('Não foi possível guardar no navegador.')}}
+function render(){
+document.getElementById('aq-group-heading').textContent='Grupo '+group.slice(1)+' — '+group;
+document.querySelectorAll('[data-aq-group]').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.aqGroup===group)));
+names.value=data[group].names.join('\n');lines.replaceChildren();
+for(let i=1;i<=9;i++){
+const row=document.createElement('div');row.className='aq-line';
+const label=document.createElement('label');label.textContent='Linha '+i;
+const select=document.createElement('select');label.htmlFor='aq-line-'+i;select.id='aq-line-'+i;
+const blank=document.createElement('option');blank.value='';blank.textContent='— Por atribuir —';select.append(blank);
+const candidates=[...new Set([...data[group].names,data[group].lines[i]].filter(Boolean))];
+for(const name of candidates){const opt=document.createElement('option');opt.value=name;opt.textContent=name;select.append(opt)}
+select.value=data[group].lines[i]||'';
+select.onchange=()=>{data[group].lines[i]=select.value;save()};
+row.append(label,select);lines.append(row);
+}
+}
+document.querySelectorAll('[data-aq-group]').forEach(b=>b.addEventListener('click',()=>{group=b.dataset.aqGroup;render()}));
+document.getElementById('aq-save-names').onclick=()=>{data[group].names=[...new Set(names.value.split('\n').map(n=>n.trim()).filter(Boolean))].slice(0,10);save();render();alert('Nomes guardados neste navegador.')};
+document.getElementById('aq-copy').onclick=()=>{
+const result='⚔️ IRMÃOS MARVEL — AQ M8 — '+group+'\n'+Array.from({length:9},(_,i)=>'Linha '+(i+1)+': '+(data[group].lines[i+1]||'Por atribuir')).join('\n');
+if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(result).then(()=>alert('Organização copiada!')).catch(()=>prompt('Copia a organização:',result));else prompt('Copia a organização:',result)
+};
+render();
+})();
+
+</script>
+</body></html>
