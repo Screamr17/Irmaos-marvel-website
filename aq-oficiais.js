@@ -16,8 +16,10 @@
   let assignments = [];
   let busy = false;
 
-  const section = document.createElement("section");
+  // Criar painel AQ dos oficiais
+  if ($("gestao-aq")) return;
 
+  const section = document.createElement("section");
   section.className = "roster-admin";
   section.id = "gestao-aq";
 
@@ -29,56 +31,51 @@
     <h2>🛡️ Gestão dos Caminhos AQ M8</h2>
 
     <p>
-      Escolhe o grupo e o Tier.
+      Escolhe o grupo e o Tier para atribuir
+      os jogadores aos caminhos.
       Cada jogador pode ocupar apenas uma linha
-      em cada Tier.
-      As alterações ficam visíveis na página pública AQ.
+      por Tier.
     </p>
 
     <div class="roster-toolbar" id="aq-group-tabs">
-      <button type="button"
-        data-aq-group="1" class="selected">G1</button>
-
-      <button type="button"
-        data-aq-group="2">G2</button>
-
-      <button type="button"
-        data-aq-group="3">G3</button>
+      <button type="button" data-aq-group="1">G1</button>
+      <button type="button" data-aq-group="2">G2</button>
+      <button type="button" data-aq-group="3">G3</button>
     </div>
 
     <div class="roster-toolbar" id="aq-tier-tabs">
-      <button type="button"
-        data-aq-tier="1" class="selected">
+      <button type="button" data-aq-tier="1">
         Tier 1 · 7 linhas
       </button>
 
-      <button type="button"
-        data-aq-tier="2">
+      <button type="button" data-aq-tier="2">
         Tier 2 · 9 linhas
       </button>
 
-      <button type="button"
-        data-aq-tier="3">
+      <button type="button" data-aq-tier="3">
         Tier 3 · 8 linhas
       </button>
     </div>
 
     <div id="aq-admin-status"
-      class="roster-status" role="status">
-      A carregar caminhos e jogadores…
+         class="roster-status"
+         role="status">
+      A carregar jogadores...
     </div>
 
     <div id="aq-admin-lines" class="v13-list"></div>
 
-    <button type="button"
-      id="aq-admin-refresh"
-      class="admin-link">
-      ↻ Atualizar caminhos
-    </button>
+    <div class="roster-toolbar">
+      <button type="button"
+              id="aq-admin-refresh"
+              class="admin-link">
+        ↻ Atualizar caminhos
+      </button>
 
-    <a class="admin-link" href="aq.html">
-      🌐 Ver página pública AQ
-    </a>
+      <a href="aq.html" class="admin-link">
+        🌐 Ver página pública AQ
+      </a>
+    </div>
   `;
 
   const before = $("gestao-v13");
@@ -91,16 +88,16 @@
 
   const quick = document.querySelector(".quick-links");
 
-  if (quick) {
-    const a = document.createElement("a");
-    a.href = "#gestao-aq";
-    a.textContent = "🛡️ Caminhos AQ";
-    quick.append(a);
+  if (quick && !quick.querySelector('a[href="#gestao-aq"]')) {
+    const link = document.createElement("a");
+    link.href = "#gestao-aq";
+    link.textContent = "🛡️ Caminhos AQ";
+    quick.append(link);
   }
 
-  const status = message => {
+  function status(message) {
     $("aq-admin-status").textContent = message;
-  };
+  }
 
   async function get(url) {
     const response = await fetch(url, {
@@ -112,12 +109,12 @@
     });
 
     const data = await response.json().catch(() => ({
-      error: "Resposta não JSON"
+      error: "Resposta inválida da API."
     }));
 
     if (!response.ok) {
-      throw Error(
-        data.error || "HTTP " + response.status
+      throw new Error(
+        data.error || "Erro HTTP " + response.status
       );
     }
 
@@ -141,11 +138,11 @@
     });
 
     const data = await response.json().catch(() => ({
-      error: "Resposta não JSON"
+      error: "Resposta inválida da API."
     }));
 
     if (!response.ok || !data.ok) {
-      throw Error(
+      throw new Error(
         data.error || "Não foi possível guardar."
       );
     }
@@ -154,33 +151,34 @@
   }
 
   function render() {
-    for (const button of
-      $("aq-group-tabs").querySelectorAll("button")) {
+    $("aq-group-tabs")
+      .querySelectorAll("button")
+      .forEach(button => {
+        button.classList.toggle(
+          "selected",
+          Number(button.dataset.aqGroup) === group
+        );
+      });
 
-      button.classList.toggle(
-        "selected",
-        Number(button.dataset.aqGroup) === group
-      );
-    }
-
-    for (const button of
-      $("aq-tier-tabs").querySelectorAll("button")) {
-
-      button.classList.toggle(
-        "selected",
-        Number(button.dataset.aqTier) === tier
-      );
-    }
+    $("aq-tier-tabs")
+      .querySelectorAll("button")
+      .forEach(button => {
+        button.classList.toggle(
+          "selected",
+          Number(button.dataset.aqTier) === tier
+        );
+      });
 
     const target = $("aq-admin-lines");
     target.replaceChildren();
 
-    const roster = members.filter(
-      member => Number(member.group_no) === group
-    );
+    const roster = members
+      .filter(member => Number(member.group_no) === group)
+      .sort((a, b) =>
+        Number(a.position) - Number(b.position)
+      );
 
     for (let line = 1; line <= limits[tier]; line++) {
-
       const existing = assignments.find(item =>
         Number(item.group_no) === group &&
         Number(item.tier) === tier &&
@@ -194,7 +192,6 @@
       heading.textContent = "🛡️ Linha " + line;
 
       const select = document.createElement("select");
-
       select.setAttribute(
         "aria-label",
         "Jogador da linha " + line
@@ -211,11 +208,10 @@
 
       const free = document.createElement("option");
       free.value = "";
-      free.textContent = "🟢 Livre";
+      free.textContent = "🟢 Por atribuir";
       select.append(free);
 
       for (const member of roster) {
-
         const assignedElsewhere = assignments.some(item =>
           Number(item.group_no) === group &&
           Number(item.tier) === tier &&
@@ -224,14 +220,10 @@
         );
 
         const option = document.createElement("option");
-
         option.value = String(member.id);
-
-        option.textContent = member.name +
-          (assignedElsewhere ? " (já atribuído)" : "");
+        option.textContent = String(member.name || "Jogador");
 
         option.disabled = assignedElsewhere;
-
         select.append(option);
       }
 
@@ -240,19 +232,15 @@
         : "";
 
       if (select.selectedIndex < 0 && existing) {
-
         const unknown = document.createElement("option");
-
         unknown.value = String(existing.member_id);
         unknown.textContent = "⚠️ Jogador não encontrado";
-
         select.append(unknown);
         select.value = unknown.value;
       }
 
       const button = document.createElement("button");
       button.type = "button";
-
       button.textContent = "💾 Guardar linha " + line;
 
       button.style.cssText = `
@@ -263,40 +251,39 @@
         border-radius:11px;
         padding:12px 15px;
         font-weight:850;
+        cursor:pointer;
       `;
 
       button.onclick = async () => {
         if (busy) return;
 
-        busy = true;
-        button.disabled = true;
-
+        const selectedGroup = group;
+        const selectedTier = tier;
+        const selectedLine = line;
         const chosen = select.value === ""
           ? null
           : Number(select.value);
 
-        status(
-          "⏳ A guardar G" + group +
-          " · Tier " + tier +
-          " · Linha " + line + "…"
-        );
+        busy = true;
+        button.disabled = true;
+
+        status("⏳ A guardar caminho...");
 
         try {
-          await save(line, chosen);
+          await save(selectedLine, chosen);
           await load();
 
           status(
-            "✓ Caminho guardado na D1. G" + group +
-            " · Tier " + tier +
-            " · Linha " + line
+            "✓ G" + selectedGroup +
+            " · Tier " + selectedTier +
+            " · Linha " + selectedLine +
+            " guardada."
           );
-
         } catch (error) {
           status("⚠️ " + error.message);
-          button.disabled = false;
-
         } finally {
           busy = false;
+          button.disabled = false;
         }
       };
 
@@ -307,57 +294,56 @@
     if (!roster.length) {
       status(
         "⚠️ Nenhum jogador encontrado no G" + group +
-        ". Confirma /api/members."
+        ". Verifica /api/public/members."
       );
     }
   }
 
   async function load() {
-    status("⏳ A carregar D1…");
+    status("⏳ A carregar jogadores e caminhos...");
 
     try {
-      const [aq, membersData] = await Promise.all([
+      const [aqData, membersData] = await Promise.all([
         get("/api/aq-assignments"),
-        get("/api/members")
+        get("/api/public/members")
       ]);
 
       if (
-        !Array.isArray(aq.items) ||
+        !Array.isArray(aqData.items) ||
         !Array.isArray(membersData.items)
       ) {
-        throw Error("Dados inválidos da API.");
+        throw new Error("Formato inválido dos dados.");
       }
 
-      assignments = aq.items;
+      assignments = aqData.items;
       members = membersData.items;
 
       render();
 
-      const count = assignments.filter(item =>
+      const rosterCount = members.filter(
+        member => Number(member.group_no) === group
+      ).length;
+
+      const assignedCount = assignments.filter(item =>
         Number(item.group_no) === group &&
         Number(item.tier) === tier
       ).length;
 
-      if (members.some(
-        member => Number(member.group_no) === group
-      )) {
+      if (rosterCount) {
         status(
           "✓ G" + group +
+          " · " + rosterCount + " jogadores disponíveis" +
           " · Tier " + tier +
-          " · " + count + " linhas atribuídas."
+          " · " + assignedCount + " linhas atribuídas."
         );
       }
-
     } catch (error) {
       status("⚠️ " + error.message);
     }
   }
 
   $("aq-group-tabs").onclick = event => {
-    const button = event.target.closest(
-      "[data-aq-group]"
-    );
-
+    const button = event.target.closest("[data-aq-group]");
     if (!button || busy) return;
 
     group = Number(button.dataset.aqGroup);
@@ -365,17 +351,16 @@
   };
 
   $("aq-tier-tabs").onclick = event => {
-    const button = event.target.closest(
-      "[data-aq-tier]"
-    );
-
+    const button = event.target.closest("[data-aq-tier]");
     if (!button || busy) return;
 
     tier = Number(button.dataset.aqTier);
     render();
   };
 
-  $("aq-admin-refresh").onclick = load;
+  $("aq-admin-refresh").onclick = () => {
+    if (!busy) load();
+  };
 
   load();
 })();
