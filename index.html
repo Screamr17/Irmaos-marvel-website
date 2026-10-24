@@ -84,6 +84,13 @@ footer{text-align:center;border-top:1px solid #3c4454;color:#9aacc4;padding:24px
  .im-hero-particles i{box-shadow:0 0 13px 4px var(--c);animation-duration:calc(var(--dur) * .72)}
 }
 @media(min-width:701px){.im-mobile-backdrop{display:none}}
+
+/* IM mobile banner: enlarge the actual artwork, not only the backdrop */
+@media(max-width:700px){
+ .hero.im-animated{height:clamp(205px,39vw,270px)!important;min-height:205px!important;max-height:270px!important;display:block!important;overflow:hidden!important}
+ .hero.im-animated img{width:100%!important;height:100%!important;max-height:none!important;object-fit:fill!important;object-position:center!important;filter:drop-shadow(0 0 14px #398aff88)!important}
+ .hero.im-animated .im-mobile-backdrop{opacity:.35!important;filter:blur(12px) brightness(.55)!important}
+}
 </style>
 </head>
 <body>
