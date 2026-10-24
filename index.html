@@ -91,6 +91,19 @@ footer{text-align:center;border-top:1px solid #3c4454;color:#9aacc4;padding:24px
  .hero.im-animated img{width:100%!important;height:auto!important;max-height:100%!important;object-fit:contain!important;object-position:center!important;filter:drop-shadow(0 0 15px #398aff88)!important}
  .hero.im-animated .im-mobile-backdrop{opacity:.65!important;filter:blur(12px) brightness(.48) saturate(1.45)!important}
 }
+
+/* IM mobile — banner panorâmico original, efeitos luminosos reforçados */
+@media(max-width:700px){
+ .hero.im-animated{height:auto!important;min-height:0!important;max-height:none!important;display:block!important;margin:12px auto 16px!important;overflow:hidden!important;border-radius:15px!important;background:#07152c!important;box-shadow:0 0 20px #238bff70,0 0 13px #ffc66a60!important;animation:imBannerEntrada .65s ease-out both,imHeroAura 2.8s ease-in-out .7s infinite!important}
+ .hero.im-animated img{display:block!important;width:100%!important;height:auto!important;max-height:none!important;object-fit:contain!important;filter:none!important;transform:none!important}
+ .hero.im-animated .im-mobile-backdrop{display:none!important}
+ .hero.im-animated::before{inset:-120% -60%!important;background:linear-gradient(105deg,transparent 37%,#4abaff00 44%,#73d9ff88 49%,#ffffffad 50%,#ffdb7680 51%,transparent 58%)!important;animation:imLightSweep 4.6s ease-in-out .4s infinite!important;z-index:3!important}
+ .hero.im-animated::after{background:radial-gradient(ellipse at 72% 56%,#ffb42b68,transparent 32%),radial-gradient(ellipse at 28% 48%,#188cff68,transparent 36%)!important;animation:imEnergyPulse 2.2s ease-in-out infinite!important;z-index:2!important}
+ .hero.im-animated .im-hero-flash{z-index:3!important;animation:imLightning 5.7s linear 1s infinite!important;background:linear-gradient(112deg,transparent 20%,#9ce6ff72 40%,transparent 45%,#ffdb7360 63%,transparent 75%)!important}
+ .hero.im-animated .im-hero-particles{z-index:4!important}
+ .im-hero-particles i{width:max(3px,var(--sz))!important;height:max(3px,var(--sz))!important;box-shadow:0 0 11px 3px var(--c),0 0 19px 5px var(--c)!important;animation-duration:calc(var(--dur) * .55)!important}
+}
+@media(prefers-reduced-motion:reduce){.hero.im-animated{animation:none!important}.hero.im-animated::before,.hero.im-animated::after,.im-hero-flash,.im-hero-particles i{animation:none!important}}
 </style>
 </head>
 <body>
