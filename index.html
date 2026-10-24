@@ -68,12 +68,16 @@ footer{text-align:center;border-top:1px solid #3c4454;color:#9aacc4;padding:24px
 @keyframes imSpark{0%,15%,100%{opacity:0;transform:translate3d(0,8px,0) scale(.3)}35%{opacity:.9}70%{opacity:.35;transform:translate3d(10px,-15px,0) scale(1.2)}}
 @keyframes imLightning{0%,23%,25%,26%,28%,100%{opacity:0}24%,27%{opacity:1}}
 @media(prefers-reduced-motion:reduce){.hero.im-animated,.hero.im-animated::before,.hero.im-animated::after,.im-hero-particles i,.im-hero-flash{animation:none!important}.im-hero-particles,.im-hero-flash{display:none}}
-/* Banner maior no telemóvel, preservando os efeitos animados */
+/* Banner cinematográfico mobile: palco alto, imagem integral sem cortes */
 @media(max-width:700px){
- .hero{height:auto;position:relative;overflow:hidden}
- .hero.im-animated img{width:100%;height:auto;object-fit:contain;object-position:center center}
+ .hero.im-animated{min-height:260px;height:clamp(260px,72vw,350px);display:flex;align-items:center;justify-content:center;position:relative;background:radial-gradient(ellipse at 50% 45%,#20528d 0%,#102b51 43%,#061329 100%)}
+ .hero.im-animated::before{z-index:3}
+ .hero.im-animated::after{z-index:2}
+ .hero.im-animated img{position:relative;z-index:1;width:100%;height:auto;max-height:100%;object-fit:contain;object-position:center;filter:drop-shadow(0 0 14px #4c91ef75)}
+ .hero.im-animated .im-hero-particles{z-index:4}
+ .hero.im-animated .im-hero-flash{z-index:3}
 }
-@media(max-width:390px){.hero{height:auto}}
+@media(max-width:390px){.hero.im-animated{height:270px;min-height:270px}}
 </style>
 </head>
 <body>
