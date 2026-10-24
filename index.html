@@ -68,6 +68,12 @@ footer{text-align:center;border-top:1px solid #3c4454;color:#9aacc4;padding:24px
 @keyframes imSpark{0%,15%,100%{opacity:0;transform:translate3d(0,8px,0) scale(.3)}35%{opacity:.9}70%{opacity:.35;transform:translate3d(10px,-15px,0) scale(1.2)}}
 @keyframes imLightning{0%,23%,25%,26%,28%,100%{opacity:0}24%,27%{opacity:1}}
 @media(prefers-reduced-motion:reduce){.hero.im-animated,.hero.im-animated::before,.hero.im-animated::after,.im-hero-particles i,.im-hero-flash{animation:none!important}.im-hero-particles,.im-hero-flash{display:none}}
+/* Banner maior no telemóvel, preservando os efeitos animados */
+@media(max-width:700px){
+ .hero{height:185px;position:relative;overflow:hidden}
+ .hero img{width:100%;height:100%;object-fit:cover;object-position:center center}
+}
+@media(max-width:390px){.hero{height:165px}}
 </style>
 </head>
 <body>
