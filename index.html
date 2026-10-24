@@ -85,11 +85,11 @@ footer{text-align:center;border-top:1px solid #3c4454;color:#9aacc4;padding:24px
 }
 @media(min-width:701px){.im-mobile-backdrop{display:none}}
 
-/* IM mobile banner: enlarge the actual artwork, not only the backdrop */
+/* Ajuste final: proporções naturais e efeitos preservados */
 @media(max-width:700px){
- .hero.im-animated{height:clamp(205px,39vw,270px)!important;min-height:205px!important;max-height:270px!important;display:block!important;overflow:hidden!important}
- .hero.im-animated img{width:100%!important;height:100%!important;max-height:none!important;object-fit:fill!important;object-position:center!important;filter:drop-shadow(0 0 14px #398aff88)!important}
- .hero.im-animated .im-mobile-backdrop{opacity:.35!important;filter:blur(12px) brightness(.55)!important}
+ .hero.im-animated{height:clamp(195px,53vw,260px)!important;min-height:0!important;max-height:none!important;display:flex!important;align-items:center!important;justify-content:center!important;overflow:hidden!important;border-radius:15px}
+ .hero.im-animated img{width:100%!important;height:auto!important;max-height:100%!important;object-fit:contain!important;object-position:center!important;filter:drop-shadow(0 0 15px #398aff88)!important}
+ .hero.im-animated .im-mobile-backdrop{opacity:.65!important;filter:blur(12px) brightness(.48) saturate(1.45)!important}
 }
 </style>
 </head>
