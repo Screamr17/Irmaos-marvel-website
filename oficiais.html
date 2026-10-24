@@ -371,6 +371,17 @@ footer{
 .aq-line button{border:1px solid #b48a48;background:#514022;color:#ffdc9b;border-radius:10px;padding:12px;font-weight:800}
 .aq-line button:disabled{opacity:.55}
 @media(max-width:760px){.aq-line{grid-template-columns:1fr}.aq-line button{width:100%}}
+
+/* RAID: caminhos e funções */
+.raid-admin-paths{display:grid;gap:15px;margin:18px 0}
+.raid-admin-path{padding:18px;border:1px solid #3973aa;border-radius:15px;background:#061b37}
+.raid-admin-path h3{margin:0 0 13px;color:#ffc66a}
+.raid-admin-line{display:grid;grid-template-columns:minmax(110px,160px) minmax(0,1fr) auto;align-items:center;gap:10px;margin:10px 0}
+.raid-admin-line label{font-weight:850;color:#c8e8ff}
+.raid-admin-line select{width:100%;min-width:0;background:#06162e;border:1px solid #5289c0;color:#fff;border-radius:10px;padding:12px}
+.raid-admin-line button{background:#514022;color:#ffdc9b;border:1px solid #b48a48;border-radius:10px;padding:12px;font-weight:800}
+.raid-admin-line button:disabled{opacity:.5}
+@media(max-width:760px){.raid-admin-line{grid-template-columns:1fr}.raid-admin-line button{width:100%}}
 </style>
 </head>
 <body>
@@ -421,6 +432,7 @@ footer{
 <nav class="quick-links" aria-label="Acesso rápido às ferramentas">
 <a href="#gestao-recrutamento">📝 Recrutamento</a>
 <a href="#gestao-aq">🛡️ Caminhos AQ M8</a>
+<a href="#gestao-raid">💀 Organização RAID</a>
  <a href="#gestao-v13">✍️ Publicações</a>
 <a href="#gestao-membros">👥 Jogadores</a>
 <a href="#troca-membros">🔄 Trocas</a>
@@ -518,6 +530,28 @@ A carregar candidaturas…
  <div class="recruitment-controls">
   <button type="button" id="aq-refresh">↻ Atualizar jogadores e caminhos</button>
   <a class="admin-link" href="aq.html">🌐 Ver página pública AQ</a>
+ </div>
+</section>
+
+<!-- GESTÃO RAID • ATRIBUIÇÕES -->
+<section class="roster-admin" id="gestao-raid">
+ <span class="admin-pill">💀 RAID • CENTRO DE COMANDO IM</span>
+ <h2>💀 Gestão das Equipas RAID</h2>
+ <p>Organiza os jogadores de cada grupo nos caminhos A, B e C. Cada caminho tem as funções Assalto, Vanguarda e Tático. As atribuições dependem da API protegida da RAID para serem guardadas.</p>
+ <div class="roster-toolbar" id="raid-admin-groups" aria-label="Grupos RAID">
+  <button type="button" data-group="1" class="selected">G1</button>
+  <button type="button" data-group="2">G2</button>
+  <button type="button" data-group="3">G3</button>
+ </div>
+ <div class="roster-toolbar" id="raid-admin-maps" aria-label="Mapas RAID">
+  <button type="button" data-map="normal" class="selected">🗺️ Normal</button>
+  <button type="button" data-map="nightmare">🔥 Nightmare</button>
+ </div>
+ <div id="raid-admin-status" class="roster-status" role="status">A verificar a ligação à RAID…</div>
+ <div id="raid-admin-paths" class="raid-admin-paths" aria-live="polite"></div>
+ <div class="recruitment-controls">
+  <button type="button" id="raid-admin-refresh">↻ Atualizar jogadores e RAID</button>
+  <a class="admin-link" href="raid.html">🌐 Ver página pública RAID</a>
  </div>
 </section>
 
@@ -1758,6 +1792,92 @@ window.addEventListener('resize',()=>{
  $('aq-groups').addEventListener('click',event=>{const b=event.target.closest('button[data-group]');if(!b)return;group=Number(b.dataset.group);render()});
  $('aq-tiers').addEventListener('click',event=>{const b=event.target.closest('button[data-tier]');if(!b)return;tier=Number(b.dataset.tier);render()});
  $('aq-refresh').addEventListener('click',load);
+ load();
+})();
+</script>
+
+
+<!-- GESTÃO RAID: requer API /api/raid-assignments protegida -->
+<script>
+(()=>{
+ 'use strict';
+ const $=id=>document.getElementById(id);
+ const roles=[['assalto','⚔️ Assalto'],['vanguarda','🛡️ Vanguarda'],['tatico','🎯 Tático']];
+ const paths=['A','B','C'];
+ let group=1,map='normal',members=[],assignments=[],ready=false,busy=false,apiReady=false;
+ const status=text=>$('raid-admin-status').textContent=text;
+ const container=$('raid-admin-paths');
+ async function request(url,options={}){
+  const response=await fetch(url,{credentials:'same-origin',cache:'no-store',headers:{Accept:'application/json',...(options.body?{'Content-Type':'application/json'}:{})},...options});
+  const type=response.headers.get('content-type')||'';
+  if(!type.includes('json'))throw Error('A API '+url+' não devolveu JSON (HTTP '+response.status+').');
+  const data=await response.json();
+  if(!response.ok||data?.error)throw Error(data?.error||'Erro HTTP '+response.status);
+  return data;
+ }
+ function groupOf(m){const raw=m.group_no??m.group??m.group_name??'';const match=String(raw).match(/[123]/);return match?Number(match[0]):0}
+ function itemsOf(data){return Array.isArray(data)?data:Array.isArray(data?.items)?data.items:Array.isArray(data?.assignments)?data.assignments:null}
+ function matchAssignment(a,path,role){return Number(a.group_no)===group&&String(a.map_type||a.map||'').toLowerCase()===map&&String(a.path||a.path_name||'').toUpperCase()===path&&String(a.role||a.raid_role||'').toLowerCase()===role}
+ function selectTabs(){
+  $('raid-admin-groups').querySelectorAll('button').forEach(b=>b.classList.toggle('selected',Number(b.dataset.group)===group));
+  $('raid-admin-maps').querySelectorAll('button').forEach(b=>b.classList.toggle('selected',b.dataset.map===map));
+ }
+ function render(){
+  selectTabs();container.replaceChildren();
+  if(!ready)return;
+  const players=members.filter(m=>groupOf(m)===group).sort((a,b)=>Number(a.position||0)-Number(b.position||0));
+  const selected=assignments.filter(a=>Number(a.group_no)===group&&String(a.map_type||a.map||'').toLowerCase()===map);
+  status((apiReady?'✓ API RAID ligada. ':'⚠️ API RAID ainda não configurada. ')+`G${group} · ${map==='normal'?'Normal':'Nightmare'} · ${players.length} jogadores · ${selected.filter(a=>a.member_id).length} atribuições.`);
+  for(const path of paths){
+   const card=document.createElement('div');card.className='raid-admin-path';
+   const title=document.createElement('h3');title.textContent='🧭 Caminho '+path;card.append(title);
+   for(const [role,label] of roles){
+    const line=document.createElement('div');line.className='raid-admin-line';
+    const text=document.createElement('label');text.textContent=label;
+    const select=document.createElement('select');select.setAttribute('aria-label',`G${group} ${map} caminho ${path} ${label}`);
+    const empty=document.createElement('option');empty.value='';empty.textContent='— Por atribuir —';select.append(empty);
+    for(const p of players){const opt=document.createElement('option');opt.value=String(p.id);opt.textContent=p.name;select.append(opt)}
+    const saved=assignments.find(a=>matchAssignment(a,path,role));
+    if(saved?.member_id!=null){
+     const id=String(saved.member_id);
+     if(!players.some(p=>String(p.id)===id)){
+      const opt=document.createElement('option');opt.value=id;opt.textContent=(saved.member_name||'Jogador indisponível')+' (fora do grupo)';select.append(opt);
+     }
+     select.value=id;
+    }
+    const button=document.createElement('button');button.type='button';button.textContent='💾 Guardar';button.disabled=!apiReady||!players.length;
+    button.onclick=async()=>{
+     if(busy)return;
+     const chosen=select.value;
+     const duplicates=[...container.querySelectorAll('select')].some(s=>s!==select&&s.value&&s.value===chosen);
+     if(chosen&&duplicates){status('⚠️ O jogador já está atribuído a outra função neste mapa e grupo.');return}
+     busy=true;container.querySelectorAll('button').forEach(b=>b.disabled=true);status('A guardar atribuição…');
+     try{
+      await request('/api/raid-assignments',{method:'POST',body:JSON.stringify({group_no:group,map_type:map,path,role,member_id:chosen?Number(chosen):null})});
+      await load();status('✓ Atribuição guardada com sucesso.');
+     }catch(e){status('⚠️ Não foi possível guardar: '+e.message)}
+     finally{busy=false;container.querySelectorAll('button').forEach(b=>b.disabled=!apiReady)}
+    };
+    line.append(text,select,button);card.append(line);
+   }
+   container.append(card);
+  }
+ }
+ async function load(){
+  status('A carregar jogadores e atribuições RAID…');
+  const results=await Promise.allSettled([request('/api/alliance-data'),request('/api/raid-assignments')]);
+  if(results[0].status==='rejected'||!Array.isArray(results[0].value?.members)){
+   ready=false;container.replaceChildren();status('⚠️ Não foi possível carregar os jogadores em /api/alliance-data.');return;
+  }
+  members=results[0].value.members;ready=true;
+  apiReady=results[1].status==='fulfilled'&&itemsOf(results[1].value)!==null;
+  assignments=apiReady?itemsOf(results[1].value):[];
+  render();
+  if(!apiReady)status('⚠️ Jogadores carregados, mas /api/raid-assignments ainda não está disponível. É necessário criar a API protegida e a tabela D1 antes de guardar atribuições.');
+ }
+ $('raid-admin-groups').addEventListener('click',e=>{const b=e.target.closest('button[data-group]');if(!b)return;group=Number(b.dataset.group);render()});
+ $('raid-admin-maps').addEventListener('click',e=>{const b=e.target.closest('button[data-map]');if(!b)return;map=b.dataset.map;render()});
+ $('raid-admin-refresh').addEventListener('click',load);
  load();
 })();
 </script>
