@@ -22,80 +22,34 @@ function json(data, status = 200) {
   });
 }
 
-async function visitorHash(ip, secret) {
-  const key = await crypto.subtle.importKey(
-    "raw",
-    new TextEncoder().encode(secret),
-    { name: "HMAC", hash: "SHA-256" },
-    false,
-    ["sign"]
-  );
-
-  const bytes = await crypto.subtle.sign(
-    "HMAC",
-    key,
-    new TextEncoder().encode(ip)
-  );
-
-  return Array.from(new Uint8Array(bytes))
-    .map(b => b.toString(16).padStart(2, "0"))
-    .join("");
-}
-
 export async function onRequestPost({ request, env }) {
   try {
-    if (
-      !env.BATTLE_DB ||
-      !env.BATTLE_MEDIA ||
-      !env.TURNSTILE_SECRET_KEY ||
-      !env.VISITOR_HASH_SECRET
-    ) {
-      return json({
-        error: "Configuração de segurança incompleta."
-      }, 503);
+    if (!env.BATTLE_DB || !env.BATTLE_MEDIA ||
+        !env.TURNSTILE_SECRET_KEY) {
+      return json({ error: "Configuração incompleta." }, 503);
     }
 
     const data = await request.json();
-    const name = String(data.name || "").trim();
     const type = String(data.type || "").toLowerCase();
     const size = Number(data.size);
     const token = String(data.turnstileToken || "");
 
-    const extension = TYPES[type];
-    const isVideo = type.startsWith("video/");
-    const maxSize = isVideo ? MAX_VIDEO : MAX_IMAGE;
+    const isImage = type.startsWith("image/");
+    const maxSize = isImage ? MAX_IMAGE : MAX_VIDEO;
 
-    if (
-      !extension ||
-      !name ||
-      name.length > 200 ||
-      !Number.isSafeInteger(size) ||
-      size < 1 ||
-      size > maxSize
-    ) {
-      return json({
-        error: "Tipo ou tamanho de ficheiro inválido."
-      }, 400);
+    if (!TYPES[type] ||
+        !Number.isSafeInteger(size) ||
+        size < 1 || size > maxSize) {
+      return json({ error: "Ficheiro inválido." }, 400);
     }
 
-    if (!token || token.length > 2048) {
-      return json({
-        error: "Verificação Turnstile obrigatória."
-      }, 403);
-    }
-
-    const ip = request.headers.get("CF-Connecting-IP");
-
-    if (!ip) {
-      return json({
-        error: "Não foi possível verificar o visitante."
-      }, 403);
+    if (!token) {
+      return json({ error: "Verificação de segurança obrigatória." }, 403);
     }
 
     const form = new FormData();
     form.append("secret", env.TURNSTILE_SECRET_KEY);
     form.append("response", token);
-    form.append("remoteip", ip);
 
     const verification = await fetch(
       "https://challenges.cloudflare.com/turnstile/v0/siteverify",
@@ -103,80 +57,64 @@ export async function onRequestPost({ request, env }) {
     );
 
     if (!verification.ok) {
-      return json({
-        error: "Verificação indisponível."
-      }, 503);
+      return json({ error: "Falha na verificação." }, 503);
     }
 
-    const result = await verification.json();
+    const verified = await verification.json();
 
-    if (
-      !result.success ||
-      result.hostname !== "irmaosmarvel.com"
-    ) {
-      return json({
-        error: "Verificação Turnstile recusada."
-      }, 403);
+    if (!verified.success) {
+      return json({ error: "Verificação Turnstile inválida." }, 403);
     }
 
-    const visitor = await visitorHash(
-      ip,
-      env.VISITOR_HASH_SECRET
+    const ip = request.headers.get("CF-Connecting-IP");
+    if (!ip) {
+      return json({ error: "Identificação indisponível." }, 403);
+    }
+
+    const day = new Date().toISOString().slice(0, 10);
+    const encoder = new TextEncoder();
+    const digest = await crypto.subtle.digest(
+      "SHA-256",
+      encoder.encode(ip + ":" + day)
     );
 
-    const day = new Date().toLocaleDateString(
-      "en-CA",
-      { timeZone: "Europe/Paris" }
-    );
+    const visitorHash = Array.from(
+      new Uint8Array(digest),
+      b => b.toString(16).padStart(2, "0")
+    ).join("");
 
     const daily = await env.BATTLE_DB.prepare(
-      `SELECT publications
-       FROM battle_daily_limits
+      `SELECT publications FROM battle_daily_limits
        WHERE visitor_hash = ? AND day = ?`
-    ).bind(visitor, day).first();
+    ).bind(visitorHash, day).first();
 
-    if ((daily?.publications || 0) >= 2) {
+    if (daily && daily.publications >= 2) {
       return json({
-        error: "Limite diário de publicações atingido."
+        error: "Limite de 2 publicações diárias atingido."
       }, 429);
     }
 
-    const pending = await env.BATTLE_DB.prepare(
-      `SELECT COUNT(*) AS total
-       FROM battle_upload_sessions
-       WHERE visitor_hash = ?
-       AND status = 'started'
-       AND expires_at > CURRENT_TIMESTAMP`
-    ).bind(visitor).first();
-
-    if ((pending?.total || 0) >= 2) {
-      return json({
-        error: "Já tens dois uploads em preparação."
-      }, 429);
-    }
-
-    const id = crypto.randomUUID();
-    const key = "battlehub/" + id + "." + extension;
+    const key = "battlehub/" + crypto.randomUUID() +
+      "." + TYPES[type];
 
     const upload = await env.BATTLE_MEDIA.createMultipartUpload(
       key,
-      {
-        httpMetadata: { contentType: type }
-      }
+      { httpMetadata: { contentType: type } }
     );
 
+    const id = crypto.randomUUID();
     const expires = new Date(
       Date.now() + 60 * 60 * 1000
-    ).toISOString().replace("T", " ").slice(0, 19);
+    ).toISOString();
 
     try {
       await env.BATTLE_DB.prepare(
         `INSERT INTO battle_upload_sessions
-        (id, media_key, r2_upload_id, visitor_hash,
-         media_type, expected_size, expires_at)
-        VALUES (?, ?, ?, ?, ?, ?, ?)`
+         (id, media_key, r2_upload_id, visitor_hash,
+          media_type, expected_size, expires_at)
+         VALUES (?, ?, ?, ?, ?, ?, ?)`
       ).bind(
-        id, key, upload.uploadId, visitor,
+        id, key, upload.uploadId, visitorHash,
         type, size, expires
       ).run();
     } catch (error) {
