@@ -1,9 +1,8 @@
 
 const MAX_VIDEO = 250 * 1024 * 1024;
 const MAX_IMAGE = 8 * 1024 * 1024;
-const PART_SIZE = 10 * 1024 * 1024;
 
-const ALLOWED = {
+const TYPES = {
   "image/jpeg": "jpg",
   "image/png": "png",
   "image/webp": "webp",
@@ -17,181 +16,112 @@ function json(data, status = 200) {
   return new Response(JSON.stringify(data), {
     status,
     headers: {
-      "Content-Type": "application/json; charset=utf-8",
-      "Cache-Control": "no-store",
-      "X-Content-Type-Options": "nosniff"
+      "Content-Type": "application/json",
+      "Cache-Control": "no-store"
     }
   });
 }
 
-async function visitorHash(ip, secret) {
-  const key = await crypto.subtle.importKey(
-    "raw",
-    new TextEncoder().encode(secret),
-    { name: "HMAC", hash: "SHA-256" },
-    false,
-    ["sign"]
-  );
-
-  const signature = await crypto.subtle.sign(
-    "HMAC",
-    key,
-    new TextEncoder().encode(ip)
-  );
-
-  return Array.from(new Uint8Array(signature))
-    .map(b => b.toString(16).padStart(2, "0"))
-    .join("");
-}
-
 export async function onRequestPost({ request, env }) {
-  if (
-    !env.BATTLE_DB ||
-    !env.BATTLE_MEDIA ||
-    !env.TURNSTILE_SECRET_KEY
-  ) {
-    return json({
-      error: "Configuração Cloudflare incompleta."
-    }, 503);
-  }
-
   try {
-    const ip = request.headers.get("CF-Connecting-IP");
-
-    if (!ip) {
-      return json({ error: "Visitante inválido." }, 403);
+    if (!env.BATTLE_DB || !env.BATTLE_MEDIA ||
+        !env.TURNSTILE_SECRET_KEY) {
+      return json({ error: "Configuração incompleta." }, 503);
     }
 
     const data = await request.json();
-
-    const name = String(data.name || "").trim();
     const type = String(data.type || "").toLowerCase();
     const size = Number(data.size);
     const token = String(data.turnstileToken || "");
 
-    const extension = ALLOWED[type];
-    const maxSize = type.startsWith("image/")
-      ? MAX_IMAGE
-      : MAX_VIDEO;
+    const isVideo = type.startsWith("video/");
+    const maxSize = isVideo ? MAX_VIDEO : MAX_IMAGE;
 
-    if (
-      !name ||
-      name.length > 200 ||
-      !Object.prototype.hasOwnProperty.call(ALLOWED, type) ||
-      !Number.isSafeInteger(size) ||
-      size < 1 ||
-      size > maxSize
-    ) {
-      return json({
-        error: "Formato ou tamanho inválido."
-      }, 400);
+    if (!TYPES[type] || !Number.isSafeInteger(size) ||
+        size < 1 || size > maxSize) {
+      return json({ error: "Ficheiro inválido." }, 400);
     }
 
-    if (!token || token.length > 4096) {
-      return json({
-        error: "Verificação Turnstile obrigatória."
-      }, 403);
+    if (!token || token.length > 2048) {
+      return json({ error: "Verificação necessária." }, 403);
+    }
+
+    const ip = request.headers.get("CF-Connecting-IP");
+    if (!ip) {
+      return json({ error: "Visitante não identificado." }, 403);
     }
 
     const form = new FormData();
-    form.set("secret", env.TURNSTILE_SECRET_KEY);
-    form.set("response", token);
-    form.set("remoteip", ip);
+    form.append("secret", env.TURNSTILE_SECRET_KEY);
+    form.append("response", token);
+    form.append("remoteip", ip);
 
-    const response = await fetch(
+    const verify = await fetch(
       "https://challenges.cloudflare.com/turnstile/v0/siteverify",
       { method: "POST", body: form }
     );
 
-    if (!response.ok) {
-      return json({
-        error: "Erro na verificação de segurança."
-      }, 503);
+    if (!verify.ok) {
+      return json({ error: "Erro na verificação." }, 503);
     }
 
-    const verified = await response.json();
-
-    if (
-      !verified.success ||
-      verified.hostname !== "irmaosmarvel.com"
-    ) {
-      return json({
-        error: "Verificação de segurança recusada."
-      }, 403);
+    const result = await verify.json();
+    if (!result.success ||
+        result.hostname !== "irmaosmarvel.com") {
+      return json({ error: "Verificação recusada." }, 403);
     }
 
-    const visitor = await visitorHash(
-      ip,
-      env.TURNSTILE_SECRET_KEY
+    const encoder = new TextEncoder();
+    const hashBuffer = await crypto.subtle.digest(
+      "SHA-256",
+      encoder.encode(ip)
     );
 
-    const day = new Intl.DateTimeFormat("en-CA", {
-      timeZone: "Europe/Paris",
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit"
-    }).format(new Date());
+    const visitorHash = Array.from(
+      new Uint8Array(hashBuffer),
+      b => b.toString(16).padStart(2, "0")
+    ).join("");
+
+    const day = new Date().toLocaleDateString("en-CA", {
+      timeZone: "Europe/Paris"
+    });
 
     const daily = await env.BATTLE_DB.prepare(
-      `SELECT publications
-       FROM battle_daily_limits
+      `SELECT publications FROM battle_daily_limits
        WHERE visitor_hash = ? AND day = ?`
-    ).bind(visitor, day).first();
+    ).bind(visitorHash, day).first();
 
-    const active = await env.BATTLE_DB.prepare(
-      `SELECT COUNT(*) AS total
-       FROM battle_upload_sessions
-       WHERE visitor_hash = ?
-       AND status IN ('started', 'completed')
-       AND expires_at > CURRENT_TIMESTAMP`
-    ).bind(visitor).first();
-
-    const count =
-      Number(daily?.publications || 0) +
-      Number(active?.total || 0);
-
-    if (count >= 2) {
+    if (daily && daily.publications >= 2) {
       return json({
-        error: "Limite de 2 publicações diárias atingido."
+        error: "Limite de 2 publicações por dia atingido."
       }, 429);
     }
 
-    const key =
-      "battlehub/" +
-      crypto.randomUUID() +
-      "." +
-      extension;
+    const key = "battlehub/" + crypto.randomUUID() +
+                "." + TYPES[type];
+
+    const upload = await env.BATTLE_MEDIA.createMultipartUpload(
+      key,
+      { httpMetadata: { contentType: type } }
+    );
 
     const sessionId = crypto.randomUUID();
-
     const expiresAt = new Date(
       Date.now() + 60 * 60 * 1000
-    ).toISOString().replace("T", " ").slice(0, 19);
-
-    const upload =
-      await env.BATTLE_MEDIA.createMultipartUpload(key, {
-        httpMetadata: { contentType: type }
-      });
+    ).toISOString();
 
     try {
       await env.BATTLE_DB.prepare(
         `INSERT INTO battle_upload_sessions
-         (id, media_key, r2_upload_id,
-          visitor_hash, media_type, expected_size,
-          status, expires_at)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
+         (id, media_key, r2_upload_id, visitor_hash,
+          media_type, expected_size, expires_at)
+         VALUES (?, ?, ?, ?, ?, ?, ?)`
       ).bind(
-        sessionId,
-        key,
-        upload.uploadId,
-        visitor,
-        type,
-        size,
-        "started",
-        expiresAt
+        sessionId, key, upload.uploadId, visitorHash,
+        type, size, expiresAt
       ).run();
     } catch (error) {
-      await upload.abort().catch(() => {});
+      await upload.abort();
       throw error;
     }
 
@@ -200,10 +130,8 @@ export async function onRequestPost({ request, env }) {
       sessionId,
       key,
       uploadId: upload.uploadId,
-      maxSize,
-      partSize: PART_SIZE
+      partSize: 10 * 1024 * 1024
     });
-
   } catch (error) {
     return json({
       error: "Não foi possível iniciar o upload."
