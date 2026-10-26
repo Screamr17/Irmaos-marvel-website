@@ -169,7 +169,7 @@ async function refresh(){
  status.textContent='A atualizar as atribuições…';
  try{
   const [nextAssignments,nextMembers]=await Promise.all([
-   fetchData('/api/aq-assignments'),
+   fetchData('/api/public/aq-assignments'),
    fetch('/api/alliance-data',{cache:'no-store',headers:{Accept:'application/json'}}).then(async r=>{
     const d=await r.json().catch(()=>({}));
     if(!r.ok||!Array.isArray(d.members))throw Error(d.error||'Erro ao carregar os membros');
