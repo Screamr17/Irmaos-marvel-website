@@ -166,13 +166,29 @@ async function fetchData(url){
  return data.items;
 }
 async function refresh(){
+ status.textContent='A atualizar as atribuições…';
  try{
-  [assignments,members]=await Promise.all([fetchData('/api/aq-assignments'),fetch('/api/alliance-data',{cache:'no-store',headers:{Accept:'application/json'}}).then(async r=>{const d=await r.json();if(!r.ok||!Array.isArray(d.members))throw Error(d.error||'Erro ao carregar /api/alliance-data');return d.members;})]);
-  loaded=true;render();
+  const [nextAssignments,nextMembers]=await Promise.all([
+   fetchData('/api/aq-assignments'),
+   fetch('/api/alliance-data',{cache:'no-store',headers:{Accept:'application/json'}}).then(async r=>{
+    const d=await r.json().catch(()=>({}));
+    if(!r.ok||!Array.isArray(d.members))throw Error(d.error||'Erro ao carregar os membros');
+    return d.members;
+   })
+  ]);
+  assignments=nextAssignments;
+  members=nextMembers;
+  loaded=true;
+  render();
+  status.textContent='✓ Organização oficial atualizada · G'+group+' · Tier '+tier;
  }catch(err){
-  loaded=false;status.textContent='⚠️ Não foi possível consultar as atribuições oficiais. '+err.message;
+  // Preservar as atribuições já carregadas em caso de falha temporária da rede.
+  status.textContent='⚠️ Falha na atualização: '+err.message;
+  console.error('AQ: erro ao sincronizar',err);
  }
 }
+window.addEventListener('pageshow',refresh);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)refresh()});
 document.querySelectorAll('[data-aq-group]').forEach(b=>b.addEventListener('click',()=>{group=Number(b.dataset.aqGroup.slice(1));render()}));
 document.querySelectorAll('[data-aq-tier]').forEach(b=>b.addEventListener('click',()=>{tier=Number(b.dataset.aqTier);render()}));
 render();refresh();
