@@ -1767,9 +1767,8 @@ window.addEventListener('resize',()=>{
   }
  }
  async function load(){
-  if(loading&&ready)return;
   status('A carregar os jogadores e os caminhos…');
-  const results=await Promise.allSettled([request('/api/alliance-data'),request('/api/aq-assignments')]);
+  const results=await Promise.allSettled([request('/api/alliance-data'),request('/api/public/aq-assignments')]);
   const memberResult=results[0],assignmentResult=results[1];
   if(memberResult.status==='rejected'){
    ready=false;lineContainer.replaceChildren();
@@ -1827,7 +1826,7 @@ window.addEventListener('resize',()=>{
   if(!ready)return;
   const players=members.filter(m=>groupOf(m)===group).sort((a,b)=>Number(a.position||0)-Number(b.position||0));
   const selected=assignments.filter(a=>Number(a.group_no)===group&&String(a.map_type||a.map||'').toLowerCase()===map);
-  status((apiReady?'✓ API RAID ligada. ':'⚠️ API RAID ainda não configurada. ')+`G${group} · ${map==='normal'?'Normal':'Nightmare'} · ${players.length} jogadores · ${selected.filter(a=>a.member_id).length} atribuições.`);
+  status((apiReady?'✓ API RAID ligada. ':'⚠️ Leitura pública da RAID indisponível. ')+`G${group} · ${map==='normal'?'Normal':'Nightmare'} · ${players.length} jogadores · ${selected.filter(a=>a.member_id).length} atribuições.`);
   for(const path of paths){
    const card=document.createElement('div');card.className='raid-admin-path';
    const title=document.createElement('h3');title.textContent='🧭 Caminho '+path;card.append(title);
@@ -1853,8 +1852,14 @@ window.addEventListener('resize',()=>{
      if(chosen&&duplicates){status('⚠️ O jogador já está atribuído a outra função neste mapa e grupo.');return}
      busy=true;container.querySelectorAll('button').forEach(b=>b.disabled=true);status('A guardar atribuição…');
      try{
-      await request('/api/raid-assignments',{method:'POST',body:JSON.stringify({group_no:group,map_type:map,path,role,member_id:chosen?Number(chosen):null})});
-      await load();status('✓ Atribuição guardada com sucesso.');
+      const saved=await request('/api/raid-assignments',{method:'POST',body:JSON.stringify({group_no:group,map_type:map,path,role,member_id:chosen?Number(chosen):null})});
+      if(saved.ok===false)throw Error(saved.error||'A API recusou a gravação.');
+      const check=await request('/api/public/raid-assignments');
+      const checked=itemsOf(check);
+      if(!checked)throw Error('Gravação enviada, mas não foi possível confirmar na API pública.');
+      const actual=checked.find(a=>matchAssignment(a,path,role));
+      if(String(actual?.member_id??'')!==(chosen||''))throw Error('A alteração ainda não aparece na base de dados. Atualiza e verifica antes de repetir.');
+      assignments=checked;render();status('✓ Atribuição guardada e confirmada na D1.');
      }catch(e){status('⚠️ Não foi possível guardar: '+e.message)}
      finally{busy=false;container.querySelectorAll('button').forEach(b=>b.disabled=!apiReady)}
     };
@@ -1865,7 +1870,7 @@ window.addEventListener('resize',()=>{
  }
  async function load(){
   status('A carregar jogadores e atribuições RAID…');
-  const results=await Promise.allSettled([request('/api/alliance-data'),request('/api/raid-assignments')]);
+  const results=await Promise.allSettled([request('/api/alliance-data'),request('/api/public/raid-assignments')]);
   if(results[0].status==='rejected'||!Array.isArray(results[0].value?.members)){
    ready=false;container.replaceChildren();status('⚠️ Não foi possível carregar os jogadores em /api/alliance-data.');return;
   }
@@ -1873,7 +1878,7 @@ window.addEventListener('resize',()=>{
   apiReady=results[1].status==='fulfilled'&&itemsOf(results[1].value)!==null;
   assignments=apiReady?itemsOf(results[1].value):[];
   render();
-  if(!apiReady)status('⚠️ Jogadores carregados, mas /api/raid-assignments ainda não está disponível. É necessário criar a API protegida e a tabela D1 antes de guardar atribuições.');
+  if(!apiReady)status('⚠️ Jogadores carregados, mas /api/public/raid-assignments não está disponível. Confirma a publicação da API pública e a ligação D1.');
  }
  $('raid-admin-groups').addEventListener('click',e=>{const b=e.target.closest('button[data-group]');if(!b)return;group=Number(b.dataset.group);render()});
  $('raid-admin-maps').addEventListener('click',e=>{const b=e.target.closest('button[data-map]');if(!b)return;map=b.dataset.map;render()});
