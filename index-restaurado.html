@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#10071f">
+<meta name="description" content="Comunidade IRMÃOS MARVEL. AQ, AW, RAID, BG, Coliseu e recrutamento.">
+<title>IRMÃOS MARVEL | Infinity Dominion</title>
+<style>
+:root{--gold:#ffc66a;--blue:#49a8ff;--muted:#aebed4}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:radial-gradient(ellipse at 50% 5%,#14305c,#050a15 65%);color:#f5f7ff;font-family:system-ui,-apple-system,Segoe UI,sans-serif}
+a{color:inherit;text-decoration:none}button{font:inherit}.wrap{max-width:1400px;margin:auto;padding:0 18px}
+.top{background:#030914f5;border-bottom:1px solid #806336;position:sticky;top:0;z-index:5;backdrop-filter:blur(15px);-webkit-backdrop-filter:blur(15px)}
+.topin{min-height:76px;display:flex;align-items:center;gap:18px}.brand{display:flex;align-items:center;gap:12px;flex-shrink:0;font-size:21px;font-weight:950}.brand img{width:50px;height:50px;object-fit:cover;border-radius:10px}.brand span{color:var(--gold)}
+.nav{margin-left:auto;display:flex;gap:3px;overflow-x:auto;scrollbar-width:none}.nav a{font-weight:750;white-space:nowrap;padding:13px 12px;border-radius:7px;color:#d6e2f2}.nav a:hover,.nav .active{color:var(--gold);background:#372b173d;border-bottom:2px solid var(--gold)}
+.hero{margin:16px auto 20px;border:1px solid #a47d38;border-radius:14px;overflow:hidden;background:#091b35;box-shadow:0 0 55px #0055b633}.hero img{display:block;width:100%;height:auto;object-fit:contain}
+.cards{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px}.tile{min-height:145px;position:relative;overflow:hidden;border:1px solid #7a633b;border-radius:12px;display:flex;flex-direction:column;justify-content:end;text-align:center;padding:20px 7px 14px;background:radial-gradient(circle at 50% 0,var(--glow),transparent 72%),linear-gradient(145deg,#13263f,#040b18);box-shadow:0 7px 18px #0007}.tile .symbol{font-size:40px;filter:drop-shadow(0 0 13px var(--glow));margin-bottom:7px}.tile strong{font-size:23px;letter-spacing:.5px}.tile small{color:#d0d5e2;font-size:10px;letter-spacing:1px;margin-top:5px}
+.recruitment-banner{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:space-between;gap:24px;margin:23px 0 0;padding:26px 30px;border:1px solid #b58b48;border-radius:17px;background:radial-gradient(circle at 90% 15%,#2565a34a,transparent 50%),linear-gradient(125deg,#102d50,#09172c 70%);box-shadow:0 10px 30px #0006,0 0 25px #c9993820}.recruitment-content{min-width:0}.recruitment-tag{display:inline-flex;align-items:center;gap:7px;padding:7px 12px;border:1px solid #b58b48;border-radius:50px;background:#4a351c;color:var(--gold);font-size:11px;font-weight:900;letter-spacing:1px}.recruitment-banner h2{margin:13px 0 9px;font-size:clamp(23px,3.5vw,33px);line-height:1.2}.recruitment-banner h2 span{color:var(--gold)}.recruitment-banner p{margin:0;color:#c7dcef;font-size:14px;line-height:1.75;max-width:720px}.recruitment-button{display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;gap:9px;padding:16px 22px;border:1px solid #d3a253;border-radius:12px;background:linear-gradient(135deg,#b68a47,#735020);color:#fff5de;font-weight:950;font-size:14px;text-align:center;box-shadow:0 5px 20px #0005;transition:transform .2s,box-shadow .2s}.recruitment-button:hover{transform:translateY(-3px);box-shadow:0 8px 25px #ffc66a44}.recruitment-button:active{transform:scale(.98)}
+.section{display:grid;grid-template-columns:1.65fr 1fr;gap:16px;margin:22px 0 42px}.panel{background:linear-gradient(160deg,#0c182c,#060d19);border:1px solid #8b6932;border-radius:13px;overflow:hidden;box-shadow:0 10px 28px #0006}.panel h2{margin:0;padding:17px 20px;border-bottom:1px solid #25364f;font-size:21px}.panel h2 span{color:var(--gold)}
+.notices{padding:18px;display:flex;flex-direction:column;gap:14px}.notice{position:relative;padding:19px;border:1px solid #345478;border-radius:14px;background:linear-gradient(150deg,#13253e,#0a1629);box-shadow:0 6px 20px #0004;transition:border-color .25s,box-shadow .25s,transform .25s}.notice:hover{border-color:#6ba8e6;box-shadow:0 0 24px #1763a52c;transform:translateY(-2px)}.notice.featured{border-color:#b58b48;background:radial-gradient(circle at 100% 0%,#66502630,transparent 65%),linear-gradient(150deg,#1b273b,#0a1425);box-shadow:0 0 25px #dba64a14}.notice.featured:hover{border-color:#ffd17c;box-shadow:0 0 28px #dba64a30}.notice-top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}.notice-label{display:inline-flex;align-items:center;gap:6px;color:#82c4ff;font-size:11px;font-weight:900;letter-spacing:1px;text-transform:uppercase}.featured .notice-label{color:var(--gold)}.notice-position{color:#8298b5;font-size:11px}.notice h3{margin:0 0 10px;font-size:clamp(17px,2vw,21px);line-height:1.35;color:#fff;overflow-wrap:anywhere}.notice p{white-space:pre-wrap;overflow-wrap:anywhere;margin:0;color:#d1deef;line-height:1.65;font-size:14px}.notice-bottom{margin-top:18px;padding-top:13px;border-top:1px solid #33445e;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.notice-date{color:#91a9c8;font-size:12px;overflow-wrap:anywhere}.notice-likes{display:flex;align-items:center;gap:9px;flex-wrap:wrap}.like-button{border:1px solid #4169a2;background:#15385d;color:#e8f4ff;border-radius:10px;padding:9px 13px;font-weight:800;font-size:13px;cursor:pointer;transition:background .2s,transform .2s}.like-button:hover{background:#22548a}.like-button:active{transform:scale(.96)}.like-button[aria-pressed="true"]{background:#1b63a7;border-color:#80c6ff}.like-button:disabled{opacity:.55;cursor:wait}.like-count{color:#a5c1e2;font-size:12px}.notice-empty{text-align:center;padding:28px 16px;border:1px dashed #3b5776;border-radius:13px;color:#aabed8}.notice-empty-icon{font-size:30px;margin-bottom:10px}.status{color:#c3d0e3}
+.strength{padding:22px}.numbers{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.number{background:#0e2037;border:1px solid #354c68;border-radius:9px;text-align:center;padding:15px 6px}.number b{display:block;font-size:26px;color:var(--gold)}.number small{font-size:11px;color:#c8d4e4}.motto{text-align:center;color:var(--gold);font-weight:900;font-size:clamp(22px,3vw,31px);line-height:1.2;margin:28px 0 8px}
+footer{text-align:center;border-top:1px solid #3c4454;color:#9aacc4;padding:24px 15px 105px}
+.wa{position:fixed;right:17px;bottom:22px;z-index:20;background:#25d366;color:white;border-radius:50%;height:54px;width:54px;display:grid;place-items:center;box-shadow:0 4px 20px #0008;border:1px solid #ffffff55}.wa svg{width:31px;height:31px;fill:currentColor}
+@keyframes imBannerEntrada{from{opacity:0;transform:translateY(18px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}@keyframes imCartaoEntrada{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}.hero{animation:imBannerEntrada .85s ease-out both}.tile{animation:imCartaoEntrada .65s ease-out both;transition:transform .25s,box-shadow .25s,border-color .25s}.tile:nth-child(1){animation-delay:.12s}.tile:nth-child(2){animation-delay:.20s}.tile:nth-child(3){animation-delay:.28s}.tile:nth-child(4){animation-delay:.36s}.tile:nth-child(5){animation-delay:.44s}.tile:nth-child(6){animation-delay:.52s}.tile:hover,.tile:focus-visible{transform:translateY(-5px);border-color:#ffc66a;box-shadow:0 0 22px var(--glow),0 0 8px #ffc66a55}.tile:active{transform:scale(.97)}.panel{animation:imCartaoEntrada .8s ease-out both;animation-delay:.35s}.notice{animation:imCartaoEntrada .5s ease-out both}.recruitment-banner{animation:imCartaoEntrada .75s ease-out both;animation-delay:.45s}
+.mobile-nav,.more-overlay,.more-panel{display:none}
+@media(max-width:1000px){.cards{grid-template-columns:repeat(3,1fr)}.nav{font-size:12px}.brand{font-size:17px}.tile{min-height:128px}}
+@media(max-width:700px){.wrap{padding:0 12px}.topin{min-height:65px}.brand img{width:42px;height:42px}.brand{font-size:18px}.nav{display:none}.hero{margin:12px auto}.hero img{width:100%;height:auto;object-fit:contain}.cards{grid-template-columns:repeat(2,1fr);gap:9px}.tile{min-height:127px}.tile .symbol{font-size:34px}.tile strong{font-size:20px}.recruitment-banner{margin-top:17px;padding:23px 18px;flex-direction:column;align-items:stretch;text-align:center;gap:20px}.recruitment-banner h2{font-size:25px}.recruitment-banner p{font-size:13px}.recruitment-button{width:100%}.section{grid-template-columns:1fr}.panel h2{font-size:19px}.notices{padding:12px}.notice{padding:15px}.notice-bottom{align-items:flex-start;flex-direction:column}.mobile-nav{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;position:fixed;bottom:0;left:0;right:0;z-index:30;padding:9px 9px calc(9px + env(safe-area-inset-bottom));background:#040c1cf7;border-top:1px solid #a7803e;box-shadow:0 -7px 28px #0009;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}.mobile-nav a,.mobile-nav button{border:1px solid transparent;border-radius:11px;background:transparent;color:#c7d7ec;min-width:0;padding:9px 2px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:5px;font-size:11px;font-weight:750;cursor:pointer}.mobile-nav .ico{font-size:23px;line-height:1}.mobile-nav .active,.mobile-nav button[aria-expanded="true"]{background:#4a361b;border-color:#b48a48;color:#ffd17c}.more-overlay{position:fixed;inset:0;z-index:24;background:#0009}.more-overlay.open{display:block}.more-panel{position:fixed;left:10px;right:10px;bottom:calc(84px + env(safe-area-inset-bottom));z-index:25;border:1px solid #b48a48;border-radius:18px;background:linear-gradient(160deg,#142640,#050d1c);padding:16px;box-shadow:0 0 40px #000c}.more-panel.open{display:block}.more-title{display:flex;align-items:center;justify-content:space-between;gap:10px;color:#ffd17c;font-weight:900;margin-bottom:14px}.more-close{background:#25344d;color:white;border:1px solid #65748a;border-radius:9px;padding:6px 11px;cursor:pointer}.more-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.more-links a{display:flex;align-items:center;gap:10px;padding:14px 12px;border:1px solid #344c6c;border-radius:12px;background:#11223b;font-size:14px;font-weight:750}.more-links a:active{background:#263b58}.more-links a:last-child{grid-column:1/-1}.wa{bottom:calc(90px + env(safe-area-inset-bottom))}footer{padding-bottom:115px}}
+@media(prefers-reduced-motion:reduce){.hero,.tile,.panel,.notice,.recruitment-banner{animation:none!important;transition:none!important}}
+/* CHAT IM */
+.im-chat-toggle{position:fixed;right:17px;bottom:88px;z-index:21;width:54px;height:54px;border:1px solid #b5dfff;border-radius:50%;background:linear-gradient(145deg,#248fff,#0955bd);color:#fff;box-shadow:0 4px 20px #0009;display:grid;place-items:center;cursor:pointer;font-size:25px}
+.im-chat-toggle:focus-visible,.im-chat-close:focus-visible{outline:3px solid #ffc66a;outline-offset:3px}
+.im-chat-window{position:fixed;right:17px;bottom:153px;z-index:22;width:min(370px,calc(100vw - 24px));height:min(490px,calc(100dvh - 185px));min-height:220px;display:none;flex-direction:column;overflow:hidden;border:1px solid #ad8243;border-radius:17px;background:#071426;color:#f5f7ff;box-shadow:0 14px 45px #000c}
+.im-chat-window.open{display:flex}.im-chat-head{display:flex;justify-content:space-between;align-items:center;padding:13px 14px;background:linear-gradient(120deg,#173c6c,#08192f);border-bottom:1px solid #456080}.im-chat-head strong{color:#ffc66a;font-size:15px}.im-chat-head small{display:block;color:#bcd4ed;font-size:11px;margin-top:3px}.im-chat-close{background:#203d61;border:1px solid #6685a9;color:#fff;border-radius:8px;padding:6px 10px;cursor:pointer}
+.im-chat-identity{padding:9px 11px;background:#0c203a;border-bottom:1px solid #324f71;display:flex;align-items:center;gap:8px}.im-chat-identity label{font-size:12px;color:#ffc66a;white-space:nowrap}.im-chat-identity input{min-width:0;flex:1;border:1px solid #48678d;border-radius:8px;padding:8px;background:#0e2745;color:#fff;font:inherit;font-size:13px}
+.im-chat-messages{flex:1;min-height:0;overflow:auto;padding:14px;display:flex;flex-direction:column;gap:11px}.im-chat-note{font-size:13px;color:#c1d4eb;line-height:1.5;text-align:center;padding:15px 8px}.im-chat-message{padding:10px 12px;border-radius:11px;background:#142c4a;border:1px solid #31547c;overflow-wrap:anywhere}.im-chat-message b{display:block;color:#ffc66a;font-size:12px;margin-bottom:4px}.im-chat-message p{margin:0;white-space:pre-wrap;font-size:13px;line-height:1.45}.im-chat-message time{display:block;text-align:right;font-size:10px;color:#9bb4d0;margin-top:5px}
+.im-chat-status{font-size:11px;padding:5px 12px;color:#bed4ed;background:#0a1c32}.im-chat-form{display:flex;gap:7px;padding:10px;border-top:1px solid #324f71;background:#091b33}.im-chat-form input{min-width:0;flex:1;border:1px solid #48678d;border-radius:9px;padding:10px;background:#0e2745;color:#fff;font:inherit;font-size:13px}.im-chat-form button{border:0;border-radius:9px;padding:0 13px;background:#168bff;color:white;font-weight:900;cursor:pointer}.im-chat-form button:disabled,.im-chat-form input:disabled{opacity:.55;cursor:not-allowed}
+@media(max-width:700px){.im-chat-toggle{bottom:calc(156px + env(safe-area-inset-bottom))}.im-chat-window{right:12px;bottom:calc(222px + env(safe-area-inset-bottom));height:min(460px,calc(100dvh - 245px));min-height:180px}}
+/* CHAT IM 2.0 */
+.im-chat-toggle{z-index:40}.im-chat-window{z-index:41}
+.im-chat-badge{position:absolute;top:-5px;right:-5px;min-width:21px;height:21px;padding:0 5px;border-radius:20px;background:#e83b4b;border:2px solid #071426;color:white;font-size:11px;font-weight:900;display:none;place-items:center}
+.im-chat-badge.visible{display:grid}
+.im-chat-message.pinned{border-color:#d8a74d;background:linear-gradient(140deg,#26334c,#142c4a)}
+.im-chat-pin{font-size:11px;color:#ffd17c;margin-bottom:6px;font-weight:800}
+.im-chat-reply-preview{padding:7px 9px;border-left:3px solid #5daeff;border-radius:5px;background:#071b33;color:#bcd4ed;font-size:11px;margin:6px 0;white-space:pre-wrap;overflow-wrap:anywhere}
+.im-chat-actions{display:flex;flex-wrap:wrap;align-items:center;gap:5px;margin-top:9px}
+.im-chat-actions button{border:1px solid #35577b;border-radius:8px;padding:5px 7px;background:#0c2441;color:#d7eaff;cursor:pointer;font-size:11px}
+.im-chat-actions button:hover{border-color:#80c6ff;background:#1b3b61}
+.im-chat-actions button:disabled{opacity:.5;cursor:wait}
+.im-chat-replying{display:none;align-items:center;justify-content:space-between;gap:8px;padding:8px 12px;background:#173351;color:#dcecff;font-size:12px;border-top:1px solid #35577b}
+.im-chat-replying.active{display:flex}
+.im-chat-replying button{border:1px solid #587a9f;border-radius:6px;background:#193c60;color:white;padding:4px 8px;cursor:pointer}
+.im-chat-message time{margin-top:6px}
+.im-chat-messages{overscroll-behavior:contain}
+@media(max-width:700px){.im-chat-window{z-index:41;bottom:calc(218px + env(safe-area-inset-bottom));height:min(510px,calc(100dvh - 236px));min-height:150px}}
+
+/* BANNER CINEMATOGRÁFICO IM — efeitos leves, sem alterar a imagem original */
+.hero.im-animated{position:relative;isolation:isolate;overflow:hidden;box-shadow:0 0 35px #1269dc44,0 0 12px #c28b3e33;animation:imBannerEntrada .85s ease-out both,imHeroAura 5s ease-in-out 1s infinite}
+.hero.im-animated img{position:relative;z-index:0;width:100%;height:auto;display:block;object-fit:contain}
+.hero.im-animated::before{content:"";position:absolute;inset:-60% -30%;z-index:1;pointer-events:none;background:linear-gradient(105deg,transparent 36%,#8bdcff00 44%,#9bdcff28 49%,#ffffff38 50%,#8bdcff18 51%,transparent 58%);transform:translateX(-120%) rotate(-2deg);animation:imLightSweep 8s ease-in-out 1.5s infinite;mix-blend-mode:screen}
+.hero.im-animated::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;background:radial-gradient(ellipse at 51% 55%,#ffcd6d1f,transparent 32%),radial-gradient(ellipse at 75% 45%,#549cff22,transparent 40%),radial-gradient(ellipse at 27% 55%,#3c8fff18,transparent 42%);animation:imEnergyPulse 4.5s ease-in-out infinite;mix-blend-mode:screen}
+.im-hero-particles{position:absolute;inset:0;z-index:3;pointer-events:none;overflow:hidden}
+.im-hero-particles i{position:absolute;display:block;left:var(--x);top:var(--y);width:var(--sz);height:var(--sz);border-radius:50%;background:var(--c);box-shadow:0 0 8px 2px var(--c);opacity:0;animation:imSpark var(--dur) ease-in-out var(--delay) infinite}
+.im-hero-flash{position:absolute;inset:0;z-index:2;pointer-events:none;background:linear-gradient(120deg,transparent 15%,#5cc6ff17 35%,transparent 48%,#f5d6a00c 60%,transparent 75%);opacity:0;animation:imLightning 11s linear 2s infinite;mix-blend-mode:screen}
+@keyframes imHeroAura{0%,100%{box-shadow:0 0 32px #1269dc44,0 0 10px #c28b3e33}50%{box-shadow:0 0 48px #287eea66,0 0 21px #ffc66a44}}
+@keyframes imLightSweep{0%,18%{transform:translateX(-125%) rotate(-2deg)}38%,100%{transform:translateX(125%) rotate(-2deg)}}
+@keyframes imEnergyPulse{0%,100%{opacity:.3}50%{opacity:.95}}
+@keyframes imSpark{0%,15%,100%{opacity:0;transform:translate3d(0,8px,0) scale(.3)}35%{opacity:.9}70%{opacity:.35;transform:translate3d(10px,-15px,0) scale(1.2)}}
+@keyframes imLightning{0%,23%,25%,26%,28%,100%{opacity:0}24%,27%{opacity:1}}
+@media(prefers-reduced-motion:reduce){.hero.im-animated,.hero.im-animated::before,.hero.im-animated::after,.im-hero-particles i,.im-hero-flash{animation:none!important}.im-hero-particles,.im-hero-flash{display:none}.im-mobile-backdrop{animation:none!important}}
+/* Banner mobile cinematográfico: imagem inteira e fundo preenchido */
+@keyframes imBackdropFloat{0%,100%{transform:scale(1.16) translateX(-1%)}50%{transform:scale(1.25) translateX(1%)}}
+@keyframes imBannerGlow{0%,100%{opacity:.35}50%{opacity:.9}}
+@media(max-width:700px){
+ .hero.im-animated{height:clamp(270px,78vw,390px);min-height:0;display:flex;align-items:center;justify-content:center;position:relative;background:radial-gradient(ellipse at 50% 50%,#16477d,#07162e 85%)}
+ .hero.im-animated .im-mobile-backdrop{position:absolute;inset:-14px;background:url("banner-im-champions.webp") center/cover no-repeat;filter:blur(16px) brightness(.58) saturate(1.65);transform:scale(1.16);opacity:1;pointer-events:none;animation:imBackdropFloat 12s ease-in-out infinite}
+ .hero.im-animated img{display:block;position:relative;z-index:1;width:100%;height:auto;max-height:100%;object-fit:contain;object-position:center;filter:drop-shadow(0 0 22px #4c9eff99)}
+ .hero.im-animated::before{z-index:3}
+ .hero.im-animated::after{z-index:2}
+ .hero.im-animated .im-hero-particles{z-index:4}
+ .hero.im-animated .im-hero-flash{z-index:3;animation-duration:6s}
+ .hero.im-animated::before{animation-duration:5s}
+ .hero.im-animated::after{animation-duration:3s}
+ .im-hero-particles i{box-shadow:0 0 13px 4px var(--c);animation-duration:calc(var(--dur) * .72)}
+}
+@media(min-width:701px){.im-mobile-backdrop{display:none}}
+
+/* Ajuste final: proporções naturais e efeitos preservados */
+@media(max-width:700px){
+ .hero.im-animated{height:clamp(195px,53vw,260px)!important;min-height:0!important;max-height:none!important;display:flex!important;align-items:center!important;justify-content:center!important;overflow:hidden!important;border-radius:15px}
+ .hero.im-animated img{width:100%!important;height:auto!important;max-height:100%!important;object-fit:contain!important;object-position:center!important;filter:drop-shadow(0 0 15px #398aff88)!important}
+ .hero.im-animated .im-mobile-backdrop{opacity:.65!important;filter:blur(12px) brightness(.48) saturate(1.45)!important}
+}
+
+/* IM mobile — banner panorâmico original, efeitos luminosos reforçados */
+@media(max-width:700px){
+ .hero.im-animated{height:auto!important;min-height:0!important;max-height:none!important;display:block!important;margin:12px auto 16px!important;overflow:hidden!important;border-radius:15px!important;background:#07152c!important;box-shadow:0 0 20px #238bff70,0 0 13px #ffc66a60!important;animation:imBannerEntrada .65s ease-out both,imHeroAura 2.8s ease-in-out .7s infinite!important}
+ .hero.im-animated img{display:block!important;width:100%!important;height:auto!important;max-height:none!important;object-fit:contain!important;filter:none!important;transform:none!important}
+ .hero.im-animated .im-mobile-backdrop{display:none!important}
+ .hero.im-animated::before{inset:-120% -60%!important;background:linear-gradient(105deg,transparent 37%,#4abaff00 44%,#73d9ff88 49%,#ffffffad 50%,#ffdb7680 51%,transparent 58%)!important;animation:imLightSweep 4.6s ease-in-out .4s infinite!important;z-index:3!important}
+ .hero.im-animated::after{background:radial-gradient(ellipse at 72% 56%,#ffb42b68,transparent 32%),radial-gradient(ellipse at 28% 48%,#188cff68,transparent 36%)!important;animation:imEnergyPulse 2.2s ease-in-out infinite!important;z-index:2!important}
+ .hero.im-animated .im-hero-flash{z-index:3!important;animation:imLightning 5.7s linear 1s infinite!important;background:linear-gradient(112deg,transparent 20%,#9ce6ff72 40%,transparent 45%,#ffdb7360 63%,transparent 75%)!important}
+ .hero.im-animated .im-hero-particles{z-index:4!important}
+ .im-hero-particles i{width:max(3px,var(--sz))!important;height:max(3px,var(--sz))!important;box-shadow:0 0 11px 3px var(--c),0 0 19px 5px var(--c)!important;animation-duration:calc(var(--dur) * .55)!important}
+}
+@media(prefers-reduced-motion:reduce){.hero.im-animated{animation:none!important}.hero.im-animated::before,.hero.im-animated::after,.im-hero-flash,.im-hero-particles i{animation:none!important}}
+
+/* CHAMAS DE ENERGIA IM — desktop e telemóvel, sem alterar o banner */
+.im-logo-fire{position:absolute;z-index:4;pointer-events:none;left:50%;top:51%;width:29%;height:76%;transform:translate(-50%,-50%);border-radius:50%;mix-blend-mode:screen;filter:drop-shadow(0 0 9px #ff9c2d88)}
+.im-logo-fire::before,.im-logo-fire::after{content:"";position:absolute;inset:6% 4%;border-radius:48%;background:conic-gradient(from 0deg,transparent 0deg,#ffb52a66 28deg,#ff620b99 48deg,transparent 76deg,#ffdc5480 117deg,transparent 152deg,#ff7b1599 196deg,#ffd44b80 222deg,transparent 256deg,#ff8a1599 305deg,transparent 342deg);-webkit-mask:radial-gradient(ellipse,transparent 49%,#000 63%,transparent 79%);mask:radial-gradient(ellipse,transparent 49%,#000 63%,transparent 79%);animation:imFireSpin 7s linear infinite}
+.im-logo-fire::after{inset:-3% -1%;filter:blur(8px);opacity:.75;animation-duration:11s;animation-direction:reverse}
+.im-logo-fire i{position:absolute;bottom:15%;left:var(--fx);width:var(--fs);height:var(--fs);border-radius:50% 50% 50% 0;background:var(--fc);box-shadow:0 0 9px 3px var(--fc);opacity:0;transform:rotate(-45deg);animation:imFireSpark var(--fd) ease-out var(--fl) infinite}
+@keyframes imFireSpin{to{transform:rotate(360deg)}}
+@keyframes imFireSpark{0%{opacity:0;translate:0 0;scale:.6}20%{opacity:.95}75%{opacity:.7}100%{opacity:0;translate:var(--dr) -90px;scale:.15}}
+@media(max-width:700px){.im-logo-fire{width:34%;height:86%}.im-logo-fire::after{filter:blur(5px)}@keyframes imFireSpark{0%{opacity:0;translate:0 0;scale:.6}20%{opacity:.9}100%{opacity:0;translate:var(--dr) -34px;scale:.1}}}
+@media(prefers-reduced-motion:reduce){.im-logo-fire::before,.im-logo-fire::after,.im-logo-fire i{animation:none!important}.im-logo-fire i{display:none}}
+</style>
+<link rel="stylesheet" href="infinity-dominion.css">
+</head>
+<body>
+<header class="top"><div class="wrap topin"><a class="brand" href="index.html"><img src="logo-im.webp" alt="Logo IM">IRMÃOS <span>MARVEL</span></a><nav class="nav"><a class="active" href="index.html">⌂ INÍCIO</a><a href="aq.html">🛡️ AQ</a><a href="aw.html">⚔️ AW</a><a href="raid.html">💀 RAID</a><a href="coliseu.html">🏆 COLISEU</a><a href="bg.html">📊 BG</a><a href="bigthing.html">💥 BIG THING</a><a href="membros.html">👥 MEMBROS</a><a href="recrutamento.html">📝 RECRUTAMENTO</a><a href="oficiais.html">🔐 OFICIAIS</a></nav></div></header>
+<main class="wrap"><div class="hero im-animated"><span class="im-mobile-backdrop" aria-hidden="true"></span><img src="banner-im-champions.webp" alt="Banner cinematográfico IRMÃOS MARVEL"><span class="im-logo-fire" aria-hidden="true"><i style="--fx:10%;--fs:2px;--fc:#ff9a25;--fd:2s;--fl:0.00s;--dr:-26px"></i><i style="--fx:17%;--fs:3px;--fc:#ffd16b;--fd:3s;--fl:0.37s;--dr:-13px"></i><i style="--fx:24%;--fs:4px;--fc:#ff5a12;--fd:4s;--fl:0.74s;--dr:0px"></i><i style="--fx:31%;--fs:2px;--fc:#ff9a25;--fd:5s;--fl:1.11s;--dr:13px"></i><i style="--fx:38%;--fs:3px;--fc:#ffd16b;--fd:2s;--fl:1.48s;--dr:26px"></i><i style="--fx:45%;--fs:4px;--fc:#ff5a12;--fd:3s;--fl:1.85s;--dr:-26px"></i><i style="--fx:52%;--fs:2px;--fc:#ff9a25;--fd:4s;--fl:2.22s;--dr:-13px"></i><i style="--fx:59%;--fs:3px;--fc:#ffd16b;--fd:5s;--fl:2.59s;--dr:0px"></i><i style="--fx:66%;--fs:4px;--fc:#ff5a12;--fd:2s;--fl:2.96s;--dr:13px"></i><i style="--fx:73%;--fs:2px;--fc:#ff9a25;--fd:3s;--fl:3.33s;--dr:26px"></i><i style="--fx:80%;--fs:3px;--fc:#ffd16b;--fd:4s;--fl:3.70s;--dr:-26px"></i><i style="--fx:87%;--fs:4px;--fc:#ff5a12;--fd:5s;--fl:4.07s;--dr:-13px"></i></span><span class="im-hero-flash" aria-hidden="true"></span><span class="im-hero-particles" aria-hidden="true"><i style="--x:8%;--y:23%;--sz:2px;--c:#6acaff;--dur:4s;--delay:0s"></i><i style="--x:16%;--y:72%;--sz:2px;--c:#eac079;--dur:5s;--delay:1s"></i><i style="--x:27%;--y:38%;--sz:3px;--c:#6acaff;--dur:6s;--delay:2s"></i><i style="--x:34%;--y:84%;--sz:2px;--c:#ffffff;--dur:5s;--delay:3s"></i><i style="--x:42%;--y:12%;--sz:2px;--c:#6acaff;--dur:4s;--delay:1.5s"></i><i style="--x:51%;--y:70%;--sz:3px;--c:#ffd279;--dur:6s;--delay:0.7s"></i><i style="--x:60%;--y:25%;--sz:2px;--c:#8dcaff;--dur:5s;--delay:2.5s"></i><i style="--x:69%;--y:80%;--sz:2px;--c:#ffd279;--dur:4s;--delay:0.4s"></i><i style="--x:78%;--y:35%;--sz:3px;--c:#a7dfff;--dur:6s;--delay:1.2s"></i><i style="--x:86%;--y:68%;--sz:2px;--c:#ffd279;--dur:5s;--delay:3.1s"></i><i style="--x:94%;--y:18%;--sz:2px;--c:#8dcaff;--dur:4s;--delay:2.2s"></i></span></div>
+<div class="cards"><a class="tile" style="--glow:#00b98188" href="aq.html"><span class="symbol">🛡️</span><strong>AQ</strong><small>ALLIANCE QUEST</small></a><a class="tile" style="--glow:#d5294388" href="aw.html"><span class="symbol">⚔️</span><strong>AW</strong><small>ALLIANCE WAR</small></a><a class="tile" style="--glow:#8247f888" href="raid.html"><span class="symbol">💀</span><strong>RAID</strong><small>ALLIANCE RAID</small></a><a class="tile" style="--glow:#ff9a2488" href="coliseu.html"><span class="symbol">🏆</span><strong>COLISEU</strong><small>ALIANÇA EM AÇÃO</small></a><a class="tile" style="--glow:#168bff88" href="bg.html"><span class="symbol">📊</span><strong>BG</strong><small>BATTLEGROUNDS</small></a><a class="tile" style="--glow:#ffd26b88" href="bigthing.html"><span class="symbol">💥</span><strong>BIG THING</strong><small>DESAFIOS ESPECIAIS</small></a></div>
+<section class="recruitment-banner" aria-labelledby="recruitment-title"><div class="recruitment-content"><span class="recruitment-tag">🛡️ RECRUTAMENTO IRMÃOS MARVEL</span><h2 id="recruitment-title">QUERES FAZER PARTE DA <span>IM?</span></h2><p>Procuramos jogadores dedicados, competitivos e com espírito de equipa. Descobre os requisitos e apresenta a tua candidatura à nossa aliança!</p></div><a class="recruitment-button" href="recrutamento.html">📝 VER RECRUTAMENTO →</a></section>
+<div class="section"><section class="panel"><h2>📢 AVISOS <span>DA ALIANÇA</span></h2><div class="notices" id="avisos-publicos"><p class="status">A carregar avisos...</p></div></section><aside class="panel"><h2>👥 A NOSSA <span>FORÇA</span></h2><div class="strength"><div class="numbers"><div class="number"><b>30</b><small>MEMBROS</small></div><div class="number"><b>M8</b><small>ALLIANCE QUEST</small></div><div class="number"><b>AW</b><small>GUERRA</small></div><div class="number"><b>IM</b><small>UMA FAMÍLIA</small></div></div><div class="motto">“JUNTOS FAZEMOS<br>A DIFERENÇA”</div></div></aside></div></main>
+<footer>© IRMÃOS MARVEL • Mais que um jogo, uma família</footer>
+<nav class="mobile-nav" aria-label="Navegação do telemóvel"><a class="active" href="index.html" aria-current="page"><span class="ico">⌂</span><span>Início</span></a><a href="aq.html"><span class="ico">🛡️</span><span>AQ</span></a><a href="aw.html"><span class="ico">⚔️</span><span>AW</span></a><a href="raid.html"><span class="ico">💀</span><span>RAID</span></a><button id="more-button" type="button" aria-expanded="false" aria-controls="more-panel"><span class="ico">☰</span><span>Mais</span></button></nav>
+<div class="more-overlay" id="more-overlay"></div><div class="more-panel" id="more-panel" role="dialog" aria-label="Mais páginas" aria-modal="true" aria-hidden="true" inert><div class="more-title"><span>⚔️ EXPLORAR ALIANÇA</span><button class="more-close" id="more-close" type="button">Fechar ✕</button></div><div class="more-links"><a href="coliseu.html">🏆 Coliseu</a><a href="bg.html">📊 BG</a><a href="bigthing.html">💥 Big Thing</a><a href="membros.html">👥 Membros</a><a href="recrutamento.html">📝 Recrutamento</a><a href="oficiais.html">🔐 Oficiais</a></div></div>
+<a class="wa" href="https://chat.whatsapp.com/CraGl18qVXMJtIJjsd03pB" target="_blank" rel="noopener noreferrer" aria-label="Entrar no grupo WhatsApp"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 .8A15.1 15.1 0 0 0 3 23.5L.8 31.2l7.9-2.1A15.2 15.2 0 1 0 16 .8Zm0 27.6a12.3 12.3 0 0 1-6.3-1.7l-.5-.3-4.7 1.2 1.3-4.5-.3-.5a12.4 12.4 0 1 1 10.5 5.8Zm6.8-9.2c-.4-.2-2.2-1.1-2.5-1.2-.3-.1-.6-.2-.8.2-.2.3-.9 1.2-1.1 1.4-.2.2-1.6-.6-3.1-1.9-1.1-1-1.9-2.2-2.1-2.6-.2-.4 0-.6.2-.8l.6-.7c.2-.2.3-.4.4-.6.1-.2 0-.5 0-.7l-1.1-2.7c-.3-.7-.6-.6-.8-.6h-.7c-.3 0-.7.1-1 .5s-1.3 1.3-1.3 3.1 1.4 3.8c.2.3 2.6 4 6.2 5.6.9.4 1.6.6 2.1.8.9.3 1.7.2 2.3.1.7-.1 2.2-.9 2.5-1.8.3-.9.3-1.7.2-1.8-.1-.2-.3-.3-.7-.5Z"/></svg></a>
+<button class="im-chat-toggle" id="im-chat-toggle" type="button" aria-label="Abrir chat da aliança" aria-controls="im-chat-window" aria-expanded="false">💬<span class="im-chat-badge" id="im-chat-badge" aria-hidden="true"></span></button>
+<section class="im-chat-window" id="im-chat-window" aria-label="Chat geral IRMÃOS MARVEL" aria-hidden="true">
+  <div class="im-chat-head"><div><strong>💬 CHAT IRMÃOS MARVEL</strong><small>Chat geral • mensagens públicas</small></div><button type="button" class="im-chat-close" id="im-chat-close" aria-label="Fechar chat">✕</button></div>
+  <div class="im-chat-identity"><label for="im-chat-name">Nome Marvel</label><input id="im-chat-name" maxlength="30" placeholder="Ex.: SCREAM" autocomplete="nickname" aria-label="O teu nome no Marvel"></div>
+  <div class="im-chat-messages" id="im-chat-messages" aria-live="polite"><div class="im-chat-note">A ligar ao chat…</div></div>
+  <div class="im-chat-status" id="im-chat-status" role="status">A ligar…</div>
+  <div class="im-chat-replying" id="im-chat-replying"><span id="im-chat-reply-label"></span><button id="im-chat-cancel-reply" type="button" aria-label="Cancelar resposta">✕</button></div>
+  <form class="im-chat-form" id="im-chat-form"><input id="im-chat-input" maxlength="500" placeholder="Escrever mensagem…" aria-label="Mensagem" autocomplete="off" disabled><button type="submit" id="im-chat-send" disabled aria-label="Enviar mensagem">➤</button></form>
+</section>
+<script>
+/* MENU */
+const moreButton=document.getElementById('more-button'),morePanel=document.getElementById('more-panel'),moreOverlay=document.getElementById('more-overlay'),moreClose=document.getElementById('more-close');
+function fecharMais(){morePanel.classList.remove('open');moreOverlay.classList.remove('open');morePanel.setAttribute('aria-hidden','true');morePanel.inert=true;moreButton.setAttribute('aria-expanded','false')}
+function abrirMais(){morePanel.inert=false;morePanel.classList.add('open');moreOverlay.classList.add('open');morePanel.setAttribute('aria-hidden','false');moreButton.setAttribute('aria-expanded','true');moreClose.focus()}
+moreButton.addEventListener('click',()=>morePanel.classList.contains('open')?fecharMais():abrirMais());moreClose.addEventListener('click',()=>{fecharMais();moreButton.focus()});moreOverlay.addEventListener('click',fecharMais);document.addEventListener('keydown',e=>{if(e.key==='Escape'&&morePanel.classList.contains('open')){fecharMais();moreButton.focus()}});window.addEventListener('resize',()=>{if(window.innerWidth>700)fecharMais()});
+/* GOSTOS */
+const avisoBotoes=new Map();
+function avisoChave(a){return a.id!==undefined&&a.id!==null&&String(a.id).trim()?'id:'+String(a.id):'texto:'+JSON.stringify([a.title||'',a.content||'',a.updated_at||''])}
+function mostrarGosto(item,estado){item.button.disabled=false;item.button.setAttribute('aria-pressed',String(!!estado.liked));item.button.textContent=estado.liked?'👍 Gostaste':'👍 Gosto';const n=Number(estado.count)||0;item.counter.textContent=n+' '+(n===1?'gosto':'gostos')}
+async function atualizarGostos(){const ids=[...avisoBotoes.keys()];if(!ids.length)return;try{const r=await fetch('/api/public/likes?ids='+encodeURIComponent(JSON.stringify(ids)),{credentials:'same-origin',cache:'no-store'});if(!r.ok)throw Error();const data=await r.json();for(const id of ids)mostrarGosto(avisoBotoes.get(id),data.likes?.[id]||{count:0,liked:false})}catch(e){for(const item of avisoBotoes.values()){item.button.disabled=true;item.counter.textContent='Gostos indisponíveis'}}}
+async function alternarGosto(id){const item=avisoBotoes.get(id);if(!item)return;item.button.disabled=true;try{const r=await fetch('/api/public/likes',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({id})});if(!r.ok)throw Error();mostrarGosto(item,await r.json())}catch(e){item.button.disabled=false;item.counter.textContent='Não foi possível guardar. Tenta novamente.'}}
+async function carregarAvisos(){const caixa=document.getElementById('avisos-publicos');try{const r=await fetch('/api/public/entries?section=avisos',{cache:'no-store',credentials:'omit'});if(!r.ok)throw Error();const dados=await r.json();if(!Array.isArray(dados.items))throw Error();caixa.replaceChildren();avisoBotoes.clear();if(!dados.items.length){const vazio=document.createElement('div');vazio.className='notice-empty';const icone=document.createElement('div');icone.className='notice-empty-icon';icone.textContent='📢';const texto=document.createElement('div');texto.textContent='Ainda não existem avisos publicados.';vazio.append(icone,texto);caixa.appendChild(vazio);return}dados.items.forEach((aviso,index)=>{const artigo=document.createElement('article');artigo.className='notice'+(index===0?' featured':'');const topo=document.createElement('div');topo.className='notice-top';const etiqueta=document.createElement('span');etiqueta.className='notice-label';etiqueta.textContent=index===0?'📌 DESTAQUE':'📢 INFORMAÇÃO';const posicao=document.createElement('span');posicao.className='notice-position';posicao.textContent='IRMÃOS MARVEL';topo.append(etiqueta,posicao);const titulo=document.createElement('h3');titulo.textContent=String(aviso.title||'Aviso');const conteudo=document.createElement('p');conteudo.textContent=String(aviso.content||'');const fundo=document.createElement('div');fundo.className='notice-bottom';const data=document.createElement('span');data.className='notice-date';data.textContent=aviso.updated_at?'📅 Atualizado: '+String(aviso.updated_at):'📢 Comunicado da aliança';const id=avisoChave(aviso);const linha=document.createElement('div'),button=document.createElement('button'),counter=document.createElement('span');linha.className='notice-likes';button.type='button';button.className='like-button';button.textContent='👍 Gosto';button.disabled=true;button.setAttribute('aria-pressed','false');counter.className='like-count';counter.textContent='A carregar gostos...';button.addEventListener('click',()=>alternarGosto(id));linha.append(button,counter);fundo.append(data,linha);artigo.append(topo,titulo,conteudo,fundo);avisoBotoes.set(id,{button,counter});caixa.appendChild(artigo)});await atualizarGostos()}catch(e){caixa.replaceChildren();const p=document.createElement('p');p.className='status';p.textContent='Não foi possível carregar os avisos. Tenta atualizar a página.';caixa.appendChild(p)}}
+carregarAvisos();
+/* CHAT IM 2.0 — reações, respostas e contador de novas mensagens */
+(()=>{
+ const $=id=>document.getElementById(id);
+ const toggle=$('im-chat-toggle'),badge=$('im-chat-badge'),panel=$('im-chat-window'),close=$('im-chat-close');
+ const list=$('im-chat-messages'),form=$('im-chat-form'),nameInput=$('im-chat-name');
+ const input=$('im-chat-input'),send=$('im-chat-send'),status=$('im-chat-status');
+ const replyBar=$('im-chat-replying'),replyLabel=$('im-chat-reply-label'),cancelReply=$('im-chat-cancel-reply');
+ const emojis=['👍','❤️','😂','🔥'];
+ let timer=null,loading=false,sending=false,connected=false,replyTo=null,lastMessages=[],seenId=0,unread=0,firstLoad=true;
+ try{nameInput.value=localStorage.getItem('im_chat_name')||'';seenId=Number(localStorage.getItem('im_chat_seen')||0)||0}catch(e){}
+ nameInput.addEventListener('change',()=>{try{localStorage.setItem('im_chat_name',nameInput.value.trim())}catch(e){}});
+ function note(text){list.replaceChildren();const d=document.createElement('div');d.className='im-chat-note';d.textContent=text;list.append(d)}
+ function formatTime(value){
+  if(!value)return '';
+  const raw=String(value);
+  const iso=/^\d{4}-\d\d-\d\d \d\d:\d\d:\d\d$/.test(raw)?raw.replace(' ','T')+'Z':raw;
+  const d=new Date(iso);
+  return Number.isNaN(d.getTime())?raw:d.toLocaleString('pt-PT',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+ }
+ function updateBadge(){badge.textContent=unread>99?'99+':String(unread);badge.classList.toggle('visible',unread>0)}
+ function markSeen(){const max=lastMessages.reduce((v,m)=>Math.max(v,Number(m.id)||0),seenId);seenId=max;unread=0;updateBadge();try{localStorage.setItem('im_chat_seen',String(seenId))}catch(e){}}
+ function setReply(m){replyTo=Number(m.id);replyLabel.textContent='↪ A responder a '+String(m.name||'Jogador')+': '+String(m.message||'').slice(0,65);replyBar.classList.add('active');input.focus()}
+ function clearReply(){replyTo=null;replyBar.classList.remove('active');replyLabel.textContent=''}
+ cancelReply.addEventListener('click',clearReply);
+ async function react(id,emoji,button){
+  button.disabled=true;
+  try{
+   const r=await fetch('/api/chat',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'react',message_id:Number(id),emoji})});
+   const data=await r.json().catch(()=>({}));
+   if(!r.ok||data.ok!==true)throw Error(data.error||'Não foi possível reagir');
+   await refresh(true);
+  }catch(e){status.textContent='⚠️ '+e.message}finally{button.disabled=false}
+ }
+ function render(messages){
+  const nearBottom=list.scrollHeight-list.scrollTop-list.clientHeight<85;
+  const previousScroll=list.scrollTop;
+  list.replaceChildren();
+  if(!messages.length){note('Ainda não existem mensagens. Sê o primeiro a escrever!');return}
+  const byId=new Map(messages.map(m=>[Number(m.id),m]));
+  for(const m of messages){
+   const article=document.createElement('article');article.className='im-chat-message'+(m.is_pinned?' pinned':'');
+   if(m.is_pinned){const pin=document.createElement('div');pin.className='im-chat-pin';pin.textContent='📌 Mensagem fixada';article.append(pin)}
+   const who=document.createElement('b');who.textContent=String(m.name||'Jogador');article.append(who);
+   if(m.reply_to_id){
+    const orig=byId.get(Number(m.reply_to_id));
+    const prev=document.createElement('div');prev.className='im-chat-reply-preview';
+    prev.textContent=orig?'↪ '+String(orig.name||'Jogador')+': '+String(orig.message||'').slice(0,110):'↪ Resposta a uma mensagem anterior';
+    article.append(prev);
+   }
+   const body=document.createElement('p');body.textContent=String(m.message||'');article.append(body);
+   const time=document.createElement('time');time.textContent=formatTime(m.created_at);article.append(time);
+   const actions=document.createElement('div');actions.className='im-chat-actions';
+   const answer=document.createElement('button');answer.type='button';answer.textContent='↪ Responder';answer.addEventListener('click',()=>setReply(m));actions.append(answer);
+   for(const emoji of emojis){
+    const count=Number(m.reactions?.[emoji]||0);
+    const btn=document.createElement('button');btn.type='button';btn.textContent=emoji+(count?' '+count:'');
+    btn.setAttribute('aria-label','Reagir com '+emoji+(count?', '+count+' reações':''));
+    btn.addEventListener('click',()=>react(m.id,emoji,btn));actions.append(btn);
+   }
+   article.append(actions);list.append(article);
+  }
+  if(nearBottom)list.scrollTop=list.scrollHeight;
+  else list.scrollTop=previousScroll;
+ }
+ async function refresh(force=false){
+  if(loading)return;
+  if(!panel.classList.contains('open')&&!force)return;
+  loading=true;
+  try{
+   const r=await fetch('/api/chat',{credentials:'same-origin',cache:'no-store'});
+   if(!r.ok)throw Error('HTTP '+r.status);
+   const data=await r.json();if(data.ok!==true||!Array.isArray(data.messages))throw Error('Resposta inválida');
+   const incoming=data.messages;
+   const max=incoming.reduce((v,m)=>Math.max(v,Number(m.id)||0),0);
+   if(firstLoad){firstLoad=false;if(!seenId)seenId=max}
+   lastMessages=incoming;
+   if(panel.classList.contains('open')){markSeen();render(incoming)}
+   else{unread=incoming.filter(m=>Number(m.id)>seenId).length;updateBadge()}
+   connected=true;input.disabled=false;send.disabled=sending;
+   status.textContent='💬 Chat geral • mensagens públicas';
+  }catch(e){connected=false;input.disabled=true;send.disabled=true;status.textContent='⚠️ Não foi possível ligar ao chat';if(panel.classList.contains('open'))note('O chat está temporariamente indisponível. Tenta novamente daqui a pouco.')}
+  finally{loading=false}
+ }
+ function setOpen(open){
+  panel.classList.toggle('open',open);panel.setAttribute('aria-hidden',String(!open));
+  toggle.setAttribute('aria-expanded',String(open));toggle.setAttribute('aria-label',open?'Fechar chat da aliança':'Abrir chat da aliança');
+  if(open){markSeen();refresh(true);input.focus()}else toggle.focus();
+ }
+ toggle.addEventListener('click',()=>setOpen(!panel.classList.contains('open')));
+ close.addEventListener('click',()=>setOpen(false));
+ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&panel.classList.contains('open'))setOpen(false)});
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden)refresh(true)});
+ timer=setInterval(()=>{if(!document.hidden)refresh(true)},5000);
+ refresh(true);
+ form.addEventListener('submit',async e=>{
+  e.preventDefault();const name=nameInput.value.trim(),message=input.value.trim();
+  if(!connected||sending)return;
+  if(!name||name.length>30){status.textContent='⚠️ Escreve o teu nome Marvel (máximo 30 caracteres).';nameInput.focus();return}
+  if(!message||message.length>500)return;
+  try{localStorage.setItem('im_chat_name',name)}catch(e){}
+  sending=true;send.disabled=true;status.textContent='A enviar…';
+  try{
+   const payload={action:'send',name,message};if(replyTo!==null)payload.reply_to_id=replyTo;
+   const r=await fetch('/api/chat',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+   const data=await r.json().catch(()=>({}));if(!r.ok||data.ok!==true)throw Error(data.error||'Não foi possível enviar');
+   input.value='';clearReply();status.textContent='Mensagem enviada ✓';await refresh(true);
+  }catch(e){status.textContent='⚠️ '+e.message}finally{sending=false;send.disabled=!connected}
+ });
+})();
+</script>
+
+<footer class="infinity-signature">IRMÃOS MARVEL <span>✦ INFINITY DOMINION ✦</span> G1 · G2 · G3</footer>
+</body>
+</html>
